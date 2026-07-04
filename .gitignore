@@ -106,3 +106,6 @@ core/http/react-ui/test-results/
 # the realtime-conformance gate; only the .fizz sources are authoritative.
 formal-verification/*.json
 formal-verification/out/
+
+# Extracted backend binaries for local testing
+bin_extract/
