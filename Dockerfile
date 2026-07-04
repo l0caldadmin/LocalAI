@@ -37,8 +37,7 @@ RUN mkdir -p /run/localai
 RUN echo "default" > /run/localai/capability
 
 # Vulkan requirements
-RUN <<EOT bash
-    if [ "${BUILD_TYPE}" = "vulkan" ] && [ "${SKIP_DRIVERS}" = "false" ]; then
+RUN if [ "${BUILD_TYPE}" = "vulkan" ] && [ "${SKIP_DRIVERS}" = "false" ]; then \
         apt-get update && \
         apt-get install -y  --no-install-recommends \
             software-properties-common pciutils wget gpg-agent && \
@@ -47,8 +46,8 @@ RUN <<EOT bash
             libwayland-dev libxrandr-dev libxcb-randr0-dev libxcb-ewmh-dev \
             git python-is-python3 bison libx11-xcb-dev liblz4-dev libzstd-dev \
             ocaml-core ninja-build pkg-config libxml2-dev wayland-protocols python3-jsonschema \
-            clang-format qtbase5-dev qt6-base-dev libxcb-glx0-dev sudo xz-utils mesa-vulkan-drivers
-        if [ "amd64" = "$TARGETARCH" ]; then
+            clang-format qtbase5-dev qt6-base-dev libxcb-glx0-dev sudo xz-utils mesa-vulkan-drivers && \
+        if [ "amd64" = "$TARGETARCH" ]; then \
             wget "https://sdk.lunarg.com/sdk/download/1.4.335.0/linux/vulkansdk-linux-x86_64-1.4.335.0.tar.xz" && \
             tar -xf vulkansdk-linux-x86_64-1.4.335.0.tar.xz && \
             rm vulkansdk-linux-x86_64-1.4.335.0.tar.xz && \
@@ -65,9 +64,9 @@ RUN <<EOT bash
             cp -rfv /opt/vulkan-sdk/1.4.335.0/x86_64/lib/* /usr/lib/x86_64-linux-gnu/ && \
             cp -rfv /opt/vulkan-sdk/1.4.335.0/x86_64/include/* /usr/include/ && \
             cp -rfv /opt/vulkan-sdk/1.4.335.0/x86_64/share/* /usr/share/ && \
-            rm -rf /opt/vulkan-sdk
-        fi
-        if [ "arm64" = "$TARGETARCH" ]; then
+            rm -rf /opt/vulkan-sdk; \
+        fi; \
+        if [ "arm64" = "$TARGETARCH" ]; then \
             mkdir vulkan && cd vulkan && \
             curl -L -o vulkan-sdk.tar.xz https://github.com/mudler/vulkan-sdk-arm/releases/download/1.4.335.0/vulkansdk-ubuntu-24.04-arm-1.4.335.0.tar.xz && \
             tar -xvf vulkan-sdk.tar.xz && \
@@ -78,31 +77,29 @@ RUN <<EOT bash
             cp -rfv aarch64/include/* /usr/include/ && \
             cp -rfv aarch64/share/* /usr/share/ && \
             cd ../.. && \
-            rm -rf vulkan
-        fi
+            rm -rf vulkan; \
+        fi; \
         ldconfig && \
         apt-get clean && \
         rm -rf /var/lib/apt/lists/* && \
-        echo "vulkan" > /run/localai/capability
+        echo "vulkan" > /run/localai/capability; \
     fi
-EOT
 
 # CuBLAS requirements
-RUN <<EOT bash
-    if ( [ "${BUILD_TYPE}" = "cublas" ] || [ "${BUILD_TYPE}" = "l4t" ] ) && [ "${SKIP_DRIVERS}" = "false" ]; then
+RUN if ( [ "${BUILD_TYPE}" = "cublas" ] || [ "${BUILD_TYPE}" = "l4t" ] ) && [ "${SKIP_DRIVERS}" = "false" ]; then \
         apt-get update && \
         apt-get install -y  --no-install-recommends \
-            software-properties-common pciutils
-        if [ "amd64" = "$TARGETARCH" ]; then
-            curl -O https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${UBUNTU_VERSION}/x86_64/cuda-keyring_1.1-1_all.deb
-        fi
-        if [ "arm64" = "$TARGETARCH" ]; then
-            if [ "${CUDA_MAJOR_VERSION}" = "13" ]; then
-                curl -O https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${UBUNTU_VERSION}/sbsa/cuda-keyring_1.1-1_all.deb
-            else
-                curl -O https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${UBUNTU_VERSION}/arm64/cuda-keyring_1.1-1_all.deb
-            fi
-        fi
+            software-properties-common pciutils; \
+        if [ "amd64" = "$TARGETARCH" ]; then \
+            curl -O https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${UBUNTU_VERSION}/x86_64/cuda-keyring_1.1-1_all.deb; \
+        fi; \
+        if [ "arm64" = "$TARGETARCH" ]; then \
+            if [ "${CUDA_MAJOR_VERSION}" = "13" ]; then \
+                curl -O https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${UBUNTU_VERSION}/sbsa/cuda-keyring_1.1-1_all.deb; \
+            else \
+                curl -O https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${UBUNTU_VERSION}/arm64/cuda-keyring_1.1-1_all.deb; \
+            fi; \
+        fi; \
         dpkg -i cuda-keyring_1.1-1_all.deb && \
         rm -f cuda-keyring_1.1-1_all.deb && \
         apt-get update && \
@@ -113,26 +110,22 @@ RUN <<EOT bash
             libcurand-dev-${CUDA_MAJOR_VERSION}-${CUDA_MINOR_VERSION} \
             libcublas-dev-${CUDA_MAJOR_VERSION}-${CUDA_MINOR_VERSION} \
             libcusparse-dev-${CUDA_MAJOR_VERSION}-${CUDA_MINOR_VERSION} \
-            libcusolver-dev-${CUDA_MAJOR_VERSION}-${CUDA_MINOR_VERSION}
-        if [ "${CUDA_MAJOR_VERSION}" = "13" ] && [ "arm64" = "$TARGETARCH" ]; then
+            libcusolver-dev-${CUDA_MAJOR_VERSION}-${CUDA_MINOR_VERSION}; \
+        if [ "${CUDA_MAJOR_VERSION}" = "13" ] && [ "arm64" = "$TARGETARCH" ]; then \
             apt-get install -y --no-install-recommends \
-            libcufile-${CUDA_MAJOR_VERSION}-${CUDA_MINOR_VERSION} libcudnn9-cuda-${CUDA_MAJOR_VERSION} cuda-cupti-${CUDA_MAJOR_VERSION}-${CUDA_MINOR_VERSION} libnvjitlink-${CUDA_MAJOR_VERSION}-${CUDA_MINOR_VERSION}
-        fi
+            libcufile-${CUDA_MAJOR_VERSION}-${CUDA_MINOR_VERSION} libcudnn9-cuda-${CUDA_MAJOR_VERSION} cuda-cupti-${CUDA_MAJOR_VERSION}-${CUDA_MINOR_VERSION} libnvjitlink-${CUDA_MAJOR_VERSION}-${CUDA_MINOR_VERSION}; \
+        fi; \
         apt-get clean && \
         rm -rf /var/lib/apt/lists/* && \
-        echo "nvidia-cuda-${CUDA_MAJOR_VERSION}" > /run/localai/capability
+        echo "nvidia-cuda-${CUDA_MAJOR_VERSION}" > /run/localai/capability; \
     fi
-EOT
 
-RUN <<EOT bash
-    if [ "${BUILD_TYPE}" = "cublas" ] && [ "${TARGETARCH}" = "arm64" ]; then
-        echo "nvidia-l4t-cuda-${CUDA_MAJOR_VERSION}" > /run/localai/capability
+RUN if [ "${BUILD_TYPE}" = "cublas" ] && [ "${TARGETARCH}" = "arm64" ]; then \
+        echo "nvidia-l4t-cuda-${CUDA_MAJOR_VERSION}" > /run/localai/capability; \
     fi
-EOT
 
 # https://github.com/NVIDIA/Isaac-GR00T/issues/343
-RUN <<EOT bash
-    if [ "${BUILD_TYPE}" = "cublas" ] && [ "${TARGETARCH}" = "arm64" ]; then
+RUN if [ "${BUILD_TYPE}" = "cublas" ] && [ "${TARGETARCH}" = "arm64" ]; then \
         wget https://developer.download.nvidia.com/compute/cudss/0.6.0/local_installers/cudss-local-tegra-repo-ubuntu${UBUNTU_VERSION}-0.6.0_0.6.0-1_arm64.deb && \
         dpkg -i cudss-local-tegra-repo-ubuntu${UBUNTU_VERSION}-0.6.0_0.6.0-1_arm64.deb && \
         cp /var/cudss-local-tegra-repo-ubuntu${UBUNTU_VERSION}-0.6.0/cudss-*-keyring.gpg /usr/share/keyrings/ && \
@@ -140,9 +133,8 @@ RUN <<EOT bash
         wget https://developer.download.nvidia.com/compute/nvpl/25.5/local_installers/nvpl-local-repo-ubuntu${UBUNTU_VERSION}-25.5_1.0-1_arm64.deb && \
         dpkg -i nvpl-local-repo-ubuntu${UBUNTU_VERSION}-25.5_1.0-1_arm64.deb && \
         cp /var/nvpl-local-repo-ubuntu${UBUNTU_VERSION}-25.5/nvpl-*-keyring.gpg /usr/share/keyrings/ && \
-        apt-get update && apt-get install -y nvpl
+        apt-get update && apt-get install -y nvpl; \
     fi
-EOT
 
 # If we are building with clblas support, we need the libraries for the builds
 RUN if [ "${BUILD_TYPE}" = "clblas" ] && [ "${SKIP_DRIVERS}" = "false" ]; then \
@@ -196,7 +188,7 @@ ENV PATH=/opt/rocm/bin:${PATH}
 # The requirements-core target is common to all images.  It should not be placed in requirements-core unless every single build will use it.
 FROM requirements-drivers AS build-requirements
 
-ARG GO_VERSION=1.26.0
+ARG GO_VERSION=1.26.4
 ARG CMAKE_VERSION=3.31.10
 ARG CMAKE_FROM_SOURCE=false
 ARG TARGETARCH
@@ -216,17 +208,15 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Install CMake (the version in 22.04 is too old)
-RUN <<EOT bash
-    if [ "${CMAKE_FROM_SOURCE}" = "true" ]; then
-        curl -L -s https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}.tar.gz -o cmake.tar.gz && tar xvf cmake.tar.gz && cd cmake-${CMAKE_VERSION} && ./configure && make && make install
-    else
+RUN if [ "${CMAKE_FROM_SOURCE}" = "true" ]; then \
+        curl -L -s https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}.tar.gz -o cmake.tar.gz && tar xvf cmake.tar.gz && cd cmake-${CMAKE_VERSION} && ./configure && make && make install; \
+    else \
         apt-get update && \
         apt-get install -y \
             cmake && \
         apt-get clean && \
-        rm -rf /var/lib/apt/lists/*
+        rm -rf /var/lib/apt/lists/*; \
     fi
-EOT
 
 # Install Go
 RUN curl -L -s https://go.dev/dl/go${GO_VERSION}.linux-${TARGETARCH}.tar.gz | tar -C /usr/local -xz
@@ -300,18 +290,16 @@ WORKDIR /build
 
 
 # We need protoc installed, and the version in 22.04 is too old.
-RUN <<EOT bash
-    if [ "amd64" = "$TARGETARCH" ]; then
+RUN if [ "amd64" = "$TARGETARCH" ]; then \
         curl -L -s https://github.com/protocolbuffers/protobuf/releases/download/v27.1/protoc-27.1-linux-x86_64.zip -o protoc.zip && \
         unzip -j -d /usr/local/bin protoc.zip bin/protoc && \
-        rm protoc.zip
-    fi
-    if [ "arm64" = "$TARGETARCH" ]; then
+        rm protoc.zip; \
+    fi; \
+    if [ "arm64" = "$TARGETARCH" ]; then \
         curl -L -s https://github.com/protocolbuffers/protobuf/releases/download/v27.1/protoc-27.1-linux-aarch_64.zip -o protoc.zip && \
         unzip -j -d /usr/local/bin protoc.zip bin/protoc && \
-        rm protoc.zip
+        rm protoc.zip; \
     fi
-EOT
 
 ###################################
 ###################################

@@ -23,7 +23,6 @@ import (
 	"sync"
 	"time"
 
-	registrytypes "github.com/docker/docker/api/types/registry"
 	"github.com/google/go-containerregistry/pkg/authn"
 	"github.com/google/go-containerregistry/pkg/name"
 	v1 "github.com/google/go-containerregistry/pkg/v1"
@@ -108,13 +107,13 @@ type Verifier struct {
 
 	// Registry plumbing — reused from the existing pkg/oci surface so we
 	// honor the same auth / transport conventions.
-	auth      *registrytypes.AuthConfig
+	auth      *authn.AuthConfig
 	transport http.RoundTripper
 }
 
 // NewVerifier constructs a Verifier. The trusted root is not fetched yet;
 // it is loaded on the first call to VerifyImage. auth and t may be nil.
-func NewVerifier(p Policy, auth *registrytypes.AuthConfig, t http.RoundTripper) (*Verifier, error) {
+func NewVerifier(p Policy, auth *authn.AuthConfig, t http.RoundTripper) (*Verifier, error) {
 	if err := p.Validate(); err != nil {
 		return nil, err
 	}
@@ -309,7 +308,7 @@ func (v *Verifier) remoteOptions(ctx context.Context) []remote.Option {
 // staticAuth mirrors pkg/oci's adapter so callers can pass the same
 // docker auth config they use everywhere else.
 type staticAuth struct {
-	auth *registrytypes.AuthConfig
+	auth *authn.AuthConfig
 }
 
 func (s staticAuth) Authorization() (*authn.AuthConfig, error) {

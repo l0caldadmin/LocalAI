@@ -14,7 +14,6 @@ import (
 	"time"
 
 	"github.com/containerd/containerd/archive"
-	registrytypes "github.com/docker/docker/api/types/registry"
 	"github.com/google/go-containerregistry/pkg/authn"
 	"github.com/google/go-containerregistry/pkg/logs"
 	"github.com/google/go-containerregistry/pkg/name"
@@ -28,7 +27,7 @@ import (
 
 // ref: https://github.com/mudler/luet/blob/master/pkg/helpers/docker/docker.go#L117
 type staticAuth struct {
-	auth *registrytypes.AuthConfig
+	auth *authn.AuthConfig
 }
 
 func (s staticAuth) Authorization() (*authn.AuthConfig, error) {
@@ -208,7 +207,7 @@ func ParseImageParts(image string) (tag, repository, dstimage string) {
 // GetImage if returns the proper image to pull with transport and auth
 // tries local daemon first and then fallbacks into remote
 // if auth is nil, it will try to use the default keychain https://github.com/google/go-containerregistry/tree/main/pkg/authn#tldr-for-consumers-of-this-package
-func GetImage(targetImage, targetPlatform string, auth *registrytypes.AuthConfig, t http.RoundTripper) (v1.Image, error) {
+func GetImage(targetImage, targetPlatform string, auth *authn.AuthConfig, t http.RoundTripper) (v1.Image, error) {
 	var platform *v1.Platform
 	var image v1.Image
 	var err error
@@ -257,7 +256,7 @@ func GetImage(targetImage, targetPlatform string, auth *registrytypes.AuthConfig
 
 // GetImageDigest returns the OCI image digest for the given image reference without downloading it.
 // It uses remote.Head to fetch only the descriptor, which is much cheaper than pulling the full image.
-func GetImageDigest(targetImage, targetPlatform string, auth *registrytypes.AuthConfig, t http.RoundTripper) (string, error) {
+func GetImageDigest(targetImage, targetPlatform string, auth *authn.AuthConfig, t http.RoundTripper) (string, error) {
 	var platform *v1.Platform
 	var err error
 
@@ -306,7 +305,7 @@ func GetImageDigest(targetImage, targetPlatform string, auth *registrytypes.Auth
 	return desc.Digest.String(), nil
 }
 
-func GetOCIImageSize(targetImage, targetPlatform string, auth *registrytypes.AuthConfig, t http.RoundTripper) (int64, error) {
+func GetOCIImageSize(targetImage, targetPlatform string, auth *authn.AuthConfig, t http.RoundTripper) (int64, error) {
 	var size int64
 	var img v1.Image
 	var err error
@@ -452,7 +451,7 @@ func ExtractOCIImageFromTar(ctx context.Context, tarFilePath, imageRef, targetDe
 }
 
 // GetOCIImageUncompressedSize returns the total uncompressed size of an image
-func GetOCIImageUncompressedSize(targetImage, targetPlatform string, auth *registrytypes.AuthConfig, t http.RoundTripper) (int64, error) {
+func GetOCIImageUncompressedSize(targetImage, targetPlatform string, auth *authn.AuthConfig, t http.RoundTripper) (int64, error) {
 	var totalSize int64
 	var img v1.Image
 	var err error
