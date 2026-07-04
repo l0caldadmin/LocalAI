@@ -500,4 +500,4 @@ require (
 	lukechampine.com/blake3 v1.4.1 // indirect
 )
 
-replace github.com/mudler/LocalAGI => github.com/l0caldadmin/LocalAGI v0.0.0-20260704043904-7fe42866269e
+replace github.com/mudler/LocalAGI => github.com/l0caldadmin/LocalAGI v0.0.0-20260704190425-a41c6ff36ed2
