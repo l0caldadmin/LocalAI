@@ -1,14 +1,14 @@
 package cli
 
 import (
+	"archive/tar"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
 	"strings"
-
-	"github.com/mholt/archiver/v3"
 	"github.com/mudler/xlog"
 
 	gguf "github.com/gpustack/gguf-parser-go"
@@ -58,7 +58,7 @@ func (u *CreateOCIImageCMD) Run(ctx *cliContext.Context) error {
 		return err
 	}
 	defer os.RemoveAll(dir)
-	err = archiver.Archive(u.Input, filepath.Join(dir, "archive.tar"))
+	err = createTarFromInputs(u.Input, filepath.Join(dir, "archive.tar"))
 	if err != nil {
 		return err
 	}
@@ -70,6 +70,106 @@ func (u *CreateOCIImageCMD) Run(ctx *cliContext.Context) error {
 	}
 
 	return oci.CreateTar(filepath.Join(dir, "archive.tar"), u.Output, u.ImageName, platform[1], platform[0])
+}
+
+func createTarFromInputs(inputs []string, tarPath string) (err error) {
+	if len(inputs) == 0 {
+		return fmt.Errorf("no input file or directory provided")
+	}
+
+	out, err := os.Create(tarPath)
+	if err != nil {
+		return err
+	}
+	defer func() {
+		if closeErr := out.Close(); err == nil {
+			err = closeErr
+		}
+	}()
+
+	tw := tar.NewWriter(out)
+	defer func() {
+		if closeErr := tw.Close(); err == nil {
+			err = closeErr
+		}
+	}()
+
+	for _, input := range inputs {
+		root, statErr := os.Lstat(input)
+		if statErr != nil {
+			return statErr
+		}
+
+		baseName := filepath.Base(input)
+		if baseName == "." || baseName == string(filepath.Separator) || baseName == "" {
+			return fmt.Errorf("invalid input path: %s", input)
+		}
+
+		if root.IsDir() {
+			walkErr := filepath.Walk(input, func(path string, info os.FileInfo, walkErr error) error {
+				if walkErr != nil {
+					return walkErr
+				}
+				rel, relErr := filepath.Rel(input, path)
+				if relErr != nil {
+					return relErr
+				}
+				tarName := baseName
+				if rel != "." {
+					tarName = filepath.Join(baseName, rel)
+				}
+				return addPathToTar(tw, path, info, tarName)
+			})
+			if walkErr != nil {
+				return walkErr
+			}
+			continue
+		}
+
+		if err := addPathToTar(tw, input, root, baseName); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func addPathToTar(tw *tar.Writer, sourcePath string, info os.FileInfo, tarName string) error {
+	linkTarget := ""
+	if info.Mode()&os.ModeSymlink != 0 {
+		link, err := os.Readlink(sourcePath)
+		if err != nil {
+			return err
+		}
+		linkTarget = link
+	}
+
+	hdr, err := tar.FileInfoHeader(info, linkTarget)
+	if err != nil {
+		return err
+	}
+
+	hdr.Name = filepath.ToSlash(tarName)
+	if info.IsDir() && !strings.HasSuffix(hdr.Name, "/") {
+		hdr.Name += "/"
+	}
+
+	if err := tw.WriteHeader(hdr); err != nil {
+		return err
+	}
+
+	if !info.Mode().IsRegular() {
+		return nil
+	}
+
+	file, err := os.Open(sourcePath)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	_, err = io.Copy(tw, file)
+	return err
 }
 
 func (u *GGUFInfoCMD) Run(ctx *cliContext.Context) error {

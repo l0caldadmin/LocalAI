@@ -4,60 +4,56 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"net/http"
 	"os"
+	"path"
+	"strings"
 
+	"github.com/mudler/LocalAI/pkg/httpclient"
 	"github.com/mudler/LocalAI/pkg/xio"
+	digest "github.com/opencontainers/go-digest"
 	ocispec "github.com/opencontainers/image-spec/specs-go/v1"
-
-	oras "oras.land/oras-go/v2"
-	"oras.land/oras-go/v2/registry/remote"
-	"oras.land/oras-go/v2/registry/remote/auth"
-	"oras.land/oras-go/v2/registry/remote/retry"
 )
 
 func FetchImageBlob(ctx context.Context, r, reference, dst string, statusReader func(ocispec.Descriptor) io.Writer) error {
-	// 0. Create a file store for the output
+	host, repo, ok := strings.Cut(r, "/")
+	if !ok || host == "" || repo == "" {
+		return fmt.Errorf("failed to parse repository %q", r)
+	}
+
+	blobURL := fmt.Sprintf("https://%s/%s", host, path.Join("v2", repo, "blobs", reference))
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, blobURL, nil)
+	if err != nil {
+		return fmt.Errorf("failed to create blob request: %v", err)
+	}
+	req.Header.Set("User-Agent", UserAgent())
+	req.Header.Set("Accept", "application/octet-stream")
+
+	client := httpclient.New(httpclient.WithFollowRedirects())
+	resp, err := client.Do(req)
+	if err != nil {
+		return fmt.Errorf("failed to fetch blob: %v", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+		return fmt.Errorf("failed to fetch blob %s: unexpected status %s", blobURL, resp.Status)
+	}
+
 	fs, err := os.Create(dst)
 	if err != nil {
 		return err
 	}
 	defer fs.Close()
 
-	// 1. Connect to a remote repository
-	repo, err := remote.NewRepository(r)
-	if err != nil {
-		return fmt.Errorf("failed to create repository: %v", err)
-	}
-	repo.SkipReferrersGC = true
-
-	// Identify LocalAI to the registry. This mirrors oras' auth.DefaultClient
-	// (same retry policy) but advertises a LocalAI User-Agent instead of the
-	// library default.
-	client := &auth.Client{
-		Client: retry.DefaultClient,
-		Cache:  auth.NewCache(),
-	}
-	client.SetUserAgent(UserAgent())
-	repo.Client = client
-
-	// https://github.com/oras-project/oras/blob/main/cmd/oras/internal/option/remote.go#L364
-	// https://github.com/oras-project/oras/blob/main/cmd/oras/root/blob/fetch.go#L136
-	desc, reader, err := oras.Fetch(ctx, repo.Blobs(), reference, oras.DefaultFetchOptions)
-	if err != nil {
-		return fmt.Errorf("failed to fetch image: %v", err)
-	}
-
 	if statusReader != nil {
-		// 3. Write the file to the file store
-		_, err = xio.Copy(ctx, io.MultiWriter(fs, statusReader(desc)), reader)
-		if err != nil {
-			return err
-		}
+		desc := ocispec.Descriptor{Size: resp.ContentLength, Digest: digest.Digest(reference)}
+		_, err = xio.Copy(ctx, io.MultiWriter(fs, statusReader(desc)), resp.Body)
 	} else {
-		_, err = xio.Copy(ctx, fs, reader)
-		if err != nil {
-			return err
-		}
+		_, err = xio.Copy(ctx, fs, resp.Body)
+	}
+	if err != nil {
+		return err
 	}
 
 	return nil

@@ -1,6 +1,7 @@
 package http
 
 import (
+	"bytes"
 	"embed"
 	"fmt"
 	"html/template"
@@ -14,7 +15,9 @@ import (
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/mudler/LocalAI/core/http/middleware"
 	"github.com/mudler/LocalAI/core/schema"
-	"github.com/russross/blackfriday"
+	"github.com/yuin/goldmark"
+	"github.com/yuin/goldmark/extension"
+	gmhtml "github.com/yuin/goldmark/renderer/html"
 )
 
 //go:embed views/*
@@ -84,6 +87,11 @@ func renderEngine() *TemplateRenderer {
 }
 
 func markDowner(args ...any) template.HTML {
-	s := blackfriday.MarkdownCommon([]byte(fmt.Sprintf("%s", args...)))
-	return template.HTML(bluemonday.UGCPolicy().Sanitize(string(s)))
+	var buf bytes.Buffer
+	md := goldmark.New(
+		goldmark.WithExtensions(extension.GFM),
+		goldmark.WithRendererOptions(gmhtml.WithUnsafe()),
+	)
+	_ = md.Convert([]byte(fmt.Sprintf("%s", args...)), &buf)
+	return template.HTML(bluemonday.UGCPolicy().Sanitize(buf.String()))
 }
