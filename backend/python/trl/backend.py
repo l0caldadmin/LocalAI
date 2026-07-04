@@ -31,9 +31,9 @@ MAX_WORKERS = int(os.environ.get('PYTHON_GRPC_MAX_WORKERS', '4'))
 class ProgressCallback:
     """HuggingFace TrainerCallback that pushes progress updates to a queue."""
 
-    def __init__(self, job_id, progress_queue, total_epochs):
+    def __init__(self, job_id, job, total_epochs):
         self.job_id = job_id
-        self.progress_queue = progress_queue
+        self.job = job
         self.total_epochs = total_epochs
 
     def get_callback(self):
@@ -80,7 +80,7 @@ class ProgressCallback:
                     status="training",
                     extra_metrics=extra_metrics,
                 )
-                parent.progress_queue.put(update)
+                parent.job.put_progress(update)
 
             def on_prediction_step(self, args, state, control, **kwargs):
                 """Send periodic updates during evaluation so the UI doesn't freeze."""
@@ -102,7 +102,7 @@ class ProgressCallback:
                     status="training",
                     message=f"Evaluating... (batch {self._eval_update_counter})",
                 )
-                parent.progress_queue.put(update)
+                parent.job.put_progress(update)
 
             def on_evaluate(self, args, state, control, metrics=None, **kwargs):
                 """Report eval results once evaluation is done."""
@@ -132,7 +132,7 @@ class ProgressCallback:
                     message=f"Evaluation complete at step {state.global_step}",
                     extra_metrics=extra_metrics,
                 )
-                parent.progress_queue.put(update)
+                parent.job.put_progress(update)
 
             def on_save(self, args, state, control, **kwargs):
                 checkpoint_path = os.path.join(args.output_dir, f"checkpoint-{state.global_step}")
@@ -143,7 +143,7 @@ class ProgressCallback:
                     message=f"Checkpoint saved at step {state.global_step}",
                     checkpoint_path=checkpoint_path,
                 )
-                parent.progress_queue.put(update)
+                parent.job.put_progress(update)
 
             def on_train_end(self, args, state, control, **kwargs):
                 update = backend_pb2.FineTuneProgressUpdate(
@@ -154,7 +154,7 @@ class ProgressCallback:
                     status="completed",
                     message="Training completed",
                 )
-                parent.progress_queue.put(update)
+                parent.job.put_progress(update)
 
         return _Callback()
 
@@ -164,7 +164,8 @@ class ActiveJob:
 
     def __init__(self, job_id):
         self.job_id = job_id
-        self.progress_queue = queue.Queue()
+        self.progress_queues = []
+        self.queues_lock = threading.Lock()
         self.trainer = None
         self.thread = None
         self.model = None
@@ -172,6 +173,22 @@ class ActiveJob:
         self.error = None
         self.completed = False
         self.stopped = False
+
+    def put_progress(self, update):
+        with self.queues_lock:
+            for q in self.progress_queues:
+                q.put(update)
+
+    def get_progress_queue(self):
+        q = queue.Queue()
+        with self.queues_lock:
+            self.progress_queues.append(q)
+        return q
+
+    def remove_progress_queue(self, q):
+        with self.queues_lock:
+            if q in self.progress_queues:
+                self.progress_queues.remove(q)
 
 
 def _is_gated_repo_error(exc):
@@ -201,6 +218,32 @@ class BackendServicer(backend_pb2_grpc.BackendServicer):
     def LoadModel(self, request, context):
         """Accept LoadModel — actual model loading happens in StartFineTune."""
         return backend_pb2.Result(success=True, message="OK")
+
+    def Free(self, request, context):
+        try:
+            import gc
+            import torch
+
+            job = self.active_job
+            if job is not None:
+                for attr in ("model", "tokenizer", "trainer"):
+                    if hasattr(job, attr) and getattr(job, attr) is not None:
+                        try:
+                            delattr(job, attr)
+                        except Exception:
+                            pass
+                        setattr(job, attr, None)
+
+            self.active_job = None
+
+            gc.collect()
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+            return backend_pb2.Result(success=True, message="OK")
+        except Exception as exc:
+            import sys
+            print(f"Free failed: {exc}", file=sys.stderr)
+            return backend_pb2.Result(success=False, message=str(exc))
 
     def StartFineTune(self, request, context):
         if self.active_job is not None and not self.active_job.completed:
@@ -241,9 +284,24 @@ class BackendServicer(backend_pb2_grpc.BackendServicer):
                 status="failed",
                 message=msg,
             )
-            job.progress_queue.put(update)
+            job.put_progress(update)
             # Send sentinel
-            job.progress_queue.put(None)
+            job.put_progress(None)
+        finally:
+            import gc
+            import torch
+
+            for attr in ("trainer", "model", "tokenizer"):
+                if hasattr(job, attr) and getattr(job, attr) is not None:
+                    try:
+                        delattr(job, attr)
+                    except Exception:
+                        pass
+                    setattr(job, attr, None)
+
+            gc.collect()
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
 
     def _do_training(self, request, job):
         import torch
@@ -255,7 +313,7 @@ class BackendServicer(backend_pb2_grpc.BackendServicer):
         training_type = request.training_type or "lora"
 
         # Send loading status
-        job.progress_queue.put(backend_pb2.FineTuneProgressUpdate(
+        job.put_progress(backend_pb2.FineTuneProgressUpdate(
             job_id=job.job_id, status="loading_model", message=f"Loading model {request.model}",
         ))
 
@@ -303,7 +361,7 @@ class BackendServicer(backend_pb2_grpc.BackendServicer):
             model = get_peft_model(model, peft_config)
 
         # Load dataset
-        job.progress_queue.put(backend_pb2.FineTuneProgressUpdate(
+        job.put_progress(backend_pb2.FineTuneProgressUpdate(
             job_id=job.job_id, status="loading_dataset", message="Loading dataset",
         ))
 
@@ -389,7 +447,7 @@ class BackendServicer(backend_pb2_grpc.BackendServicer):
                 common_train_kwargs[flag] = extra[flag].lower() == "true"
 
         # Create progress callback
-        progress_cb = ProgressCallback(job.job_id, job.progress_queue, num_epochs)
+        progress_cb = ProgressCallback(job.job_id, job, num_epochs)
 
         # Build save kwargs (shared across all methods)
         _save_kwargs = {}
@@ -599,7 +657,7 @@ class BackendServicer(backend_pb2_grpc.BackendServicer):
         job.trainer = trainer
 
         # Start training
-        job.progress_queue.put(backend_pb2.FineTuneProgressUpdate(
+        job.put_progress(backend_pb2.FineTuneProgressUpdate(
             job_id=job.job_id, status="training", message="Training started",
         ))
 
@@ -613,7 +671,7 @@ class BackendServicer(backend_pb2_grpc.BackendServicer):
 
         job.completed = True
         # Sentinel to signal stream end
-        job.progress_queue.put(None)
+        job.put_progress(None)
 
     def FineTuneProgress(self, request, context):
         if self.active_job is None or self.active_job.job_id != request.job_id:
@@ -622,20 +680,24 @@ class BackendServicer(backend_pb2_grpc.BackendServicer):
             return
 
         job = self.active_job
-        while True:
-            try:
-                update = job.progress_queue.get(timeout=1.0)
-                if update is None:
-                    break
-                yield update
-                if update.status in ("completed", "failed", "stopped"):
-                    break
-            except queue.Empty:
-                if job.completed or job.stopped:
-                    break
-                if not context.is_active():
-                    break
-                continue
+        q = job.get_progress_queue()
+        try:
+            while True:
+                try:
+                    update = q.get(timeout=1.0)
+                    if update is None:
+                        break
+                    yield update
+                    if update.status in ("completed", "failed", "stopped"):
+                        break
+                except queue.Empty:
+                    if job.completed or job.stopped:
+                        break
+                    if not context.is_active():
+                        break
+                    continue
+        finally:
+            job.remove_progress_queue(q)
 
     def StopFineTune(self, request, context):
         # Stopping is handled by killing the process from Go via ShutdownModel.

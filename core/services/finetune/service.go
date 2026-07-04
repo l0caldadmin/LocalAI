@@ -268,6 +268,53 @@ func (s *FineTuneService) StartJob(ctx context.Context, userID string, req schem
 	}
 	s.saveJobState(job)
 
+	// Spawn a background watcher goroutine to monitor the training progress,
+	// update status in the store, and shut down the backend process upon completion/error.
+	go func() {
+		bgCtx := context.Background()
+		xlog.Info("Starting background progress watcher for fine-tune job", "job_id", jobID)
+
+		err := backendModel.FineTuneProgress(bgCtx, &pb.FineTuneProgressRequest{
+			JobId: jobID,
+		}, func(update *pb.FineTuneProgressUpdate) {
+			s.mu.Lock()
+			defer s.mu.Unlock()
+			if j, ok := s.jobs.Get(jobID); ok {
+				isTerminal := j.Status == "stopped" || j.Status == "completed" || j.Status == "failed"
+				if !isTerminal {
+					j.Status = update.Status
+				}
+				if update.Message != "" {
+					j.Message = update.Message
+				}
+				if err := s.jobs.Set(bgCtx, j); err != nil {
+					xlog.Warn("Failed to persist progress update in background", "job_id", jobID, "error", err)
+				}
+				s.saveJobState(j)
+			}
+		})
+
+		s.mu.Lock()
+		defer s.mu.Unlock()
+		if j, ok := s.jobs.Get(jobID); ok {
+			if j.Status != "completed" && j.Status != "stopped" && j.Status != "failed" {
+				j.Status = "failed"
+				if err != nil {
+					j.Message = fmt.Sprintf("Connection to training backend lost: %v", err)
+				} else {
+					j.Message = "Training terminated unexpectedly"
+				}
+				if err := s.jobs.Set(bgCtx, j); err != nil {
+					xlog.Warn("Failed to persist final failure update in background", "job_id", jobID, "error", err)
+				}
+				s.saveJobState(j)
+			}
+		}
+
+		xlog.Info("Shutting down model backend after job finish/error", "model_id", modelID)
+		s.modelLoader.ShutdownModel(modelID)
+	}()
+
 	return &schema.FineTuneJobResponse{
 		ID:      jobID,
 		Status:  "queued",

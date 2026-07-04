@@ -88,11 +88,28 @@ class ActiveJob:
 
     def __init__(self, job_id):
         self.job_id = job_id
-        self.progress_queue = queue.Queue()
+        self.progress_queues = []
+        self.queues_lock = threading.Lock()
         self.thread = None
         self.stopped = False
         self.completed = False
         self.error = None
+
+    def put_progress(self, update):
+        with self.queues_lock:
+            for q in self.progress_queues:
+                q.put(update)
+
+    def get_progress_queue(self):
+        q = queue.Queue()
+        with self.queues_lock:
+            self.progress_queues.append(q)
+        return q
+
+    def remove_progress_queue(self, q):
+        with self.queues_lock:
+            if q in self.progress_queues:
+                self.progress_queues.remove(q)
 
 
 class BackendServicer(backend_pb2_grpc.BackendServicer):
@@ -125,6 +142,7 @@ class BackendServicer(backend_pb2_grpc.BackendServicer):
                         delattr(self, attr)
                     except Exception:
                         pass
+            self.active_job = None
             import gc
             gc.collect()
             try:
@@ -595,20 +613,24 @@ class BackendServicer(backend_pb2_grpc.BackendServicer):
             return
 
         job = self.active_job
-        while True:
-            try:
-                update = job.progress_queue.get(timeout=1.0)
-            except queue.Empty:
-                if job.completed or job.stopped:
+        q = job.get_progress_queue()
+        try:
+            while True:
+                try:
+                    update = q.get(timeout=1.0)
+                except queue.Empty:
+                    if job.completed or job.stopped:
+                        break
+                    if not context.is_active():
+                        break
+                    continue
+                if update is None:
                     break
-                if not context.is_active():
+                yield update
+                if update.status in ("completed", "failed", "stopped"):
                     break
-                continue
-            if update is None:
-                break
-            yield update
-            if update.status in ("completed", "failed", "stopped"):
-                break
+        finally:
+            job.remove_progress_queue(q)
 
     def StopFineTune(self, request, context):
         # We can't kill the Accelerate training loop mid-step cleanly from here;
@@ -616,14 +638,14 @@ class BackendServicer(backend_pb2_grpc.BackendServicer):
         # at least lets the progress stream terminate quickly.
         if self.active_job is not None and self.active_job.job_id == request.job_id:
             self.active_job.stopped = True
-            self.active_job.progress_queue.put(None)
+            self.active_job.put_progress(None)
         return backend_pb2.Result(success=True, message="OK")
 
     def _run_training(self, request, job):
         try:
             self._do_train(request, job)
             job.completed = True
-            job.progress_queue.put(backend_pb2.FineTuneProgressUpdate(
+            job.put_progress(backend_pb2.FineTuneProgressUpdate(
                 job_id=job.job_id, status="completed", message="Training completed",
                 progress_percent=100.0,
             ))
@@ -632,11 +654,16 @@ class BackendServicer(backend_pb2_grpc.BackendServicer):
             job.completed = True
             print(f"Training failed: {exc}", file=sys.stderr)
             print(traceback.format_exc(), file=sys.stderr)
-            job.progress_queue.put(backend_pb2.FineTuneProgressUpdate(
+            job.put_progress(backend_pb2.FineTuneProgressUpdate(
                 job_id=job.job_id, status="failed", message=str(exc),
             ))
         finally:
-            job.progress_queue.put(None)
+            job.put_progress(None)
+            import gc
+            import torch
+            gc.collect()
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
 
     def _do_train(self, request, job):
         from liquid_audio import LFM2AudioModel  # noqa: F401  (sanity import)
@@ -665,21 +692,20 @@ class BackendServicer(backend_pb2_grpc.BackendServicer):
         )
         os.makedirs(output_dir, exist_ok=True)
 
-        job.progress_queue.put(backend_pb2.FineTuneProgressUpdate(
+        job.put_progress(backend_pb2.FineTuneProgressUpdate(
             job_id=job.job_id, status="loading_dataset",
             message=f"Loading preprocessed dataset from {dataset_path}",
         ))
         train_data = LFM2DataLoader(dataset_path)
         val_data = LFM2DataLoader(val_path) if val_path else None
 
-        job.progress_queue.put(backend_pb2.FineTuneProgressUpdate(
+        job.put_progress(backend_pb2.FineTuneProgressUpdate(
             job_id=job.job_id, status="loading_model",
             message=f"Loading base model {model_id}",
         ))
 
         # The Liquid Trainer logs via self.accelerator.print; we subclass it to
         # also push progress events onto the queue every logging_interval steps.
-        progress_q = job.progress_queue
 
         class QueuedTrainer(Trainer):
             def log(self_, model_output):
@@ -692,7 +718,7 @@ class BackendServicer(backend_pb2_grpc.BackendServicer):
                         loss = float("nan")
                     lr_now = self_.optimizer.param_groups[0]["lr"]
                     pct = (self_.step / self_.max_steps * 100.0) if self_.max_steps else 0.0
-                    progress_q.put(backend_pb2.FineTuneProgressUpdate(
+                    job.put_progress(backend_pb2.FineTuneProgressUpdate(
                         job_id=job.job_id,
                         current_step=int(self_.step),
                         total_steps=int(self_.max_steps),
@@ -708,7 +734,7 @@ class BackendServicer(backend_pb2_grpc.BackendServicer):
                 return super().log(model_output)
 
             def validate(self_):
-                progress_q.put(backend_pb2.FineTuneProgressUpdate(
+                job.put_progress(backend_pb2.FineTuneProgressUpdate(
                     job_id=job.job_id, current_step=int(self_.step),
                     total_steps=int(self_.max_steps), status="training",
                     message=f"Running validation at step {self_.step}",
@@ -728,13 +754,13 @@ class BackendServicer(backend_pb2_grpc.BackendServicer):
             weight_decay=request.weight_decay or 0.1,
         )
 
-        job.progress_queue.put(backend_pb2.FineTuneProgressUpdate(
+        job.put_progress(backend_pb2.FineTuneProgressUpdate(
             job_id=job.job_id, status="training", message="Training started",
             total_steps=int(max_steps),
         ))
         trainer.train()
 
-        job.progress_queue.put(backend_pb2.FineTuneProgressUpdate(
+        job.put_progress(backend_pb2.FineTuneProgressUpdate(
             job_id=job.job_id, status="saving",
             message=f"Saved final model to {output_dir}",
             checkpoint_path=os.path.join(output_dir, "final"),
