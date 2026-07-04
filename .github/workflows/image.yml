@@ -77,22 +77,22 @@
               platform-tag: 'amd64'
               tag-latest: 'auto'
               tag-suffix: ''
-              base-image: "ubuntu:24.04"
+              base-image: "ubuntu:26.04"
               runs-on: 'ubuntu-latest'
               makeflags: "--jobs=4 --output-sync=target"
               skip-drivers: 'false'
-              ubuntu-version: '2404'
+              ubuntu-version: '2604'
               ubuntu-codename: 'noble'
             - build-type: ''
               platforms: 'linux/arm64'
               platform-tag: 'arm64'
               tag-latest: 'auto'
               tag-suffix: ''
-              base-image: "ubuntu:24.04"
+              base-image: "ubuntu:26.04"
               runs-on: 'ubuntu-24.04-arm'
               makeflags: "--jobs=4 --output-sync=target"
               skip-drivers: 'false'
-              ubuntu-version: '2404'
+              ubuntu-version: '2604'
               ubuntu-codename: 'noble'
             - build-type: 'cublas'
               cuda-major-version: "12"
@@ -101,10 +101,10 @@
               tag-latest: 'auto'
               tag-suffix: '-gpu-nvidia-cuda-12'
               runs-on: 'ubuntu-latest'
-              base-image: "ubuntu:24.04"
+              base-image: "ubuntu:26.04"
               skip-drivers: 'false'
               makeflags: "--jobs=4 --output-sync=target"
-              ubuntu-version: '2404'
+              ubuntu-version: '2604'
               ubuntu-codename: 'noble'
             - build-type: 'cublas'
               cuda-major-version: "13"
@@ -116,7 +116,7 @@
               base-image: "ubuntu:22.04"
               skip-drivers: 'false'
               makeflags: "--jobs=4 --output-sync=target"
-              ubuntu-version: '2404'
+              ubuntu-version: '2604'
               ubuntu-codename: 'noble'
             - build-type: 'vulkan'
               platforms: 'linux/amd64'
@@ -124,10 +124,10 @@
               tag-latest: 'auto'
               tag-suffix: '-gpu-vulkan'
               runs-on: 'ubuntu-latest'
-              base-image: "ubuntu:24.04"
+              base-image: "ubuntu:26.04"
               skip-drivers: 'false'
               makeflags: "--jobs=4 --output-sync=target"
-              ubuntu-version: '2404'
+              ubuntu-version: '2604'
               ubuntu-codename: 'noble'
             - build-type: 'vulkan'
               platforms: 'linux/arm64'
@@ -135,10 +135,10 @@
               tag-latest: 'auto'
               tag-suffix: '-gpu-vulkan'
               runs-on: 'ubuntu-24.04-arm'
-              base-image: "ubuntu:24.04"
+              base-image: "ubuntu:26.04"
               skip-drivers: 'false'
               makeflags: "--jobs=4 --output-sync=target"
-              ubuntu-version: '2404'
+              ubuntu-version: '2604'
               ubuntu-codename: 'noble'
             - build-type: 'intel'
               platforms: 'linux/amd64'
@@ -147,7 +147,7 @@
               tag-suffix: '-gpu-intel'
               runs-on: 'ubuntu-latest'
               makeflags: "--jobs=3 --output-sync=target"
-              ubuntu-version: '2404'
+              ubuntu-version: '2604'
               ubuntu-codename: 'noble'
 
     core-image-merge:
@@ -306,10 +306,10 @@
               platforms: 'linux/arm64'
               tag-latest: 'auto'
               tag-suffix: '-nvidia-l4t-arm64-cuda-13'
-              base-image: "ubuntu:24.04"
+              base-image: "ubuntu:26.04"
               runs-on: 'ubuntu-24.04-arm'
               makeflags: "--jobs=4 --output-sync=target"
               skip-drivers: 'false'
-              ubuntu-version: '2404'
+              ubuntu-version: '2604'
               ubuntu-codename: 'noble'
   

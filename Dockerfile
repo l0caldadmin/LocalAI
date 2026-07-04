@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=ubuntu:24.04
+ARG BASE_IMAGE=ubuntu:26.04
 ARG INTEL_BASE_IMAGE=${BASE_IMAGE}
 ARG UBUNTU_CODENAME=noble
 # Optional alternate Ubuntu apt mirror(s). Empty = use upstream.
@@ -31,7 +31,7 @@ ARG SKIP_DRIVERS=false
 ARG TARGETARCH
 ARG TARGETVARIANT
 ENV BUILD_TYPE=${BUILD_TYPE}
-ARG UBUNTU_VERSION=2404
+ARG UBUNTU_VERSION=2604
 
 RUN mkdir -p /run/localai
 RUN echo "default" > /run/localai/capability
@@ -220,7 +220,7 @@ RUN if [ "${CMAKE_FROM_SOURCE}" = "true" ]; then \
 
 # Install Go
 RUN curl -L -s https://go.dev/dl/go${GO_VERSION}.linux-${TARGETARCH}.tar.gz | tar -C /usr/local -xz
-ENV PATH=$PATH:/root/go/bin:/usr/local/go/bin
+ENV PATH=/root/go/bin:/usr/local/go/bin:$PATH
 
 # Install grpc compilers
 RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.34.2 && \
