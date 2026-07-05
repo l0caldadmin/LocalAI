@@ -33,11 +33,23 @@ func ListModelCapabilitiesEndpoint(bcl *config.ModelConfigLoader, ml *model.Mode
 
 		dataModels := []schema.ModelCapabilities{}
 		for _, m := range modelNames {
-			entry := schema.ModelCapabilities{ID: m, Object: "model"}
+			entry := schema.ModelCapabilities{
+				ID:              m,
+				Object:          "model",
+				Capabilities:    []string{},
+				InputModalities: []string{},
+				OutputModalities: []string{},
+			}
 			if cfg, ok := bcl.GetModelConfig(m); ok {
-				entry.Capabilities = cfg.Capabilities()
-				entry.InputModalities = cfg.InputModalities()
-				entry.OutputModalities = cfg.OutputModalities()
+				if caps := cfg.Capabilities(); caps != nil {
+					entry.Capabilities = caps
+				}
+				if in := cfg.InputModalities(); in != nil {
+					entry.InputModalities = in
+				}
+				if out := cfg.OutputModalities(); out != nil {
+					entry.OutputModalities = out
+				}
 			}
 			dataModels = append(dataModels, entry)
 		}
