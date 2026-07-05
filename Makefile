@@ -79,10 +79,11 @@ COVERAGE_DIR?=$(abspath ./coverage)
 COVERAGE_PROFILE?=$(COVERAGE_DIR)/coverage.out
 COVERAGE_BASELINE?=coverage-baseline.txt
 ## Coverage is collected one recursive root at a time and merged (see
-## scripts/run-coverage.sh): passing several recursive roots to a single
-## ginkgo invocation only keeps one root's coverprofile. Mirrors TEST_PATHS
-## minus ./api (which doesn't exist).
-COVERAGE_ROOTS?=./pkg ./core
+## scripts/run-coverage.sh). Must mirror COVERAGE_COVERPKG — running ./pkg
+## recursively would invoke test suites for grpc/, downloader/, httpclient/ etc
+## which produce "[no statements]" (exit 2) against the narrowed coverpkg
+## because none of those packages are in the measurement scope.
+COVERAGE_ROOTS?=./pkg/functions ./pkg/reasoning ./pkg/sanitize ./pkg/utils ./pkg/radixtree ./pkg/audio ./pkg/sound ./pkg/model ./pkg/concurrency ./pkg/xsync ./pkg/xio ./pkg/clusterrouting ./core
 ## Build tags for the coverage build. `auth` is required to compile the real
 ## auth implementation and its ~150 `//go:build auth` tests (otherwise they're
 ## invisible and the gate scores auth against a stub). `debug` matches `test`.

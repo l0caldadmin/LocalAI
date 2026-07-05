@@ -64,6 +64,14 @@ for root in $unit_roots; do
 	base="$(profile_name "$root")"
 	go run github.com/onsi/ginkgo/v2/ginkgo --flake-attempts "$flakes" -v -r "$@" \
 		--cover --covermode=atomic --coverprofile="$base" --output-dir="$out_dir" "$root" || fail=1
+	# If a root produced a profile with no measurable statements (e.g. a package
+	# that exists in the test tree but not in COVERAGE_COVERPKG), drop it so the
+	# merge step doesn't receive an empty profile and exit 2.
+	profile_path="$out_dir/$base"
+	if [ -f "$profile_path" ] && ! grep -qv '^mode:' "$profile_path" 2>/dev/null; then
+		echo "run-coverage: $root produced no statements, skipping profile"
+		rm -f "$profile_path"
+	fi
 done
 
 # In-process integration roots: NON-recursive + optional label filter.
