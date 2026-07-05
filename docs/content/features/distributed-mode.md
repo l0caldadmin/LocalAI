@@ -364,13 +364,16 @@ Agent workers:
 - Handle MCP tool discovery and execution requests from the frontend
 - Get auto-provisioned API keys during registration for calling the inference API
 
-In the docker-compose setup, the agent worker mounts the Docker socket so it can run MCP stdio servers (e.g., `docker run` commands):
+> [!CAUTION]
+> Mounting the host's `/var/run/docker.sock` exposes the host machine's Docker daemon. Since the agent worker container runs as a privileged user by default, any tool executions (like code execution or tool scripts triggered by the LLM) can interact with this socket to spin up privileged containers and completely compromise the host system. **Do not mount the host Docker socket in production or untrusted environments.**
+
+In the docker-compose setup, the agent worker can optionally mount the Docker socket if you explicitly accept the security risks and require running Docker-packaged stdio MCP servers:
 
 ```yaml
 agent-worker-1:
   command: agent-worker
-  volumes:
-    - /var/run/docker.sock:/var/run/docker.sock
+  # volumes:
+  #   - /var/run/docker.sock:/var/run/docker.sock
 ```
 
 ## MCP in Distributed Mode

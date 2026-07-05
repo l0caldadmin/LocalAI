@@ -384,18 +384,24 @@ ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
 ENV NVIDIA_REQUIRE_CUDA="cuda>=${CUDA_MAJOR_VERSION}.0"
 ENV NVIDIA_VISIBLE_DEVICES=all
 
+# Create a localai user and group, add to video and render groups for GPU access
+RUN groupadd -g 1000 localai && \
+    useradd -u 1000 -g localai -m -s /bin/bash localai && \
+    usermod -aG video,render localai
+
 WORKDIR /
 
-COPY ./entrypoint.sh .
+# Make sure key directories exist and are owned by localai
+RUN mkdir -p /models /backends /data /configuration /run/localai && \
+    chown -R localai:localai /models /backends /data /configuration /run/localai
+
+COPY --chown=localai:localai ./entrypoint.sh .
 
 # Copy the binary
-COPY --from=builder /build/local-ai ./
+COPY --chown=localai:localai --from=builder /build/local-ai ./
 # Copy the opus shim if it was built
 RUN --mount=from=builder,src=/build/,dst=/mnt/build \
-    if [ -f /mnt/build/libopusshim.so ]; then cp /mnt/build/libopusshim.so ./; fi
-
-# Make sure the models directory exists
-RUN mkdir -p /models /backends /data
+    if [ -f /mnt/build/libopusshim.so ]; then cp /mnt/build/libopusshim.so ./ && chown localai:localai ./libopusshim.so; fi
 
 # Define the health check command
 HEALTHCHECK --interval=1m --timeout=10m --retries=10 \
@@ -403,4 +409,5 @@ HEALTHCHECK --interval=1m --timeout=10m --retries=10 \
 
 VOLUME /models /backends /configuration /data
 EXPOSE 8080
+USER localai
 ENTRYPOINT [ "/entrypoint.sh" ]

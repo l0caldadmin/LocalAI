@@ -13,13 +13,44 @@ func ExistsInPath(path string, s string) bool {
 }
 
 func InTrustedRoot(path string, trustedRoot string) error {
-	for path != "/" {
-		path = filepath.Dir(path)
-		if path == trustedRoot {
-			return nil
+	absBase, err := filepath.Abs(trustedRoot)
+	if err != nil {
+		return fmt.Errorf("resolving base dir: %w", err)
+	}
+	realBase, err := filepath.EvalSymlinks(absBase)
+	if err != nil {
+		return fmt.Errorf("resolving base dir symlinks: %w", err)
+	}
+
+	absTarget, err := filepath.Abs(path)
+	if err != nil {
+		return fmt.Errorf("resolving target path: %w", err)
+	}
+	realTarget, err := filepath.EvalSymlinks(absTarget)
+	if err != nil {
+		// File may not exist yet, walk up to first existing ancestor
+		remaining := filepath.Base(absTarget)
+		dir := filepath.Dir(absTarget)
+		for {
+			resolved, resolveErr := filepath.EvalSymlinks(dir)
+			if resolveErr == nil {
+				realTarget = filepath.Join(resolved, remaining)
+				break
+			}
+			remaining = filepath.Join(filepath.Base(dir), remaining)
+			parent := filepath.Dir(dir)
+			if parent == dir {
+				realTarget = filepath.Clean(absTarget)
+				break
+			}
+			dir = parent
 		}
 	}
-	return fmt.Errorf("path is outside of trusted root")
+
+	if !strings.HasPrefix(realTarget, realBase+string(filepath.Separator)) && realTarget != realBase {
+		return fmt.Errorf("path %q is outside allowed directory", path)
+	}
+	return nil
 }
 
 // VerifyPath verifies that path is based in basePath.

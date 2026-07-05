@@ -128,15 +128,17 @@ func (bcl *ModelConfigLoader) LoadModelConfigFileByName(modelName, modelPath str
 	} else {
 		// Try loading a model config file
 		modelConfig := filepath.Join(modelPath, modelName+".yaml")
-		if _, err := os.Stat(modelConfig); err == nil {
-			if err := bcl.ReadModelConfig(
-				modelConfig, opts...,
-			); err != nil {
-				return nil, fmt.Errorf("failed loading model config (%s) %s", modelConfig, err.Error())
-			}
-			cfgExisting, exists = bcl.GetModelConfig(modelName)
-			if exists {
-				cfg = &cfgExisting
+		if err := utils.InTrustedRoot(modelConfig, modelPath); err == nil {
+			if _, err := os.Stat(modelConfig); err == nil {
+				if err := bcl.ReadModelConfig(
+					modelConfig, opts...,
+				); err != nil {
+					return nil, fmt.Errorf("failed loading model config (%s) %s", modelConfig, err.Error())
+				}
+				cfgExisting, exists = bcl.GetModelConfig(modelName)
+				if exists {
+					cfg = &cfgExisting
+				}
 			}
 		}
 	}

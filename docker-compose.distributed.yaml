@@ -210,8 +210,11 @@ services:
       LOCALAI_NODE_NAME: "agent-worker-1"
       LOCALAI_REGISTRATION_TOKEN: "changeme"  # Must match frontend token
       GODEBUG: "netdns=go"  # See note in localai service
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+    # WARNING: Mounting the host's Docker socket grants full root access to the
+    # host machine. If you enable this, ensure the container environment is fully trusted
+    # and not exposed to untrusted user input or external networks.
+    # volumes:
+    #   - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
       localai:
         condition: service_started
