@@ -560,10 +560,10 @@ jobs:
         with:
           go-version: '1.25.4'
       - name: Pull pre-built llama-cpp backend image
-        run: docker pull quay.io/go-skynet/local-ai-backends:master-cpu-llama-cpp
+        run: docker pull docker.io/localdadm1n/local-ai-backends:master-cpu-llama-cpp
       - name: Run e2e-backends smoke
         env:
-          BACKEND_IMAGE: quay.io/go-skynet/local-ai-backends:master-cpu-llama-cpp
+          BACKEND_IMAGE: docker.io/localdadm1n/local-ai-backends:master-cpu-llama-cpp
           BACKEND_TEST_CAPS: health,load,predict,stream,logprobs,logit_bias,tokenize
         run: |
           make test-extra-backend

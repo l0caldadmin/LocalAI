@@ -37,9 +37,9 @@ on:
         required: false
       dockerPassword:
         required: false
-      quayUsername:
+      dockerUsername:
         required: true
-      quayPassword:
+      dockerPassword:
         required: true
 
 jobs:
@@ -298,7 +298,7 @@ jobs:
 
       - name: Log in to quay.io
         run: |
-          echo "${{ secrets.quayPassword }}" | crane auth login quay.io -u "${{ secrets.quayUsername }}" --password-stdin
+          echo "${{ secrets.dockerPassword }}" | crane auth login quay.io -u "${{ secrets.dockerUsername }}" --password-stdin
 
       - name: Docker meta
         id: meta
@@ -319,7 +319,7 @@ jobs:
         uses: docker/metadata-action@v6
         with:
           images: |
-            quay.io/go-skynet/local-ai-backends
+            docker.io/localdadm1n/local-ai-backends
           tags: |
             type=ref,event=branch
             type=semver,pattern={{raw}}

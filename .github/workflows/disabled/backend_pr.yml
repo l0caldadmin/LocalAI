@@ -65,8 +65,8 @@ jobs:
       ubuntu-version: ${{ matrix.ubuntu-version }}
       amdgpu-targets: ${{ matrix.amdgpu-targets || 'gfx908,gfx90a,gfx942,gfx950,gfx1030,gfx1100,gfx1101,gfx1102,gfx1151,gfx1200,gfx1201' }}
     secrets:
-      quayUsername: ${{ secrets.LOCALAI_REGISTRY_USERNAME }}
-      quayPassword: ${{ secrets.LOCALAI_REGISTRY_PASSWORD }}
+      dockerUsername: ${{ secrets.DOCKER_USERNAME }}
+      dockerPassword: ${{ secrets.DOCKER_PASSWORD }}
     strategy:
       fail-fast: true
       max-parallel: 8
@@ -93,8 +93,8 @@ jobs:
       ubuntu-version: ${{ matrix.ubuntu-version }}
       amdgpu-targets: ${{ matrix.amdgpu-targets || 'gfx908,gfx90a,gfx942,gfx950,gfx1030,gfx1100,gfx1101,gfx1102,gfx1151,gfx1200,gfx1201' }}
     secrets:
-      quayUsername: ${{ secrets.LOCALAI_REGISTRY_USERNAME }}
-      quayPassword: ${{ secrets.LOCALAI_REGISTRY_PASSWORD }}
+      dockerUsername: ${{ secrets.DOCKER_USERNAME }}
+      dockerPassword: ${{ secrets.DOCKER_PASSWORD }}
     strategy:
       fail-fast: true
       max-parallel: 8
@@ -112,8 +112,8 @@ jobs:
       tag-latest: ${{ matrix.tag-latest }}
       tag-suffix: ${{ matrix.tag-suffix }}
     secrets:
-      quayUsername: ${{ secrets.LOCALAI_REGISTRY_USERNAME }}
-      quayPassword: ${{ secrets.LOCALAI_REGISTRY_PASSWORD }}
+      dockerUsername: ${{ secrets.DOCKER_USERNAME }}
+      dockerPassword: ${{ secrets.DOCKER_PASSWORD }}
     strategy:
       fail-fast: false
       matrix: ${{ fromJson(needs.generate-matrix.outputs['merge-matrix-multiarch']) }}
@@ -126,8 +126,8 @@ jobs:
       tag-latest: ${{ matrix.tag-latest }}
       tag-suffix: ${{ matrix.tag-suffix }}
     secrets:
-      quayUsername: ${{ secrets.LOCALAI_REGISTRY_USERNAME }}
-      quayPassword: ${{ secrets.LOCALAI_REGISTRY_PASSWORD }}
+      dockerUsername: ${{ secrets.DOCKER_USERNAME }}
+      dockerPassword: ${{ secrets.DOCKER_PASSWORD }}
     strategy:
       fail-fast: false
       matrix: ${{ fromJson(needs.generate-matrix.outputs['merge-matrix-singlearch']) }}
@@ -144,8 +144,8 @@ jobs:
       use-pip: ${{ matrix.backend == 'diffusers' }}
       runs-on: "macos-latest"
     secrets:
-      quayUsername: ${{ secrets.LOCALAI_REGISTRY_USERNAME }}
-      quayPassword: ${{ secrets.LOCALAI_REGISTRY_PASSWORD }}
+      dockerUsername: ${{ secrets.DOCKER_USERNAME }}
+      dockerPassword: ${{ secrets.DOCKER_PASSWORD }}
     strategy:
       fail-fast: true
       matrix: ${{ fromJson(needs.generate-matrix.outputs.matrix-darwin) }}

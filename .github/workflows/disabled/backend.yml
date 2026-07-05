@@ -97,8 +97,8 @@ jobs:
     secrets:
       dockerUsername: ${{ secrets.DOCKERHUB_USERNAME }}
       dockerPassword: ${{ secrets.DOCKERHUB_PASSWORD }}
-      quayUsername: ${{ secrets.LOCALAI_REGISTRY_USERNAME }}
-      quayPassword: ${{ secrets.LOCALAI_REGISTRY_PASSWORD }}
+      dockerUsername: ${{ secrets.DOCKER_USERNAME }}
+      dockerPassword: ${{ secrets.DOCKER_PASSWORD }}
     strategy:
       fail-fast: false
       max-parallel: 8
@@ -133,8 +133,8 @@ jobs:
     secrets:
       dockerUsername: ${{ secrets.DOCKERHUB_USERNAME }}
       dockerPassword: ${{ secrets.DOCKERHUB_PASSWORD }}
-      quayUsername: ${{ secrets.LOCALAI_REGISTRY_USERNAME }}
-      quayPassword: ${{ secrets.LOCALAI_REGISTRY_PASSWORD }}
+      dockerUsername: ${{ secrets.DOCKER_USERNAME }}
+      dockerPassword: ${{ secrets.DOCKER_PASSWORD }}
     strategy:
       fail-fast: false
       max-parallel: 8
@@ -168,8 +168,8 @@ jobs:
     secrets:
       dockerUsername: ${{ secrets.DOCKERHUB_USERNAME }}
       dockerPassword: ${{ secrets.DOCKERHUB_PASSWORD }}
-      quayUsername: ${{ secrets.LOCALAI_REGISTRY_USERNAME }}
-      quayPassword: ${{ secrets.LOCALAI_REGISTRY_PASSWORD }}
+      dockerUsername: ${{ secrets.DOCKER_USERNAME }}
+      dockerPassword: ${{ secrets.DOCKER_PASSWORD }}
     strategy:
       fail-fast: false
       matrix: ${{ fromJson(needs.generate-matrix.outputs['merge-matrix-multiarch']) }}
@@ -185,8 +185,8 @@ jobs:
     secrets:
       dockerUsername: ${{ secrets.DOCKERHUB_USERNAME }}
       dockerPassword: ${{ secrets.DOCKERHUB_PASSWORD }}
-      quayUsername: ${{ secrets.LOCALAI_REGISTRY_USERNAME }}
-      quayPassword: ${{ secrets.LOCALAI_REGISTRY_PASSWORD }}
+      dockerUsername: ${{ secrets.DOCKER_USERNAME }}
+      dockerPassword: ${{ secrets.DOCKER_PASSWORD }}
     strategy:
       fail-fast: false
       matrix: ${{ fromJson(needs.generate-matrix.outputs['merge-matrix-singlearch']) }}
@@ -206,8 +206,8 @@ jobs:
     secrets:
       dockerUsername: ${{ secrets.DOCKERHUB_USERNAME }}
       dockerPassword: ${{ secrets.DOCKERHUB_PASSWORD }}
-      quayUsername: ${{ secrets.LOCALAI_REGISTRY_USERNAME }}
-      quayPassword: ${{ secrets.LOCALAI_REGISTRY_PASSWORD }}
+      dockerUsername: ${{ secrets.DOCKER_USERNAME }}
+      dockerPassword: ${{ secrets.DOCKER_PASSWORD }}
     strategy:
       fail-fast: false
       matrix: ${{ fromJson(needs.generate-matrix.outputs.matrix-darwin) }}

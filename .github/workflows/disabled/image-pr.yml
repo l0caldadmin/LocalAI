@@ -26,8 +26,8 @@
       secrets:
         dockerUsername: ${{ secrets.DOCKERHUB_USERNAME }}
         dockerPassword: ${{ secrets.DOCKERHUB_PASSWORD }}
-        quayUsername: ${{ secrets.LOCALAI_REGISTRY_USERNAME }}
-        quayPassword: ${{ secrets.LOCALAI_REGISTRY_PASSWORD }}
+        dockerUsername: ${{ secrets.DOCKER_USERNAME }}
+        dockerPassword: ${{ secrets.DOCKER_PASSWORD }}
       strategy:
         # Pushing with all jobs in parallel
         # eats the bandwidth of all the nodes

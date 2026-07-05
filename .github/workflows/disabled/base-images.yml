@@ -17,7 +17,7 @@ name: 'build base-grpc images'
 # Bootstrap (one-time after this PR merges):
 #   gh workflow run base-images.yml --ref master
 # Wait ~30 min for all 9 matrix variants to push to
-# quay.io/go-skynet/ci-cache:base-grpc-* before merging PR 2.
+# docker.io/localdadm1n/ci-cache:base-grpc-* before merging PR 2.
 
 on:
   schedule:
@@ -140,9 +140,9 @@ jobs:
       - uses: docker/setup-buildx-action@master
       - uses: docker/login-action@v4
         with:
-          registry: quay.io
-          username: ${{ secrets.LOCALAI_REGISTRY_USERNAME }}
-          password: ${{ secrets.LOCALAI_REGISTRY_PASSWORD }}
+          registry: docker.io
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
       - uses: docker/build-push-action@v7
         with:
           context: .
@@ -154,8 +154,8 @@ jobs:
             CUDA_MINOR_VERSION=${{ matrix.cuda-minor-version }}
             UBUNTU_VERSION=${{ matrix.ubuntu-version }}
             SKIP_DRIVERS=${{ matrix.skip-drivers || 'false' }}
-          cache-from: type=registry,ref=quay.io/go-skynet/ci-cache:cache-${{ matrix.tag }}
-          cache-to: type=registry,ref=quay.io/go-skynet/ci-cache:cache-${{ matrix.tag }},mode=max,ignore-error=true
+          cache-from: type=registry,ref=docker.io/localdadm1n/ci-cache:cache-${{ matrix.tag }}
+          cache-to: type=registry,ref=docker.io/localdadm1n/ci-cache:cache-${{ matrix.tag }},mode=max,ignore-error=true
           provenance: false
-          tags: quay.io/go-skynet/ci-cache:${{ matrix.tag }}
+          tags: docker.io/localdadm1n/ci-cache:${{ matrix.tag }}
           push: true
