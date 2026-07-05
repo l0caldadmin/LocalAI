@@ -55,6 +55,10 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
+    // Raise the warning threshold to 1 MB — the app legitimately bundles
+    // several rich vendor libraries and the default 500 kB limit fires on
+    // almost every production build. Real perf work is tracked separately.
+    chunkSizeWarningLimit: 1000,
     // Source maps are needed only to map V8 coverage back to original sources.
     sourcemap: coverageV8,
     rollupOptions: {
