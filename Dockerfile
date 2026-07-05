@@ -397,6 +397,9 @@ RUN if getent group 1000 >/dev/null; then \
     else \
         useradd -u 1000 -g localai -m -s /bin/bash localai; \
     fi && \
+    # Ensure video and render groups exist (they are used for GPU pass-through)
+    getent group video >/dev/null || groupadd video && \
+    getent group render >/dev/null || groupadd render && \
     usermod -aG video,render localai
 
 WORKDIR /
