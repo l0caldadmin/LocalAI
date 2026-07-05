@@ -712,7 +712,15 @@
   license: apache-2.0
   urls:
     - https://github.com/vllm-project/vllm
+- &axolotl
+  capabilities:
+    text: true
+    training: true
+  description: Axolotl fine-tuning backend
+  name: axolotl
   tags:
+    - fine-tuning
+tags:
     - text-to-text
     - multimodal
     - GPTQ
@@ -5902,3 +5910,8 @@
   uri: "quay.io/go-skynet/local-ai-backends:master-metal-darwin-arm64-supertonic"
   mirrors:
     - localai/localai-backends:master-metal-darwin-arm64-supertonic
+- <<: *axolotl
+  uri: quay.io/go-skynet/local-ai-backends:master-cpu-axolotl
+- <<: *axolotl
+  name: axolotl-development
+  uri: quay.io/go-skynet/local-ai-backends:master-cpu-axolotl

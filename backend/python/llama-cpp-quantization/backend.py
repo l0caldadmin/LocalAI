@@ -154,7 +154,12 @@ class BackendServicer(backend_pb2_grpc.BackendServicer):
             )
 
         except Exception as e:
-            self._send_progress(job, "failed", f"Quantization failed: {str(e)}")
+            import traceback
+            tb = traceback.format_exc()
+            traceback.print_exc()
+            self._send_progress(job, "failed", f"Quantization failed: {e}\n\nTraceback:\n{tb}")
+        finally:
+            job.progress_queue.put(None)
 
     def _resolve_model(self, job, model, output_dir, extra_options):
         """Download model from HuggingFace or return local path."""

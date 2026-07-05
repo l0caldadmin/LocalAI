@@ -495,10 +495,16 @@ class BackendServicer(backend_pb2_grpc.BackendServicer):
 
             max_length = int(extra.get("max_seq_length", "512"))
             packing = extra.get("packing", "false").lower() == "true"
+            dataset_text_field = extra.get("dataset_text_field")
+
+            sft_kwargs = {}
+            if dataset_text_field:
+                sft_kwargs["dataset_text_field"] = dataset_text_field
 
             training_args = SFTConfig(
                 max_length=max_length,
                 packing=packing,
+                **sft_kwargs,
                 **_common_args,
             )
 
@@ -661,17 +667,31 @@ class BackendServicer(backend_pb2_grpc.BackendServicer):
             job_id=job.job_id, status="training", message="Training started",
         ))
 
-        resume_ckpt = request.resume_from_checkpoint if request.resume_from_checkpoint else None
-        trainer.train(resume_from_checkpoint=resume_ckpt)
+        try:
+            resume_ckpt = request.resume_from_checkpoint if request.resume_from_checkpoint else None
+            trainer.train(resume_from_checkpoint=resume_ckpt)
 
-        # Save final model
-        trainer.save_model(output_dir)
-        if tokenizer:
-            tokenizer.save_pretrained(output_dir)
+            # Save final model
+            trainer.save_model(output_dir)
+            if tokenizer:
+                tokenizer.save_pretrained(output_dir)
 
-        job.completed = True
-        # Sentinel to signal stream end
-        job.put_progress(None)
+            job.completed = True
+            job.put_progress(backend_pb2.FineTuneProgressUpdate(
+                job_id=job.job_id, status="completed", message="Training completed",
+                progress_percent=100.0,
+            ))
+        except Exception as exc:
+            import traceback
+            tb = traceback.format_exc()
+            traceback.print_exc()
+            job.completed = True
+            job.put_progress(backend_pb2.FineTuneProgressUpdate(
+                job_id=job.job_id, status="failed", message=f"Training failed: {exc}\n\nTraceback:\n{tb}",
+            ))
+        finally:
+            # Sentinel to signal stream end
+            job.put_progress(None)
 
     def FineTuneProgress(self, request, context):
         if self.active_job is None or self.active_job.job_id != request.job_id:

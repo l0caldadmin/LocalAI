@@ -1,5 +1,5 @@
 # Disable parallel execution for backend builds
-.NOTPARALLEL: backends/diffusers backends/llama-cpp backends/turboquant backends/outetts backends/piper backends/stablediffusion-ggml backends/whisper backends/crispasr backends/parakeet-cpp backends/faster-whisper backends/silero-vad backends/local-store backends/huggingface backends/rfdetr backends/rfdetr-cpp backends/insightface backends/speaker-recognition backends/kitten-tts backends/kokoro backends/chatterbox backends/llama-cpp-darwin backends/neutts build-darwin-python-backend build-darwin-go-backend backends/mlx backends/diffuser-darwin backends/mlx-vlm backends/mlx-audio backends/mlx-distributed backends/stablediffusion-ggml-darwin backends/vllm backends/vllm-omni backends/sglang backends/moonshine backends/pocket-tts backends/qwen-tts backends/faster-qwen3-tts backends/qwen-asr backends/nemo backends/voxcpm backends/whisperx backends/ace-step backends/acestep-cpp backends/fish-speech backends/voxtral backends/opus backends/trl backends/llama-cpp-quantization backends/kokoros backends/sam3-cpp backends/qwen3-tts-cpp backends/omnivoice-cpp backends/vibevoice-cpp backends/localvqe backends/tinygrad backends/sherpa-onnx backends/ds4 backends/ds4-darwin backends/liquid-audio backends/supertonic backends/depth-anything-cpp backends/privacy-filter backends/privacy-filter-darwin
+.NOTPARALLEL: backends/diffusers backends/llama-cpp backends/turboquant backends/outetts backends/piper backends/stablediffusion-ggml backends/whisper backends/crispasr backends/parakeet-cpp backends/faster-whisper backends/silero-vad backends/local-store backends/huggingface backends/rfdetr backends/rfdetr-cpp backends/insightface backends/speaker-recognition backends/kitten-tts backends/kokoro backends/chatterbox backends/llama-cpp-darwin backends/neutts build-darwin-python-backend build-darwin-go-backend backends/mlx backends/diffuser-darwin backends/mlx-vlm backends/mlx-audio backends/mlx-distributed backends/stablediffusion-ggml-darwin backends/vllm backends/vllm-omni backends/sglang backends/moonshine backends/pocket-tts backends/qwen-tts backends/faster-qwen3-tts backends/qwen-asr backends/nemo backends/voxcpm backends/whisperx backends/ace-step backends/acestep-cpp backends/fish-speech backends/voxtral backends/opus backends/trl backends/llama-cpp-quantization backends/kokoros backends/sam3-cpp backends/qwen3-tts-cpp backends/omnivoice-cpp backends/vibevoice-cpp backends/localvqe backends/tinygrad backends/sherpa-onnx backends/ds4 backends/ds4-darwin backends/liquid-audio backends/supertonic backends/depth-anything-cpp backends/privacy-filter backends/privacy-filter-darwin backends/axolotl
 
 GOCMD=go
 GOTEST=$(GOCMD) test
@@ -580,6 +580,7 @@ prepare-test-extra: protogen-python
 	$(MAKE) -C backend/python/whisperx
 	$(MAKE) -C backend/python/ace-step
 	$(MAKE) -C backend/python/trl
+	$(MAKE) -C backend/python/axolotl
 	$(MAKE) -C backend/python/tinygrad
 	$(MAKE) -C backend/python/insightface
 	$(MAKE) -C backend/python/speaker-recognition
@@ -608,6 +609,7 @@ test-extra: prepare-test-extra
 	$(MAKE) -C backend/python/whisperx test
 	$(MAKE) -C backend/python/ace-step test
 	$(MAKE) -C backend/python/trl test
+	$(MAKE) -C backend/python/axolotl test
 	$(MAKE) -C backend/python/tinygrad test
 	$(MAKE) -C backend/python/insightface test
 	$(MAKE) -C backend/python/speaker-recognition test
@@ -1256,6 +1258,7 @@ BACKEND_MLX = mlx|python|.|false|true
 BACKEND_MLX_VLM = mlx-vlm|python|.|false|true
 BACKEND_MLX_DISTRIBUTED = mlx-distributed|python|./|false|true
 BACKEND_TRL = trl|python|.|false|true
+BACKEND_AXOLOTL = axolotl|python|.|false|true
 BACKEND_LLAMA_CPP_QUANTIZATION = llama-cpp-quantization|python|.|false|true
 BACKEND_TINYGRAD = tinygrad|python|.|false|true
 

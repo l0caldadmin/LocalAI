@@ -739,6 +739,11 @@ export default function FineTune() {
   // liquid-audio specific knobs (folded into extra_options on submit)
   const [liquidAudioVoice, setLiquidAudioVoice] = useState('')
   const [liquidAudioValDataset, setLiquidAudioValDataset] = useState('')
+  
+  // axolotl specific knobs
+  const [axolotlFlashAttention, setAxolotlFlashAttention] = useState(false)
+  const [axolotlSamplePacking, setAxolotlSamplePacking] = useState(true)
+  const [axolotlDatasetType, setAxolotlDatasetType] = useState('alpaca')
   const [hfToken, setHfToken] = useState('')
   const [showAdvanced, setShowAdvanced] = useState(false)
   const [resumeFromCheckpoint, setResumeFromCheckpoint] = useState('')
@@ -813,6 +818,11 @@ export default function FineTune() {
       if (backend === 'liquid-audio') {
         if (liquidAudioVoice) extra.voice = liquidAudioVoice
         if (liquidAudioValDataset.trim()) extra.val_dataset = liquidAudioValDataset.trim()
+      }
+      if (backend === 'axolotl') {
+        extra.flash_attention = axolotlFlashAttention
+        extra.sample_packing = axolotlSamplePacking
+        if (axolotlDatasetType) extra.dataset_type = axolotlDatasetType
       }
 
       const isAdapter = ['lora', 'loha', 'lokr'].includes(trainingType)
@@ -890,6 +900,11 @@ export default function FineTune() {
     if (backend === 'liquid-audio') {
       if (liquidAudioVoice) extra.voice = liquidAudioVoice
       if (liquidAudioValDataset.trim()) extra.val_dataset = liquidAudioValDataset.trim()
+    }
+    if (backend === 'axolotl') {
+      extra.flash_attention = axolotlFlashAttention
+      extra.sample_packing = axolotlSamplePacking
+      if (axolotlDatasetType) extra.dataset_type = axolotlDatasetType
     }
     return {
       model,
@@ -989,10 +1004,15 @@ export default function FineTune() {
     if (config.extra_options?.voice != null) setLiquidAudioVoice(String(config.extra_options.voice))
     if (config.extra_options?.val_dataset != null) setLiquidAudioValDataset(String(config.extra_options.val_dataset))
 
+    // Restore axolotl specific extras
+    if (config.extra_options?.flash_attention != null) setAxolotlFlashAttention(Boolean(config.extra_options.flash_attention === 'true' || config.extra_options.flash_attention === true))
+    if (config.extra_options?.sample_packing != null) setAxolotlSamplePacking(Boolean(config.extra_options.sample_packing === 'true' || config.extra_options.sample_packing === true))
+    if (config.extra_options?.dataset_type != null) setAxolotlDatasetType(String(config.extra_options.dataset_type))
+
     // Convert extra_options object to [{key, value}] entries, filtering out handled keys
     if (config.extra_options && typeof config.extra_options === 'object') {
       const entries = Object.entries(config.extra_options)
-        .filter(([k]) => !['max_seq_length', 'save_total_limit', 'hf_token', 'eval_strategy', 'eval_steps', 'eval_split', 'eval_dataset_source', 'eval_split_ratio', 'voice', 'val_dataset'].includes(k))
+        .filter(([k]) => !['max_seq_length', 'save_total_limit', 'hf_token', 'eval_strategy', 'eval_steps', 'eval_split', 'eval_dataset_source', 'eval_split_ratio', 'voice', 'val_dataset', 'flash_attention', 'sample_packing', 'dataset_type'].includes(k))
         .map(([key, value]) => ({ key, value: String(value) }))
       setExtraOptions(entries)
     }
@@ -1483,6 +1503,35 @@ export default function FineTune() {
                       <button type="button" className="btn" style={{ padding: 'var(--spacing-xs) var(--spacing-sm)' }} onClick={() => setResumeFromCheckpoint('')}>
                         <i className="fas fa-times" />
                       </button>
+                    </div>
+                  </div>
+                )}
+
+                {backend === 'axolotl' && (
+                  <div style={{ marginBottom: 'var(--spacing-md)' }}>
+                    <label className="form-label">Axolotl</label>
+                    <div style={{ fontSize: '0.8125rem', color: 'var(--color-text-muted)', marginBottom: 'var(--spacing-sm)' }}>
+                      Advanced configuration options for the Axolotl backend.
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 'var(--spacing-sm)' }}>
+                      <div>
+                        <label className="form-label">Dataset Type</label>
+                        <select value={axolotlDatasetType} onChange={e => setAxolotlDatasetType(e.target.value)} className="input">
+                          <option value="alpaca">Alpaca</option>
+                          <option value="sharegpt">ShareGPT</option>
+                          <option value="chatml">ChatML</option>
+                        </select>
+                      </div>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-xs)', justifyContent: 'center' }}>
+                        <label style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-sm)', cursor: 'pointer' }}>
+                          <input type="checkbox" checked={axolotlFlashAttention} onChange={e => setAxolotlFlashAttention(e.target.checked)} />
+                          <span style={{ fontSize: '0.875rem' }}>Flash Attention</span>
+                        </label>
+                        <label style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-sm)', cursor: 'pointer' }}>
+                          <input type="checkbox" checked={axolotlSamplePacking} onChange={e => setAxolotlSamplePacking(e.target.checked)} />
+                          <span style={{ fontSize: '0.875rem' }}>Sample Packing</span>
+                        </label>
+                      </div>
                     </div>
                   </div>
                 )}

@@ -652,10 +652,11 @@ class BackendServicer(backend_pb2_grpc.BackendServicer):
         except Exception as exc:
             job.error = str(exc)
             job.completed = True
+            tb = traceback.format_exc()
             print(f"Training failed: {exc}", file=sys.stderr)
-            print(traceback.format_exc(), file=sys.stderr)
+            print(tb, file=sys.stderr)
             job.put_progress(backend_pb2.FineTuneProgressUpdate(
-                job_id=job.job_id, status="failed", message=str(exc),
+                job_id=job.job_id, status="failed", message=f"Training failed: {exc}\n\nTraceback:\n{tb}",
             ))
         finally:
             job.put_progress(None)

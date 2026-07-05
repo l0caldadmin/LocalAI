@@ -18,6 +18,7 @@ RUN --mount=type=bind,source=.docker/apt-mirror.sh,target=/usr/local/sbin/apt-mi
     apt-get install -y --no-install-recommends \
         ca-certificates curl wget espeak-ng libgomp1 \
         ffmpeg libopenblas0 libopenblas-dev libopus0 sox && \
+    rm -f /usr/bin/pebble && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 

@@ -1,0 +1,4 @@
+grpcio==1.78.1
+protobuf
+certifi
+axolotl @ git+https://github.com/axolotl-ai-cloud/axolotl.git

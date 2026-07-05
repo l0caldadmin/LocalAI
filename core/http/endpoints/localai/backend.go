@@ -31,8 +31,13 @@ var knownPrefOnlyBackends = []schema.KnownBackend{
 	// dedupe away.
 	{Name: "sglang", Modality: "text", AutoDetect: false, Description: "SGLang runtime (preference-only)"},
 	{Name: "tinygrad", Modality: "text", AutoDetect: false, Description: "tinygrad runtime (preference-only)"},
-	{Name: "trl", Modality: "text", AutoDetect: false, Description: "Transformers Reinforcement Learning (preference-only)"},
 	{Name: "mlx-vlm", Modality: "text", AutoDetect: false, Description: "MLX vision-language models (preference-only)"},
+	// Training
+	{Name: "trl", Modality: "training", AutoDetect: false, Description: "Transformers Reinforcement Learning (training)"},
+	{Name: "axolotl", Modality: "training", AutoDetect: false, Description: "Axolotl fine-tuning backend (training)"},
+	{Name: "liquid-audio", Modality: "training", AutoDetect: false, Description: "Liquid Audio (training)"},
+	// Quantization
+	{Name: "llama-cpp-quantization", Modality: "quantization", AutoDetect: false, Description: "llama.cpp quantization backend (preference-only)"},
 	// ASR
 	{Name: "whisperx", Modality: "asr", AutoDetect: false, Description: "WhisperX transcription (preference-only)"},
 	{Name: "crispasr", Modality: "asr", AutoDetect: false, Description: "CrispASR multi-architecture transcription (preference-only)"},
