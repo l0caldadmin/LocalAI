@@ -12,7 +12,7 @@ concurrency:
 
 jobs:
   generate_caches:
-    if: github.repository == 'mudler/LocalAI'
+    if: github.repository == 'l0caldadmin/LocalAI'
     strategy:
       matrix:
         include:

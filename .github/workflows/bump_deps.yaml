@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
 jobs:
   bump-backends:
-    if: github.repository == 'mudler/LocalAI'
+    if: github.repository == 'l0caldadmin/LocalAI'
     strategy:
       fail-fast: false
       matrix:
@@ -133,7 +133,7 @@ jobs:
     # so the cublas13 requirements file pins both a URL segment and a version
     # constraint. bump_deps.sh handles git-sha-in-Makefile only — this job
     # rewrites both values atomically when a new vLLM stable tag ships.
-    if: github.repository == 'mudler/LocalAI'
+    if: github.repository == 'l0caldadmin/LocalAI'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -169,7 +169,7 @@ jobs:
     # (the wheel release) and VLLM_VERSION (the vLLM it builds against); this job
     # tracks vllm-project/vllm-metal and rewrites both atomically. Separate from
     # bump-vllm-wheel because darwin follows vllm-metal, not vllm/vllm latest.
-    if: github.repository == 'mudler/LocalAI'
+    if: github.repository == 'l0caldadmin/LocalAI'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7

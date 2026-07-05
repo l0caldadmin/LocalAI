@@ -1,6 +1,8 @@
-module github.com/mudler/LocalAI
+module github.com/l0caldadmin/LocalAI
 
 go 1.26.0
+
+replace github.com/mudler/LocalAI => ./
 
 require (
 	dario.cat/mergo v1.0.2
@@ -35,6 +37,7 @@ require (
 	github.com/lithammer/fuzzysearch v1.1.8
 	github.com/microcosm-cc/bluemonday v1.0.27
 	github.com/modelcontextprotocol/go-sdk v1.5.0
+	github.com/mudler/LocalAI v0.0.0-00010101000000-000000000000
 	github.com/mudler/cogito v0.10.1-0.20260609212329-bf4010d31047
 	github.com/mudler/edgevpn v0.34.0
 	github.com/mudler/go-processmanager v0.1.1

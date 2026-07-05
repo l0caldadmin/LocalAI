@@ -109,3 +109,4 @@ formal-verification/out/
 
 # Extracted backend binaries for local testing
 bin_extract/
+local-ai-binary

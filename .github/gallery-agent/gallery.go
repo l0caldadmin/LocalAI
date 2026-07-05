@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/mudler/LocalAI/core/gallery/importers"
+	"github.com/l0caldadmin/LocalAI/core/gallery/importers"
 	"sigs.k8s.io/yaml"
 )
 
@@ -128,7 +128,7 @@ func generateYAMLEntry(model ProcessedModel, quantization string) string {
 
 	yamlTemplate := ""
 	yamlTemplate = `- name: "%s"
-  url: "github:mudler/LocalAI/gallery/virtual.yaml@master"
+  url: "github:l0caldadmin/LocalAI/gallery/virtual.yaml@master"
   urls:
     - https://huggingface.co/%s
   description: |

@@ -5,12 +5,12 @@ on:
   workflow_dispatch:
 jobs:
   bump-docs:
-    if: github.repository == 'mudler/LocalAI'
+    if: github.repository == 'l0caldadmin/LocalAI'
     strategy:
       fail-fast: false
       matrix:
         include:
-          - repository: "mudler/LocalAI"
+          - repository: "l0caldadmin/LocalAI"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7

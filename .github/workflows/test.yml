@@ -124,7 +124,7 @@ jobs:
 
   # Fast standalone unit tests for the backends' pure C++ helpers - currently the
   # llama-cpp message reconstruction (backend/cpp/llama-cpp/message_content.h),
-  # which guards the OpenAI chat content normalization (mudler/LocalAI#10524,
+  # which guards the OpenAI chat content normalization (l0caldadmin/LocalAI#10524,
   # #7324, #7528). The runner discovers every *_test.cpp under backend/cpp/, so
   # new pure-C++ unit tests are picked up with no CI changes. These need only the
   # C++ stdlib + nlohmann/json, so they run on every PR without the full

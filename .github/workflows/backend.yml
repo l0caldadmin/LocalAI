@@ -29,7 +29,7 @@ concurrency:
 
 jobs:
   generate-matrix:
-    if: github.repository == 'mudler/LocalAI'
+    if: github.repository == 'l0caldadmin/LocalAI'
     runs-on: ubuntu-latest
     outputs:
       matrix-singlearch: ${{ steps.set-matrix.outputs['matrix-singlearch'] }}

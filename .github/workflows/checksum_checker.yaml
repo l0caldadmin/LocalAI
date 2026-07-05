@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
 jobs:
   checksum_check:
-    if: github.repository == 'mudler/LocalAI'
+    if: github.repository == 'l0caldadmin/LocalAI'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7

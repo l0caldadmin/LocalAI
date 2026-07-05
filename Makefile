@@ -36,8 +36,8 @@ RANDOM := $(shell bash -c 'echo $$RANDOM')
 VERSION?=$(shell git describe --always --tags || echo "dev" )
 # go tool nm ./local-ai | grep Commit
 LD_FLAGS?=-s -w
-override LD_FLAGS += -X "github.com/mudler/LocalAI/internal.Version=$(VERSION)"
-override LD_FLAGS += -X "github.com/mudler/LocalAI/internal.Commit=$(shell git rev-parse HEAD)"
+override LD_FLAGS += -X "github.com/l0caldadmin/LocalAI/internal.Version=$(VERSION)"
+override LD_FLAGS += -X "github.com/l0caldadmin/LocalAI/internal.Commit=$(shell git rev-parse HEAD)"
 
 OPTIONAL_TARGETS?=
 
@@ -90,7 +90,7 @@ COVERAGE_TAGS?=debug auth
 ## Coverage is attributed to these packages via --coverpkg, so the in-process
 ## integration suites (COVERAGE_E2E_ROOTS) credit the core/http handlers they
 ## drive over HTTP — not just their own test package.
-COVERAGE_COVERPKG?=github.com/mudler/LocalAI/core/...,github.com/mudler/LocalAI/pkg/...
+COVERAGE_COVERPKG?=github.com/l0caldadmin/LocalAI/core/...,github.com/l0caldadmin/LocalAI/pkg/...
 ## In-process integration suites folded into coverage. Run non-recursively
 ## (excludes tests/e2e/distributed, which needs containers) with the mock
 ## backend built by prepare-test. real-models specs need a downloaded model,

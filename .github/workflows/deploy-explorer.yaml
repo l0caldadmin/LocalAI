@@ -12,7 +12,7 @@ concurrency:
 
 jobs:
   build-linux:
-    if: github.repository == 'mudler/LocalAI'
+    if: github.repository == 'l0caldadmin/LocalAI'
     runs-on: ubuntu-latest
     steps:
       - name: Clone

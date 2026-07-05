@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   dependabot:
-    if: github.repository == 'mudler/LocalAI' && github.actor == 'dependabot[bot]'
+    if: github.repository == 'l0caldadmin/LocalAI' && github.actor == 'dependabot[bot]'
     runs-on: ubuntu-latest
     steps:
       - name: Dependabot metadata
