@@ -229,8 +229,8 @@ test-coverage: prepare-test
 	COVERAGE_EXCLUDE_RE='$(COVERAGE_EXCLUDE_RE)' \
 	OPUS_SHIM_LIBRARY=$(abspath ./pkg/opus/shim/libopusshim.so) \
 	scripts/run-coverage.sh $(COVERAGE_DIR) $(COVERAGE_PROFILE) $(TEST_FLAKES) $(COVERAGE_ROOTS)
-	@$(GOCMD) tool cover -html=$(COVERAGE_PROFILE) -o $(COVERAGE_DIR)/coverage.html
-	@$(GOCMD) tool cover -func=$(COVERAGE_PROFILE) | tail -n1
+	@$(GOCMD) tool cover -html=$(COVERAGE_PROFILE) -o $(COVERAGE_DIR)/coverage.html || true
+	@$(GOCMD) tool cover -func=$(COVERAGE_PROFILE) | tail -n1 || true
 
 ## Writes the current total coverage to $(COVERAGE_BASELINE). Run this (and
 ## commit the result) whenever a change legitimately raises coverage so the
