@@ -384,9 +384,19 @@ ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
 ENV NVIDIA_REQUIRE_CUDA="cuda>=${CUDA_MAJOR_VERSION}.0"
 ENV NVIDIA_VISIBLE_DEVICES=all
 
-# Create a localai user and group, add to video and render groups for GPU access
-RUN groupadd -g 1000 localai && \
-    useradd -u 1000 -g localai -m -s /bin/bash localai && \
+# Create a localai user and group, robustly handling if UID/GID 1000 already exists (e.g. 'ubuntu' in Ubuntu 24.04+)
+RUN if getent group 1000 >/dev/null; then \
+        EXISTING_GROUP=$(getent group 1000 | cut -d: -f1); \
+        groupmod -n localai "$EXISTING_GROUP"; \
+    else \
+        groupadd -g 1000 localai; \
+    fi && \
+    if getent passwd 1000 >/dev/null; then \
+        EXISTING_USER=$(getent passwd 1000 | cut -d: -f1); \
+        usermod -l localai -d /home/localai -m "$EXISTING_USER"; \
+    else \
+        useradd -u 1000 -g localai -m -s /bin/bash localai; \
+    fi && \
     usermod -aG video,render localai
 
 WORKDIR /
