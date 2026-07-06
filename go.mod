@@ -36,7 +36,6 @@ require (
 	github.com/microcosm-cc/bluemonday v1.0.27
 	github.com/modelcontextprotocol/go-sdk v1.5.0
 	github.com/mudler/cogito v0.10.1-0.20260609212329-bf4010d31047
-	github.com/mudler/edgevpn v0.0.0-00010101000000-000000000000
 	github.com/mudler/go-processmanager v0.1.1
 	github.com/mudler/memory v0.0.0-20260406210934-424c1ecf2cf8
 	github.com/mudler/xlog v0.0.6
@@ -506,6 +505,8 @@ replace github.com/mudler/LocalAI => .
 
 replace github.com/mudler/localrecall => github.com/l0caldadmin/LocalRecall v0.0.0-20260626062721-d5f4a998e01f
 
-replace github.com/mudler/edgevpn => github.com/l0caldadmin/edgevpn v0.0.0-20260705232733-ffe7abe00a44
+require github.com/mudler/edgevpn v0.0.0-20260706024509-2c7fd4e1e9ff
+
+replace github.com/mudler/edgevpn => github.com/l0caldadmin/edgevpn v0.0.0-20260706024509-2c7fd4e1e9ff
 
 replace github.com/mudler/water => github.com/l0caldadmin/water v0.0.0-20260705232006-eb8e8f5343f1
