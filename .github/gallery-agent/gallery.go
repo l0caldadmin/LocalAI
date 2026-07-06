@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/l0caldadmin/LocalAI/core/gallery/importers"
+	"github.com/mudler/LocalAI/core/gallery/importers"
 	"sigs.k8s.io/yaml"
 )
 

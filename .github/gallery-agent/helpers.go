@@ -9,7 +9,7 @@ import (
 	"regexp"
 	"strings"
 
-	hfapi "github.com/l0caldadmin/LocalAI/pkg/huggingface-api"
+	hfapi "github.com/mudler/LocalAI/pkg/huggingface-api"
 	"sigs.k8s.io/yaml"
 )
 

@@ -76,7 +76,7 @@ var modelPageTemplate string = `
     <div class="container mx-auto px-4 py-4">
         <div class="flex items-center justify-between">
             <div class="flex items-center">
-                <a href="/" class="text-white text-xl font-bold"><img src="https://github.com/l0caldadmin/LocalAI/assets/2420543/0966aa2a-166e-4f99-a3e5-6c915fc997dd" alt="LocalAI Logo" class="h-10 mr-3 border-2 border-gray-300 shadow rounded"></a>
+                <a href="/" class="text-white text-xl font-bold"><img src="https://github.com/mudler/LocalAI/assets/2420543/0966aa2a-166e-4f99-a3e5-6c915fc997dd" alt="LocalAI Logo" class="h-10 mr-3 border-2 border-gray-300 shadow rounded"></a>
                 <a href="/" class="text-white text-xl font-bold">LocalAI</a>
             </div>
             <!-- Menu button for small screens -->
