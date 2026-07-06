@@ -20,7 +20,6 @@ from qwen_tts import Qwen3TTSModel
 
 import json
 import hashlib
-import pickle
 
 import grpc
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'common'))
@@ -551,14 +550,14 @@ class BackendServicer(backend_pb2_grpc.BackendServicer):
         if not self.options.get("disk_cache", False):
             return None
 
-        cache_file = f"{ref_audio}.voice_cache.pkl"
+        cache_file = f"{ref_audio}.voice_cache.json"
 
         if not os.path.exists(cache_file):
             return None
 
         try:
-            with open(cache_file, "rb") as f:
-                cached = pickle.load(f)
+            with open(cache_file, "r", encoding="utf-8") as f:
+                cached = json.load(f)
 
             # Validate checksums
             current_audio_hash = self._compute_file_hash(ref_audio)
@@ -597,7 +596,7 @@ class BackendServicer(backend_pb2_grpc.BackendServicer):
         if not self.options.get("disk_cache", False):
             return
 
-        cache_file = f"{ref_audio}.voice_cache.pkl"
+        cache_file = f"{ref_audio}.voice_cache.json"
 
         try:
             cache_data = {
@@ -606,8 +605,8 @@ class BackendServicer(backend_pb2_grpc.BackendServicer):
                 "prompt_items": prompt_items,
             }
 
-            with open(cache_file, "wb") as f:
-                pickle.dump(cache_data, f)
+            with open(cache_file, "w", encoding="utf-8") as f:
+                json.dump(cache_data, f)
 
             print(
                 f"[INFO] Saved voice clone prompt to disk cache: {cache_file}",

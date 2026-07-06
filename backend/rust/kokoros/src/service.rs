@@ -1,4 +1,5 @@
 use std::sync::{Arc, Mutex};
+use std::path::{Component, Path, PathBuf};
 use tokio::sync::Mutex as TokioMutex;
 use tokio_stream::wrappers::ReceiverStream;
 use tonic::{Request, Response, Status};
@@ -11,7 +12,7 @@ use crate::backend::backend_server::Backend;
 /// Write f32 samples as a standard 44-byte PCM 16-bit WAV file.
 /// LocalAI's audio pipeline assumes this exact header layout.
 fn write_pcm16_wav(
-    path: &str,
+    path: impl AsRef<Path>,
     samples: &[f32],
     sample_rate: u32,
 ) -> Result<(), Box<dyn std::error::Error>> {
@@ -22,7 +23,7 @@ fn write_pcm16_wav(
     let data_size = num_samples * 2; // 16-bit = 2 bytes per sample
     let file_size = 36 + data_size;
 
-    let mut f = File::create(path)?;
+    let mut f = File::create(path.as_ref())?;
 
     // RIFF header
     f.write_all(b"RIFF")?;
@@ -50,6 +51,56 @@ fn write_pcm16_wav(
     }
 
     Ok(())
+}
+
+fn resolve_output_path(requested: &str) -> Result<PathBuf, Status> {
+    let base_dir = std::env::var("KOKOROS_OUTPUT_DIR")
+        .map(PathBuf::from)
+        .unwrap_or_else(|_| std::env::temp_dir().join("kokoros"));
+
+    std::fs::create_dir_all(&base_dir)
+        .map_err(|e| Status::internal(format!("failed to create output dir: {e}")))?;
+
+    let base_dir = std::fs::canonicalize(&base_dir)
+        .map_err(|e| Status::internal(format!("failed to resolve output dir: {e}")))?;
+
+    let candidate = Path::new(requested);
+    if candidate
+        .components()
+        .any(|component| matches!(component, Component::ParentDir | Component::Prefix(_)))
+    {
+        return Err(Status::permission_denied(
+            "output path must not contain path traversal segments",
+        ));
+    }
+
+    let resolved = if candidate.is_absolute() {
+        if !candidate.starts_with(&base_dir) {
+            return Err(Status::permission_denied(
+                "output path must stay within KOKOROS_OUTPUT_DIR",
+            ));
+        }
+        candidate.to_path_buf()
+    } else {
+        base_dir.join(candidate)
+    };
+
+    let parent = resolved
+        .parent()
+        .ok_or_else(|| Status::invalid_argument("invalid output path"))?;
+
+    std::fs::create_dir_all(parent)
+        .map_err(|e| Status::internal(format!("failed to create output path: {e}")))?;
+
+    let canonical_parent = std::fs::canonicalize(parent)
+        .map_err(|e| Status::internal(format!("failed to resolve output path: {e}")))?;
+    if !canonical_parent.starts_with(&base_dir) {
+        return Err(Status::permission_denied(
+            "output path must stay within KOKOROS_OUTPUT_DIR",
+        ));
+    }
+
+    Ok(resolved)
 }
 
 pub struct KokorosService {
@@ -164,6 +215,8 @@ impl Backend for KokorosService {
             "TTS request received"
         );
 
+        let out_path = resolve_output_path(&req.dst)?;
+
         let start = std::time::Instant::now();
         match tts.tts_raw_audio(&req.text, &lang, voice, speed, None, None, None, None) {
             Ok(samples) => {
@@ -175,8 +228,8 @@ impl Backend for KokorosService {
                     dst = req.dst,
                     "TTS inference complete"
                 );
-                if let Err(e) = write_pcm16_wav(&req.dst, &samples, 24000) {
-                    tracing::error!("Failed to write WAV to {}: {}", req.dst, e);
+                if let Err(e) = write_pcm16_wav(&out_path, &samples, 24000) {
+                    tracing::error!("Failed to write WAV to {}: {}", out_path.display(), e);
                     return Ok(Response::new(backend::Result {
                         success: false,
                         message: format!("Failed to write WAV: {}", e),
