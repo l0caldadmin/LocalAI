@@ -428,13 +428,19 @@ func (s *AgentPoolService) Chat(name, message string) (string, error) {
 	go func() {
 		started := time.Now()
 		response := ag.Ask(coreTypes.WithText(message))
+
+		agentLabel := name
+		if _, n, ok := strings.Cut(name, ":"); ok {
+			agentLabel = n
+		}
+
 		outcome := "completed"
 		if response == nil {
-			outcome = "cancelled"
+			outcome = "error"
 		} else if response.Error != nil {
 			outcome = "error"
 		}
-		recordAgentRun(name, outcome, time.Since(started).Seconds())
+		recordAgentRun(agentLabel, outcome, time.Since(started).Seconds())
 
 		if response == nil {
 			errMsg, _ := json.Marshal(map[string]any{
