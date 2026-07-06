@@ -36,8 +36,8 @@ RANDOM := $(shell bash -c 'echo $$RANDOM')
 VERSION?=$(shell git describe --always --tags || echo "dev" )
 # go tool nm ./local-ai | grep Commit
 LD_FLAGS?=-s -w
-override LD_FLAGS += -X "github.com/l0caldadmin/LocalAI/internal.Version=$(VERSION)"
-override LD_FLAGS += -X "github.com/l0caldadmin/LocalAI/internal.Commit=$(shell git rev-parse HEAD)"
+override LD_FLAGS += -X "github.com/mudler/LocalAI/internal.Version=$(VERSION)"
+override LD_FLAGS += -X "github.com/mudler/LocalAI/internal.Commit=$(shell git rev-parse HEAD)"
 
 OPTIONAL_TARGETS?=
 
@@ -98,7 +98,7 @@ COVERAGE_TAGS?=debug auth
 ## pkg/xsysinfo, pkg/system, pkg/signals, pkg/distributedhdr). Those packages
 ## are integration/e2e territory and inflating the denominator with dead-weight
 ## zeros made the 10% gate meaningless.
-COVERAGE_COVERPKG?=github.com/l0caldadmin/LocalAI/core/...,github.com/l0caldadmin/LocalAI/pkg/functions/...,github.com/l0caldadmin/LocalAI/pkg/reasoning/...,github.com/l0caldadmin/LocalAI/pkg/sanitize/...,github.com/l0caldadmin/LocalAI/pkg/utils/...,github.com/l0caldadmin/LocalAI/pkg/radixtree/...,github.com/l0caldadmin/LocalAI/pkg/audio/...,github.com/l0caldadmin/LocalAI/pkg/sound/...,github.com/l0caldadmin/LocalAI/pkg/model/...,github.com/l0caldadmin/LocalAI/pkg/concurrency/...,github.com/l0caldadmin/LocalAI/pkg/xsync/...,github.com/l0caldadmin/LocalAI/pkg/xio/...,github.com/l0caldadmin/LocalAI/pkg/clusterrouting/...
+COVERAGE_COVERPKG?=github.com/mudler/LocalAI/core/...,github.com/mudler/LocalAI/pkg/functions/...,github.com/mudler/LocalAI/pkg/reasoning/...,github.com/mudler/LocalAI/pkg/sanitize/...,github.com/mudler/LocalAI/pkg/utils/...,github.com/mudler/LocalAI/pkg/radixtree/...,github.com/mudler/LocalAI/pkg/audio/...,github.com/mudler/LocalAI/pkg/sound/...,github.com/mudler/LocalAI/pkg/model/...,github.com/mudler/LocalAI/pkg/concurrency/...,github.com/mudler/LocalAI/pkg/xsync/...,github.com/mudler/LocalAI/pkg/xio/...,github.com/mudler/LocalAI/pkg/clusterrouting/...
 ## In-process integration suites folded into coverage. Run non-recursively
 ## (excludes tests/e2e/distributed, which needs containers) with the mock
 ## backend built by prepare-test. real-models specs need a downloaded model,
