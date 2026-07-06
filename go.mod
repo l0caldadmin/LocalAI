@@ -1,4 +1,4 @@
-module github.com/l0caldadmin/LocalAI
+module github.com/mudler/LocalAI
 
 go 1.26.0
 
@@ -503,7 +503,7 @@ require (
 
 replace github.com/mudler/LocalAGI => github.com/l0caldadmin/LocalAGI v0.0.0-20260704190425-a41c6ff36ed2
 
-replace github.com/mudler/LocalAI => ./
+replace github.com/mudler/LocalAI => .
 
 replace github.com/mudler/localrecall => github.com/l0caldadmin/LocalRecall v0.0.0-20260626062721-d5f4a998e01f
 
