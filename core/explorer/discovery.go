@@ -188,7 +188,7 @@ func (s *DiscoveryServer) retrieveNetworkData(c context.Context, ledger *blockch
 			DATA:
 				for _, v := range data[d] {
 					nd := &schema.NodeData{}
-					if err := v.Unmarshal(nd); err != nil {
+					if err := v.Value.Unmarshal(nd); err != nil {
 						continue DATA
 					}
 

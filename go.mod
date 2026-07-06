@@ -1,6 +1,6 @@
 module github.com/mudler/LocalAI
 
-go 1.26.0
+go 1.26.4
 
 require (
 	dario.cat/mergo v1.0.2
@@ -35,9 +35,8 @@ require (
 	github.com/lithammer/fuzzysearch v1.1.8
 	github.com/microcosm-cc/bluemonday v1.0.27
 	github.com/modelcontextprotocol/go-sdk v1.5.0
-	github.com/mudler/LocalAI v0.0.0-00010101000000-000000000000
 	github.com/mudler/cogito v0.10.1-0.20260609212329-bf4010d31047
-	github.com/mudler/edgevpn v0.34.0
+	github.com/mudler/edgevpn v0.0.0-00010101000000-000000000000
 	github.com/mudler/go-processmanager v0.1.1
 	github.com/mudler/memory v0.0.0-20260406210934-424c1ecf2cf8
 	github.com/mudler/xlog v0.0.6
@@ -203,7 +202,7 @@ require (
 	github.com/go-telegram/bot v1.17.0 // indirect
 	github.com/gobwas/glob v0.2.3 // indirect
 	github.com/gocolly/colly v1.2.0 // indirect
-	github.com/gofiber/fiber/v2 v2.52.13 // indirect
+	github.com/gofiber/fiber/v2 v2.52.14 // indirect
 	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/google/go-github/v69 v69.2.0 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect

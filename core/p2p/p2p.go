@@ -236,7 +236,7 @@ func discoveryTunnels(ctx context.Context, n *node.Node, token, servicesID strin
 				for k, v := range data {
 					// New worker found in the ledger data as k (worker id)
 					nd := &schema.NodeData{}
-					if err := v.Unmarshal(nd); err != nil {
+					if err := v.Value.Unmarshal(nd); err != nil {
 						zlog.Error("cannot unmarshal node data")
 						continue
 					}
