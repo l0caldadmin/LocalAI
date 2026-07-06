@@ -11,8 +11,8 @@
     "i18n:extract": "i18next-parser",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
-    "build:coverage": "COVERAGE=true vite build",
-    "build:coverage-v8": "COVERAGE_V8=true vite build",
+    "build:coverage": "vite build --mode coverage",
+    "build:coverage-v8": "vite build --mode coverage-v8",
     "coverage:report": "nyc report"
   },
   "dependencies": {
