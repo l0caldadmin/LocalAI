@@ -55,7 +55,7 @@ jobs:
         run: make react-ui
       - name: Run Tests
         run: |
-          PATH="$PATH:/root/go/bin" make test
+          PATH="$PATH:$HOME/go/bin" make test
   tests-backend-cpp:
     runs-on: ubuntu-latest
     steps:
