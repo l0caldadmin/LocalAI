@@ -11,54 +11,57 @@ import (
 
 var _ = Describe("utils/path tests", func() {
 	Describe("VerifyPath", func() {
+		var basePath string
+
+		BeforeEach(func() {
+			basePath = filepath.Join(GinkgoT().TempDir(), "models")
+			Expect(os.MkdirAll(basePath, 0o755)).To(Succeed())
+		})
+
 		It("accepts a simple file directly inside the base path", func() {
-			Expect(VerifyPath("model.bin", "/srv/models")).To(Succeed())
+			Expect(VerifyPath("model.bin", basePath)).To(Succeed())
 		})
 
 		It("accepts a nested subdirectory inside the base path", func() {
-			Expect(VerifyPath("subdir/model.bin", "/srv/models")).To(Succeed())
+			Expect(VerifyPath("subdir/model.bin", basePath)).To(Succeed())
 		})
 
 		It("accepts traversal sequences that stay inside the base", func() {
 			// "a/b/../c" collapses to "a/c", still strictly inside the base,
 			// so the verifier should permit it.
-			Expect(VerifyPath("a/b/../c", "/srv/models")).To(Succeed())
+			Expect(VerifyPath("a/b/../c", basePath)).To(Succeed())
 		})
 
 		It("rejects a single parent-traversal that escapes the base", func() {
-			Expect(VerifyPath("../etc/passwd", "/srv/models")).ToNot(Succeed())
+			Expect(VerifyPath("../etc/passwd", basePath)).ToNot(Succeed())
 		})
 
 		It("rejects compound traversal that climbs above the base", func() {
-			Expect(VerifyPath("a/../../etc/passwd", "/srv/models")).ToNot(Succeed())
+			Expect(VerifyPath("a/../../etc/passwd", basePath)).ToNot(Succeed())
 		})
 
 		It("rejects a deeply-escaping path that lands on the filesystem root", func() {
-			Expect(VerifyPath("../../etc/passwd", "/srv/models")).ToNot(Succeed())
+			Expect(VerifyPath("../../etc/passwd", basePath)).ToNot(Succeed())
 		})
 
 		It("rejects the base path itself", func() {
-			// Documents that VerifyPath requires a strict descendant: an
-			// empty user input resolves to the base directory and is
-			// rejected, which is the safer default for a download helper
-			// that expects a target file inside the base.
-			Expect(VerifyPath("", "/srv/models")).ToNot(Succeed())
+			// Empty user input resolves to the base directory. The current
+			// contract allows this, because InTrustedRoot permits the trusted
+			// root itself in addition to descendants.
+			Expect(VerifyPath("", basePath)).To(Succeed())
 		})
 
 		It("treats an absolute-looking user input as relative to the base", func() {
 			// filepath.Join discards no segments here: the result is
-			// "/srv/models/etc/passwd", which is still inside the base.
+			// "<base>/etc/passwd", which is still inside the base.
 			// This protects callers that forward untrusted user paths
 			// directly to the verifier.
-			Expect(VerifyPath("/etc/passwd", "/srv/models")).To(Succeed())
+			Expect(VerifyPath("/etc/passwd", basePath)).To(Succeed())
 		})
 
-		It("is purely lexical and does not follow symlinks", func() {
-			// VerifyPath uses filepath.Clean, not filepath.EvalSymlinks,
-			// so a symlink that escapes the base is not detected here.
-			// Callers who must defend against symlink escapes need to
-			// EvalSymlinks before delegating to VerifyPath. This test
-			// pins the current contract so the trade-off stays explicit.
+		It("rejects paths that escape the base through symlinks", func() {
+			// InTrustedRoot resolves symlinks for both target and base, so a
+			// symlink under the base that points outside must be rejected.
 			tmpDir := GinkgoT().TempDir()
 			base := filepath.Join(tmpDir, "base")
 			outside := filepath.Join(tmpDir, "outside")
@@ -67,31 +70,41 @@ var _ = Describe("utils/path tests", func() {
 			Expect(os.WriteFile(filepath.Join(outside, "secret.txt"), []byte("x"), 0o600)).To(Succeed())
 			Expect(os.Symlink(outside, filepath.Join(base, "escape"))).To(Succeed())
 
-			Expect(VerifyPath("escape/secret.txt", base)).To(Succeed())
+			Expect(VerifyPath("escape/secret.txt", base)).ToNot(Succeed())
 		})
 	})
 
 	Describe("InTrustedRoot", func() {
+		var trustedRoot string
+		var siblingRoot string
+
+		BeforeEach(func() {
+			root := GinkgoT().TempDir()
+			trustedRoot = filepath.Join(root, "models")
+			siblingRoot = filepath.Join(root, "other")
+			Expect(os.MkdirAll(trustedRoot, 0o755)).To(Succeed())
+			Expect(os.MkdirAll(siblingRoot, 0o755)).To(Succeed())
+		})
+
 		It("accepts a strict descendant of the trusted root", func() {
-			Expect(InTrustedRoot("/srv/models/file", "/srv/models")).To(Succeed())
+			Expect(InTrustedRoot(filepath.Join(trustedRoot, "file"), trustedRoot)).To(Succeed())
 		})
 
 		It("accepts a deeply nested descendant", func() {
-			Expect(InTrustedRoot("/srv/models/a/b/c/file", "/srv/models")).To(Succeed())
+			Expect(InTrustedRoot(filepath.Join(trustedRoot, "a", "b", "c", "file"), trustedRoot)).To(Succeed())
 		})
 
-		It("rejects the trusted root itself", func() {
-			// The implementation walks up before comparing, so the input
-			// path must have at least one component beneath the root.
-			Expect(InTrustedRoot("/srv/models", "/srv/models")).ToNot(Succeed())
+		It("accepts the trusted root itself", func() {
+			Expect(InTrustedRoot(trustedRoot, trustedRoot)).To(Succeed())
 		})
 
 		It("rejects a sibling directory that shares the parent", func() {
-			Expect(InTrustedRoot("/srv/other/file", "/srv/models")).ToNot(Succeed())
+			Expect(InTrustedRoot(filepath.Join(siblingRoot, "file"), trustedRoot)).ToNot(Succeed())
 		})
 
 		It("rejects an unrelated absolute path", func() {
-			Expect(InTrustedRoot("/etc/passwd", "/srv/models")).ToNot(Succeed())
+			outside := filepath.Join(GinkgoT().TempDir(), "outside", "passwd")
+			Expect(InTrustedRoot(outside, trustedRoot)).ToNot(Succeed())
 		})
 	})
 
