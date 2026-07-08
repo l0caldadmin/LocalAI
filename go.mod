@@ -500,6 +500,8 @@ require (
 	lukechampine.com/blake3 v1.4.1 // indirect
 )
 
+require github.com/mudler/edgevpn v0.0.0-20260706024509-2c7fd4e1e9ff
+
 replace (
 	github.com/mudler/LocalAI => .
 	github.com/mudler/LocalAGI => github.com/l0caldadmin/LocalAGI v0.0.0-20260704190425-a41c6ff36ed2
