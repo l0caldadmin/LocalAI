@@ -75,7 +75,7 @@ var _ = Describe("EstimateMultiContext", func() {
 
 			res, err := EstimateMultiContext(ctx, files, defaultCtx, EstimateOptions{}, sizes, nil)
 			Expect(err).ToNot(HaveOccurred())
-			Expect(res.Estimates["8192"].VRAMBytes).To(BeNumerically(">", 10_000_000_000))
+			Expect(res.Estimates["8192"].VRAMBytes).To(BeNumerically(">", uint64(10_000_000_000)))
 		})
 
 		It("sums size for multiple GGUF shards", func() {

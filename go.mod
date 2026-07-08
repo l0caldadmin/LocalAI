@@ -500,14 +500,10 @@ require (
 	lukechampine.com/blake3 v1.4.1 // indirect
 )
 
-replace github.com/mudler/LocalAGI => github.com/l0caldadmin/LocalAGI v0.0.0-20260704190425-a41c6ff36ed2
-
-replace github.com/mudler/LocalAI => .
-
-replace github.com/mudler/localrecall => github.com/l0caldadmin/LocalRecall v0.0.0-20260626062721-d5f4a998e01f
-
-require github.com/mudler/edgevpn v0.0.0-20260706024509-2c7fd4e1e9ff
-
-replace github.com/mudler/water => github.com/l0caldadmin/water v0.0.0-20260705232006-eb8e8f5343f1
-
-replace github.com/mudler/edgevpn => github.com/l0caldadmin/edgevpn v0.0.0-20260706024509-2c7fd4e1e9ff
+replace (
+	github.com/mudler/LocalAI => .
+	github.com/mudler/LocalAGI => github.com/l0caldadmin/LocalAGI v0.0.0-20260704190425-a41c6ff36ed2
+	github.com/mudler/localrecall => github.com/l0caldadmin/LocalRecall v0.0.0-20260626062721-d5f4a998e01f
+	github.com/mudler/edgevpn => github.com/l0caldadmin/edgevpn v0.0.0-20260706024509-2c7fd4e1e9ff
+	github.com/mudler/water => github.com/l0caldadmin/water v0.0.0-20260705232006-eb8e8f5343f1
+)
