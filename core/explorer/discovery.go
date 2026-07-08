@@ -11,7 +11,7 @@ import (
 
 	"github.com/mudler/LocalAI/core/p2p"
 	"github.com/mudler/LocalAI/core/schema"
-	"github.com/mudler/edgevpn/pkg/blockchain"
+	"github.com/l0caldadmin/edgevpn/pkg/blockchain"
 )
 
 type DiscoveryServer struct {

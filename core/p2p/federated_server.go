@@ -8,7 +8,7 @@ import (
 	"net"
 
 	"github.com/mudler/LocalAI/core/schema"
-	"github.com/mudler/edgevpn/pkg/node"
+	"github.com/l0caldadmin/edgevpn/pkg/node"
 	"github.com/mudler/xlog"
 )
 
