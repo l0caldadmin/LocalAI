@@ -15,17 +15,17 @@ import (
 	"github.com/libp2p/go-libp2p/core/peer"
 	"github.com/mudler/LocalAI/core/schema"
 	"github.com/mudler/LocalAI/pkg/utils"
-	"github.com/mudler/edgevpn/pkg/config"
-	"github.com/mudler/edgevpn/pkg/node"
-	"github.com/mudler/edgevpn/pkg/protocol"
-	"github.com/mudler/edgevpn/pkg/services"
-	"github.com/mudler/edgevpn/pkg/types"
-	eutils "github.com/mudler/edgevpn/pkg/utils"
+	"github.com/l0caldadmin/edgevpn/pkg/config"
+	"github.com/l0caldadmin/edgevpn/pkg/node"
+	"github.com/l0caldadmin/edgevpn/pkg/protocol"
+	"github.com/l0caldadmin/edgevpn/pkg/services"
+	"github.com/l0caldadmin/edgevpn/pkg/types"
+	eutils "github.com/l0caldadmin/edgevpn/pkg/utils"
 	zlog "github.com/mudler/xlog"
 	"github.com/multiformats/go-multiaddr"
 	"github.com/phayes/freeport"
 
-	"github.com/mudler/edgevpn/pkg/logger"
+	"github.com/l0caldadmin/edgevpn/pkg/logger"
 )
 
 func generateNewConnectionData(DHTInterval, OTPInterval int) *node.YAMLConnectionConfig {
