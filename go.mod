@@ -133,8 +133,6 @@ require (
 	github.com/jolestar/go-commons-pool/v2 v2.1.2 // indirect
 	github.com/klauspost/pgzip v1.2.6 // indirect
 	github.com/klippa-app/go-pdfium v1.19.2 // indirect
-	github.com/l0caldadmin/edgevpn v0.0.0-20260708195157-ac22c5fce11e // indirect
-	github.com/l0caldadmin/water v0.0.0-20260708175602-1c6bdaae76e0 // indirect
 	github.com/mattn/go-sqlite3 v1.14.28 // indirect
 	github.com/moby/moby/api v1.54.2 // indirect
 	github.com/moby/moby/client v0.4.1 // indirect
@@ -432,7 +430,6 @@ require (
 	github.com/moby/term v0.5.2 // indirect
 	github.com/mr-tron/base58 v1.3.0 // indirect
 	github.com/mudler/go-piper v0.0.0-20241023091659-2494246fd9fc
-	github.com/mudler/water v0.0.0-20260705232006-eb8e8f5343f1 // indirect
 	github.com/muesli/reflow v0.3.0 // indirect
 	github.com/muesli/termenv v0.16.0 // indirect
 	github.com/multiformats/go-base32 v0.1.0 // indirect
@@ -475,7 +472,7 @@ require (
 	github.com/vishvananda/netlink v1.3.1 // indirect
 	github.com/vishvananda/netns v0.0.5 // indirect
 	github.com/whyrusleeping/go-keyspace v0.0.0-20160322163242-5b898ac5add1 // indirect
-	github.com/yuin/goldmark v1.7.13
+	github.com/yuin/goldmark v1.7.17
 	github.com/yuin/goldmark-emoji v1.0.6 // indirect
 	github.com/yusufpapurcu/wmi v1.2.4 // indirect
 	go.opencensus.io v0.24.0 // indirect
@@ -504,12 +501,13 @@ require (
 	lukechampine.com/blake3 v1.4.1 // indirect
 )
 
-require github.com/mudler/edgevpn v0.0.0-20260706024509-2c7fd4e1e9ff
+require (
+	github.com/l0caldadmin/edgevpn v0.0.0-20260708195157-ac22c5fce11e
+	github.com/l0caldadmin/water v0.0.0-20260708175602-1c6bdaae76e0
+)
 
 replace (
 	github.com/mudler/LocalAGI => github.com/l0caldadmin/LocalAGI v0.0.0-20260704190425-a41c6ff36ed2
 	github.com/mudler/LocalAI => .
-	github.com/mudler/edgevpn => github.com/l0caldadmin/edgevpn v0.0.0-20260706024509-2c7fd4e1e9ff
 	github.com/mudler/localrecall => github.com/l0caldadmin/LocalRecall v0.0.0-20260626062721-d5f4a998e01f
-	github.com/mudler/water => github.com/l0caldadmin/water v0.0.0-20260705232006-eb8e8f5343f1
 )
