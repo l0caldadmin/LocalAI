@@ -690,6 +690,9 @@ func (uri URI) DownloadFileWithContext(ctx context.Context, filePath, sha string
 	default:
 	}
 
+	outFile.Close()
+
+
 	// Invariant: verify the streamed hash before promoting the temp file to
 	// the final path. Renaming first would leave tampered content reachable
 	// to subsequent readers even though we return an error.

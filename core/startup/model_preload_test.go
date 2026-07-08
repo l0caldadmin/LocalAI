@@ -35,6 +35,7 @@ var _ = Describe("Preload test", func() {
 
 	AfterEach(func() {
 		cancel()
+		os.RemoveAll(tmpdir)
 	})
 
 	Context("Preloading from strings", func() {

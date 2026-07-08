@@ -259,6 +259,11 @@ var _ = Describe("Download Test", func() {
 		Expect(err).NotTo(HaveOccurred())
 	})
 
+	AfterEach(func() {
+		os.Remove(filePath)
+		os.Remove(filePath + ".partial")
+	})
+
 	Context("URI DownloadFile", func() {
 		It("fetches files from mock server", func() {
 			mockServer := getMockServer(true)

@@ -30,7 +30,7 @@ require (
 	github.com/jaypipes/ghw v0.24.0
 	github.com/joho/godotenv v1.5.1
 	github.com/klauspost/cpuid/v2 v2.3.0
-	github.com/labstack/echo/v4 v4.15.2
+	github.com/labstack/echo/v4 v4.15.4
 	github.com/libp2p/go-libp2p v0.48.0
 	github.com/lithammer/fuzzysearch v1.1.8
 	github.com/microcosm-cc/bluemonday v1.0.27
@@ -136,6 +136,7 @@ require (
 	github.com/moby/moby/client v0.4.1 // indirect
 	github.com/nats-io/nuid v1.0.1 // indirect
 	github.com/oklog/ulid/v2 v2.1.1 // indirect
+	github.com/pion/transport/v3 v3.0.7 // indirect
 	github.com/secure-systems-lab/go-securesystemslib v0.11.0 // indirect
 	github.com/shibumi/go-pathspec v1.3.0 // indirect
 	github.com/sigstore/protobuf-specs v0.5.1 // indirect
@@ -298,21 +299,21 @@ require (
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646 // indirect
 	github.com/nicksnyder/go-i18n/v2 v2.5.1 // indirect
 	github.com/otiai10/mint v1.6.3 // indirect
-	github.com/pion/datachannel v1.6.0 // indirect
+	github.com/pion/datachannel v1.5.10 // indirect
 	github.com/pion/dtls/v3 v3.1.2 // indirect
-	github.com/pion/ice/v4 v4.2.2 // indirect
-	github.com/pion/interceptor v0.1.44 // indirect
+	github.com/pion/ice/v4 v4.0.10 // indirect
+	github.com/pion/interceptor v0.1.40 // indirect
 	github.com/pion/logging v0.2.4 // indirect
-	github.com/pion/mdns/v2 v2.1.0 // indirect
+	github.com/pion/mdns/v2 v2.0.7 // indirect
 	github.com/pion/randutil v0.1.0 // indirect
 	github.com/pion/rtcp v1.2.16 // indirect
-	github.com/pion/rtp v1.10.1
-	github.com/pion/sctp v1.9.4 // indirect
+	github.com/pion/rtp v1.8.19
+	github.com/pion/sctp v1.8.39 // indirect
 	github.com/pion/sdp/v3 v3.0.18 // indirect
-	github.com/pion/srtp/v3 v3.0.10 // indirect
+	github.com/pion/srtp/v3 v3.0.6 // indirect
 	github.com/pion/stun/v3 v3.1.1 // indirect
-	github.com/pion/turn/v4 v4.1.4 // indirect
-	github.com/pion/webrtc/v4 v4.2.11
+	github.com/pion/turn/v4 v4.0.2 // indirect
+	github.com/pion/webrtc/v4 v4.1.2
 	github.com/prometheus/otlptranslator v1.0.0 // indirect
 	github.com/rymdport/portal v0.4.2 // indirect
 	github.com/shirou/gopsutil/v4 v4.26.3 // indirect
@@ -329,7 +330,7 @@ require (
 	golang.org/x/image v0.38.0 // indirect
 	golang.org/x/net v0.56.0 // indirect (for websocket)
 	golang.org/x/oauth2 v0.36.0
-	golang.org/x/telemetry v0.0.0-20260508192327-42602be52be6 // indirect
+	golang.org/x/telemetry v0.0.0-20260626140120-b709645a9e92 // indirect
 	golang.org/x/time v0.15.0 // indirect
 )
 
@@ -388,7 +389,7 @@ require (
 	github.com/huin/goupnp v1.3.0 // indirect
 	github.com/ipfs/boxo v0.39.0 // indirect
 	github.com/ipfs/go-cid v0.6.1 // indirect
-	github.com/ipfs/go-datastore v0.9.1 // indirect
+	github.com/ipfs/go-datastore v0.9.2 // indirect
 	github.com/ipfs/go-log/v2 v2.9.2 // indirect
 	github.com/ipld/go-ipld-prime v0.23.0 // indirect
 	github.com/jackpal/go-nat-pmp v1.0.2 // indirect
@@ -413,7 +414,7 @@ require (
 	github.com/lufia/plan9stats v0.0.0-20250317134145-8bc96cf8fc35 // indirect
 	github.com/mailru/easyjson v0.9.0 // indirect
 	github.com/marten-seemann/tcp v0.0.0-20210406111302-dfbc87cc63fd // indirect
-	github.com/mattn/go-colorable v0.1.14 // indirect
+	github.com/mattn/go-colorable v0.1.15 // indirect
 	github.com/mattn/go-isatty v0.0.22 // indirect
 	github.com/mattn/go-runewidth v0.0.17 // indirect
 	github.com/miekg/dns v1.1.72 // indirect
@@ -481,15 +482,15 @@ require (
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.28.0 // indirect
 	golang.org/x/crypto v0.53.0
-	golang.org/x/exp v0.0.0-20260410095643-746e56fc9e2f // indirect
+	golang.org/x/exp v0.0.0-20260611194520-c48552f49976 // indirect
 	golang.org/x/mod v0.37.0 // indirect
 	golang.org/x/sync v0.21.0
 	golang.org/x/sys v0.46.0 // indirect
 	golang.org/x/term v0.44.0
 	golang.org/x/text v0.38.0
-	golang.org/x/tools v0.45.0 // indirect
+	golang.org/x/tools v0.46.0 // indirect
 	golang.zx2c4.com/wintun v0.0.0-20230126152724-0fa3db229ce2 // indirect
-	golang.zx2c4.com/wireguard v0.0.0-20250521234502-f333402bd9cb // indirect
+	golang.zx2c4.com/wireguard v0.0.0-20260522210424-ecfc5a8d5446 // indirect
 	golang.zx2c4.com/wireguard/windows v1.0.1 // indirect
 	gonum.org/v1/gonum v0.17.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20260427160629-7cedc36a6bc4 // indirect
@@ -507,6 +508,6 @@ replace github.com/mudler/localrecall => github.com/l0caldadmin/LocalRecall v0.0
 
 require github.com/mudler/edgevpn v0.0.0-20260706024509-2c7fd4e1e9ff
 
-replace github.com/mudler/edgevpn => github.com/l0caldadmin/edgevpn v0.0.0-20260706024509-2c7fd4e1e9ff
-
 replace github.com/mudler/water => github.com/l0caldadmin/water v0.0.0-20260705232006-eb8e8f5343f1
+
+replace github.com/mudler/edgevpn => github.com/l0caldadmin/edgevpn v0.0.0-20260706024509-2c7fd4e1e9ff
