@@ -3,6 +3,16 @@ set -e
 
 cd /
 
+# If running as root, fix permissions for mounted volumes
+if [ "$(id -u)" = '0' ]; then
+	for dir in /models /backends /data /configuration /run/localai; do
+		if [ -d "$dir" ] && [ "$(stat -c '%u' "$dir")" != "1000" ]; then
+			echo "Fixing permissions for $dir..."
+			chown -R localai:localai "$dir"
+		fi
+	done
+fi
+
 # If we have set EXTRA_BACKENDS, then we need to prepare the backends
 if [ -n "$EXTRA_BACKENDS" ]; then
 	echo "EXTRA_BACKENDS: $EXTRA_BACKENDS"
@@ -32,4 +42,8 @@ else
 	echo "CPU: no AVX512 found"
 fi
 
-exec ./local-ai "$@"
+if [ "$(id -u)" = '0' ]; then
+	exec gosu localai ./local-ai "$@"
+else
+	exec ./local-ai "$@"
+fi

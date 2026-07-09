@@ -1,5 +1,5 @@
 ARG BASE_IMAGE=ubuntu:26.04
-ARG INTEL_BASE_IMAGE=${BASE_IMAGE}
+ARG INTEL_BASE_IMAGE=ubuntu:22.04
 ARG UBUNTU_CODENAME=noble
 # Optional alternate Ubuntu apt mirror(s). Empty = use upstream.
 # See .docker/apt-mirror.sh for accepted values.
@@ -16,7 +16,7 @@ RUN --mount=type=bind,source=.docker/apt-mirror.sh,target=/usr/local/sbin/apt-mi
     APT_MIRROR="${APT_MIRROR}" APT_PORTS_MIRROR="${APT_PORTS_MIRROR}" sh /usr/local/sbin/apt-mirror && \
     apt-get update && \
     apt-get install -y --no-install-recommends \
-        ca-certificates curl wget espeak-ng libgomp1 \
+        ca-certificates curl wget espeak-ng libgomp1 gosu \
         ffmpeg libopenblas0 libopenblas-dev libopus0 sox && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
@@ -25,8 +25,9 @@ RUN --mount=type=bind,source=.docker/apt-mirror.sh,target=/usr/local/sbin/apt-mi
 FROM requirements AS requirements-drivers
 
 ARG BUILD_TYPE
-ARG CUDA_MAJOR_VERSION=12
-ARG CUDA_MINOR_VERSION=0
+ARG CUDA_MAJOR_VERSION=13
+ARG CUDA_MINOR_VERSION=3
+ARG UBUNTU_CODENAME
 ARG SKIP_DRIVERS=false
 ARG TARGETARCH
 ARG TARGETVARIANT
@@ -37,16 +38,18 @@ RUN mkdir -p /run/localai
 RUN echo "default" > /run/localai/capability
 
 # Vulkan requirements
-RUN if [ "${BUILD_TYPE}" = "vulkan" ] && [ "${SKIP_DRIVERS}" = "false" ]; then \
-        apt-get update && \
-        apt-get install -y  --no-install-recommends \
-            software-properties-common pciutils wget gpg-agent && \
-        apt-get install -y libglm-dev cmake libxcb-dri3-0 libxcb-present0 libpciaccess0 \
-            libpng-dev libxcb-keysyms1-dev libxcb-dri3-dev libx11-dev g++ gcc \
+RUN set -e; if [ "${BUILD_TYPE}" = "vulkan" ] && [ "${SKIP_DRIVERS}" = "false" ]; then \
+        apt-get update; \
+        apt-get install -y --no-install-recommends \
+            software-properties-common pciutils wget gpg-agent; \
+        apt-get install -y --no-install-recommends libglm-dev cmake libxcb-dri3-0 libxcb-present0 libpciaccess0 \
+            libpng-dev libxcb-keysyms1-dev libxcb-dri3-dev libx11-dev libmirclient-dev \
             libwayland-dev libxrandr-dev libxcb-randr0-dev libxcb-ewmh-dev \
-            git python-is-python3 bison libx11-xcb-dev liblz4-dev libzstd-dev \
-            ocaml-core ninja-build pkg-config libxml2-dev wayland-protocols python3-jsonschema \
-            clang-format qtbase5-dev qt6-base-dev libxcb-glx0-dev sudo xz-utils mesa-vulkan-drivers && \
+            git python3 bison pkg-config; \
+        wget -qO - https://packages.lunarg.com/lunarg-signing-key-pub.asc | gpg --dearmor -o /usr/share/keyrings/lunarg-vulkan.gpg; \
+        echo "deb [signed-by=/usr/share/keyrings/lunarg-vulkan.gpg] https://packages.lunarg.com/vulkan ${UBUNTU_CODENAME} main" > /etc/apt/sources.list.d/lunarg-vulkan.list; \
+        apt-get update; \
+        apt-get install -y --no-install-recommends vulkan-sdk; \
         if [ "amd64" = "$TARGETARCH" ]; then \
             wget "https://sdk.lunarg.com/sdk/download/1.4.335.0/linux/vulkansdk-linux-x86_64-1.4.335.0.tar.xz" && \
             tar -xf vulkansdk-linux-x86_64-1.4.335.0.tar.xz && \
@@ -86,23 +89,22 @@ RUN if [ "${BUILD_TYPE}" = "vulkan" ] && [ "${SKIP_DRIVERS}" = "false" ]; then \
     fi
 
 # CuBLAS requirements
-RUN if ( [ "${BUILD_TYPE}" = "cublas" ] || [ "${BUILD_TYPE}" = "l4t" ] ) && [ "${SKIP_DRIVERS}" = "false" ]; then \
-        apt-get update && \
-        apt-get install -y  --no-install-recommends \
-            software-properties-common pciutils; \
+RUN set -e; if ( [ "${BUILD_TYPE}" = "cublas" ] || [ "${BUILD_TYPE}" = "l4t" ] ) && [ "${SKIP_DRIVERS}" = "false" ]; then \
+        apt-get update; \
+        apt-get install -y --no-install-recommends software-properties-common pciutils; \
         if [ "amd64" = "$TARGETARCH" ]; then \
-            curl -O https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${UBUNTU_VERSION}/x86_64/cuda-keyring_1.1-1_all.deb; \
+            curl -fO https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${UBUNTU_VERSION}/x86_64/cuda-keyring_1.1-1_all.deb; \
         fi; \
         if [ "arm64" = "$TARGETARCH" ]; then \
             if [ "${CUDA_MAJOR_VERSION}" = "13" ]; then \
-                curl -O https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${UBUNTU_VERSION}/sbsa/cuda-keyring_1.1-1_all.deb; \
+                curl -fO https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${UBUNTU_VERSION}/sbsa/cuda-keyring_1.1-1_all.deb; \
             else \
-                curl -O https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${UBUNTU_VERSION}/arm64/cuda-keyring_1.1-1_all.deb; \
+                curl -fO https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${UBUNTU_VERSION}/arm64/cuda-keyring_1.1-1_all.deb; \
             fi; \
         fi; \
-        dpkg -i cuda-keyring_1.1-1_all.deb && \
-        rm -f cuda-keyring_1.1-1_all.deb && \
-        apt-get update && \
+        dpkg -i cuda-keyring_1.1-1_all.deb; \
+        rm -f cuda-keyring_1.1-1_all.deb; \
+        apt-get update; \
         apt-get install -y --no-install-recommends \
             cuda-nvcc-${CUDA_MAJOR_VERSION}-${CUDA_MINOR_VERSION} \
             cuda-nvrtc-dev-${CUDA_MAJOR_VERSION}-${CUDA_MINOR_VERSION} \
@@ -115,8 +117,8 @@ RUN if ( [ "${BUILD_TYPE}" = "cublas" ] || [ "${BUILD_TYPE}" = "l4t" ] ) && [ "$
             apt-get install -y --no-install-recommends \
             libcufile-${CUDA_MAJOR_VERSION}-${CUDA_MINOR_VERSION} libcudnn9-cuda-${CUDA_MAJOR_VERSION} cuda-cupti-${CUDA_MAJOR_VERSION}-${CUDA_MINOR_VERSION} libnvjitlink-${CUDA_MAJOR_VERSION}-${CUDA_MINOR_VERSION}; \
         fi; \
-        apt-get clean && \
-        rm -rf /var/lib/apt/lists/* && \
+        apt-get clean; \
+        rm -rf /var/lib/apt/lists/*; \
         echo "nvidia-cuda-${CUDA_MAJOR_VERSION}" > /run/localai/capability; \
     fi
 
@@ -173,6 +175,20 @@ RUN if [ "${BUILD_TYPE}" = "hipblas" ] && [ -f /usr/share/libdrm/amdgpu.ids ] &&
     mkdir -p /opt/amdgpu/share/libdrm && \
     ln -s /usr/share/libdrm/amdgpu.ids /opt/amdgpu/share/libdrm/amdgpu.ids \
     ; fi
+
+# Intel requirements
+# Temporary workaround for Intel's repository to work correctly
+RUN set -e; if [ "${BUILD_TYPE}" = "intel" ] && [ "${SKIP_DRIVERS}" = "false" ]; then \
+        apt-get update; \
+        apt-get install -y --no-install-recommends gnupg; \
+        wget -qO - https://repositories.intel.com/gpu/intel-graphics.key | \
+        gpg --yes --dearmor --output /usr/share/keyrings/intel-graphics.gpg; \
+        echo "deb [arch=amd64 signed-by=/usr/share/keyrings/intel-graphics.gpg] https://repositories.intel.com/gpu/ubuntu ${UBUNTU_CODENAME}/lts/2350 unified" > /etc/apt/sources.list.d/intel-graphics.list; \
+        apt-get update; \
+        apt-get install -y --no-install-recommends intel-opencl-icd intel-level-zero-gpu level-zero; \
+        apt-get clean; \
+        rm -rf /var/lib/apt/lists/*; \
+    fi
 
 RUN expr "${BUILD_TYPE}" = intel && echo "intel" > /run/localai/capability || echo "not intel"
 
@@ -245,23 +261,7 @@ WORKDIR /build
 ###################################
 ###################################
 
-# Temporary workaround for Intel's repository to work correctly
-# https://community.intel.com/t5/Intel-oneAPI-Math-Kernel-Library/APT-Repository-not-working-signatures-invalid/m-p/1599436/highlight/true#M36143
-# This is a temporary workaround until Intel fixes their repository
-FROM ${INTEL_BASE_IMAGE} AS intel
-ARG UBUNTU_CODENAME=noble
-ARG APT_MIRROR
-ARG APT_PORTS_MIRROR
-RUN wget -qO - https://repositories.intel.com/gpu/intel-graphics.key | \
-gpg --yes --dearmor --output /usr/share/keyrings/intel-graphics.gpg
-RUN echo "deb [arch=amd64 signed-by=/usr/share/keyrings/intel-graphics.gpg] https://repositories.intel.com/gpu/ubuntu ${UBUNTU_CODENAME}/lts/2350 unified" > /etc/apt/sources.list.d/intel-graphics.list
-RUN --mount=type=bind,source=.docker/apt-mirror.sh,target=/usr/local/sbin/apt-mirror \
-    APT_MIRROR="${APT_MIRROR}" APT_PORTS_MIRROR="${APT_PORTS_MIRROR}" sh /usr/local/sbin/apt-mirror && \
-    apt-get update && \
-    apt-get install -y --no-install-recommends \
-        intel-oneapi-runtime-libs && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+
 
 ###################################
 ###################################
@@ -379,7 +379,7 @@ FROM requirements-drivers
 
 ENV HEALTHCHECK_ENDPOINT=http://localhost:8080/readyz
 
-ARG CUDA_MAJOR_VERSION=12
+ARG CUDA_MAJOR_VERSION=13
 ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
 ENV NVIDIA_REQUIRE_CUDA="cuda>=${CUDA_MAJOR_VERSION}.0"
 ENV NVIDIA_VISIBLE_DEVICES=all
@@ -422,5 +422,4 @@ HEALTHCHECK --interval=1m --timeout=10m --retries=10 \
 
 VOLUME /models /backends /configuration /data
 EXPOSE 8080
-USER localai
 ENTRYPOINT [ "/entrypoint.sh" ]
