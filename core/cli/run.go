@@ -2,7 +2,6 @@ package cli
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"net"
 	"os"
@@ -253,13 +252,6 @@ func (r *RunCMD) Run(ctx *cliContext.Context) error {
 			tunnelEnvVar := strings.Join(tunnels, ",")
 			os.Setenv("LLAMACPP_GRPC_SERVERS", tunnelEnvVar)
 			xlog.Debug("setting LLAMACPP_GRPC_SERVERS", "value", tunnelEnvVar)
-		}),
-		config.WithMLXTunnelCallback(func(tunnels []string) {
-			hostfile := filepath.Join(os.TempDir(), "localai_mlx_hostfile.json")
-			data, _ := json.Marshal(tunnels)
-			os.WriteFile(hostfile, data, 0644)
-			os.Setenv("MLX_DISTRIBUTED_HOSTFILE", hostfile)
-			xlog.Debug("setting MLX_DISTRIBUTED_HOSTFILE", "value", hostfile, "tunnels", tunnels)
 		}),
 	}
 

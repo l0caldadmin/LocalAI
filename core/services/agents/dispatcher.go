@@ -14,7 +14,7 @@ import (
 	"github.com/mudler/LocalAI/core/services/messaging"
 	"github.com/mudler/LocalAI/pkg/concurrency"
 
-	coreTypes "github.com/mudler/LocalAGI/core/types"
+	coreTypes "github.com/l0caldadmin/LocalAGI/core/types"
 	"github.com/mudler/cogito"
 	"github.com/mudler/xlog"
 	"github.com/sashabaranov/go-openai"

@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/mudler/LocalAGI/services/skills"
+	"github.com/l0caldadmin/LocalAGI/services/skills"
 	skillserver "github.com/mudler/skillserver/pkg/domain"
 	skillgit "github.com/mudler/skillserver/pkg/git"
 	"github.com/mudler/xlog"

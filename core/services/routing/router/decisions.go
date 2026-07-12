@@ -4,6 +4,8 @@ import (
 	"context"
 	"sync"
 	"time"
+
+	"github.com/mudler/LocalAI/core/services/routing/orchestrator"
 )
 
 // Decision row written to the in-memory store. Mirrors the PIIEvent
@@ -34,6 +36,11 @@ type DecisionRecord struct {
 	// written before the field existed.
 	Source        string        `json:"source,omitempty"`
 	CreatedAt     time.Time     `json:"created_at"`
+
+	// Trace captures the operational reality of how the planned route
+	// was executed, including fallback attempts, boundaries, and final outcome.
+	// Present on new logs, missing on legacy logs.
+	Trace *orchestrator.ProvenanceChain `json:"trace,omitempty"`
 }
 
 // Source values for DecisionRecord.Source. Kept as constants so callers

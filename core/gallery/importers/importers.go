@@ -170,18 +170,14 @@ var defaultImporters = []Importer{
 	// GGUFs.
 	&DepthAnythingImporter{},
 	// Existing
-	// DS4Importer must precede LlamaCPPImporter - ds4 weights are GGUFs and
-	// would otherwise be claimed by the generic .gguf-handling llama-cpp
-	// importer. Matches only the antirez/deepseek-v4-gguf repo + filename
-	// pattern, so false-positives against arbitrary GGUFs are impossible.
-	&DS4Importer{},
+
 	// PrivacyFilterImporter must precede LlamaCPPImporter too — the OpenMed
 	// privacy-filter GGUFs would otherwise be claimed by the generic .gguf
 	// importer. Matches only .gguf names carrying the "privacy-filter" token,
 	// so arbitrary GGUFs are never claimed.
 	&PrivacyFilterImporter{},
 	&LlamaCPPImporter{},
-	&MLXImporter{},
+
 	&VLLMImporter{},
 	&TransformersImporter{},
 	&DiffuserImporter{},

@@ -1,79 +1,78 @@
 {
-  "title": "Competenze",
-  "subtitle": "Gestisci le competenze degli agenti (istruzioni e risorse riutilizzabili)",
-  "unavailable": {
-    "subtitle": "Il servizio competenze non è disponibile o l'indice è in ricostruzione. Riprova tra un momento.",
-    "retry": "Riprova"
-  },
   "actions": {
-    "newSkill": "Nuova competenza",
+    "adding": "Aggiunta...",
+    "addRepo": "Aggiungi repo",
     "createSkill": "Crea competenza",
+    "delete": "Elimina",
+    "disable": "Disabilita",
+    "edit": "Modifica",
+    "enable": "Abilita",
+    "export": "Esporta",
+    "gitRepos": "Repo Git",
     "import": "Importa",
     "importing": "Importazione...",
-    "gitRepos": "Repo Git",
-    "edit": "Modifica",
-    "delete": "Elimina",
-    "export": "Esporta",
-    "sync": "Sincronizza",
-    "addRepo": "Aggiungi repo",
-    "adding": "Aggiunta...",
-    "remove": "Rimuovi",
-    "enable": "Abilita",
-    "disable": "Disabilita"
+    "newSkill": "Nuova competenza",
+    "sync": "Sincronizza"
+  },
+  "card": {
+    "deleteTitle": "Elimina competenza",
+    "editTitle": "Modifica competenza",
+    "exportTitle": "Esporta come .tar.gz",
+    "noDescription": "Nessuna descrizione",
+    "readOnly": "Sola lettura"
+  },
+  "deleteDialog": {
+    "confirm": "Elimina",
+    "message": "Eliminare la competenza \"{{name}}\"? Questa azione non può essere annullata.",
+    "title": "Elimina competenza"
+  },
+  "empty": {
+    "noPersonal": "Non hai ancora competenze.",
+    "text": "Crea una competenza o importane una per iniziare.",
+    "title": "Nessuna competenza trovata"
+  },
+  "git": {
+    "description": "Aggiungi repository Git da cui ottenere le competenze. Le competenze appariranno nella lista dopo la sincronizzazione.",
+    "disabled": "Disabilitato",
+    "noRepos": "Nessun repo Git configurato. Aggiungine uno sopra.",
+    "removeRepo": "Rimuovi repo",
+    "title": "Repository Git",
+    "urlPlaceholder": "https://github.com/user/repo o git@github.com:user/repo.git"
+  },
+  "removeRepoDialog": {
+    "confirm": "Rimuovi",
+    "message": "Rimuovere questo repository Git? Le competenze al suo interno non saranno più disponibili.",
+    "title": "Rimuovi repository Git"
   },
   "search": {
     "placeholder": "Cerca competenze..."
   },
-  "git": {
-    "title": "Repository Git",
-    "description": "Aggiungi repository Git da cui ottenere le competenze. Le competenze appariranno nella lista dopo la sincronizzazione.",
-    "urlPlaceholder": "https://github.com/user/repo o git@github.com:user/repo.git",
-    "noRepos": "Nessun repo Git configurato. Aggiungine uno sopra.",
-    "disabled": "Disabilitato",
-    "removeRepo": "Rimuovi repo"
-  },
-  "card": {
-    "noDescription": "Nessuna descrizione",
-    "readOnly": "Sola lettura",
-    "editTitle": "Modifica competenza",
-    "deleteTitle": "Elimina competenza",
-    "exportTitle": "Esporta come .tar.gz"
-  },
-  "empty": {
-    "title": "Nessuna competenza trovata",
-    "text": "Crea una competenza o importane una per iniziare.",
-    "noPersonal": "Non hai ancora competenze."
-  },
   "sections": {
-    "yourSkills": "Le tue competenze",
-    "otherUsersSkills": "Competenze di altri utenti"
+    "otherUsersSkills": "Competenze di altri utenti",
+    "yourSkills": "Le tue competenze"
   },
-  "deleteDialog": {
-    "title": "Elimina competenza",
-    "message": "Eliminare la competenza \"{{name}}\"? Questa azione non può essere annullata.",
-    "confirm": "Elimina"
-  },
-  "removeRepoDialog": {
-    "title": "Rimuovi repository Git",
-    "message": "Rimuovere questo repository Git? Le competenze al suo interno non saranno più disponibili.",
-    "confirm": "Rimuovi"
-  },
+  "subtitle": "Gestisci le competenze degli agenti (istruzioni e risorse riutilizzabili)",
+  "title": "Competenze",
   "toasts": {
-    "loadFailed": "Caricamento competenze fallito",
+    "addRepoFailed": "Aggiunta repo fallita",
     "deleted": "Competenza \"{{name}}\" eliminata",
     "deleteFailed": "Eliminazione competenza fallita",
     "exported": "Competenza \"{{name}}\" esportata",
     "exportFailed": "Esportazione fallita",
     "imported": "Competenza importata da \"{{file}}\"",
     "importFailed": "Importazione fallita",
+    "loadFailed": "Caricamento competenze fallito",
     "loadReposFailed": "Caricamento repo Git fallito",
+    "removed": "Repo rimosso",
+    "removeFailed": "Rimozione fallita",
     "repoAdded": "Repo Git aggiunto e in sincronizzazione",
-    "addRepoFailed": "Aggiunta repo fallita",
     "synced": "Repo sincronizzato",
     "syncFailed": "Sincronizzazione fallita",
     "toggled": "Repo modificato",
-    "toggleFailed": "Modifica fallita",
-    "removed": "Repo rimosso",
-    "removeFailed": "Rimozione fallita"
+    "toggleFailed": "Modifica fallita"
+  },
+  "unavailable": {
+    "retry": "Riprova",
+    "subtitle": "Il servizio competenze non è disponibile o l'indice è in ricostruzione. Riprova tra un momento."
   }
 }

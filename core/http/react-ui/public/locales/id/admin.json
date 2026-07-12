@@ -1,89 +1,60 @@
 {
-  "manage": {
-    "title": "Sistem",
-    "subtitle": "Kelola model dan backend yang terinstal"
-  },
-  "settings": {
-    "title": "Pengaturan",
-    "subtitle": "Konfigurasi pengaturan runtime LocalAI",
-    "saved": "Pengaturan berhasil disimpan",
-    "saveFailed": "Gagal menyimpan: {{message}}",
-    "loadFailed": "Gagal memuat pengaturan: {{message}}",
-    "sections": {
-      "branding": "Branding",
-      "watchdog": "Watchdog",
-      "memory": "Memori",
-      "backends": "Backend",
-      "performance": "Performa",
-      "tracing": "Tracing",
-      "api": "API & CORS",
-      "p2p": "P2P",
-      "galleries": "Galeri",
-      "apikeys": "API Key",
-      "agents": "Agent Job",
-      "agentpool": "Agent Pool",
-      "assistant": "Asisten LocalAI",
-      "responses": "Respons"
-    }
-  },
   "backends": {
-    "title": "Manajemen Backend",
-    "subtitle": "Temukan dan instal backend AI untuk mendukung model Anda"
+    "subtitle": "Temukan dan instal backend AI untuk mendukung model Anda",
+    "title": "Manajemen Backend"
   },
-  "backendLogs": {
-    "title": "Log Backend",
-    "subtitle": "Lihat log dari backend yang sedang berjalan",
-    "empty": "Tidak ada log yang tersedia"
-  },
-  "traces": {
-    "title": "Trace",
-    "subtitle": "Lihat log permintaan API, respons, dan operasi backend"
+  "manage": {
+    "subtitle": "Kelola model dan backend yang terinstal",
+    "title": "Sistem"
   },
   "nodes": {
-    "title": "Node Terdistribusi",
-    "subtitle": "Kelola node backend dan node worker"
-  },
-  "scheduling": {
-    "title": "Penjadwalan",
-    "subtitle": "Aturan penempatan model dan replika di seluruh kluster"
+    "subtitle": "Kelola node backend dan node worker",
+    "title": "Node Terdistribusi"
   },
   "p2p": {
-    "title": "Komputasi AI Terdistribusi",
-    "subtitle": "Skalakan beban kerja AI Anda ke beberapa perangkat dengan distribusi peer-to-peer"
+    "subtitle": "Skalakan beban kerja AI Anda ke beberapa perangkat dengan distribusi peer-to-peer",
+    "title": "Komputasi AI Terdistribusi"
   },
-  "users": {
-    "title": "Pengguna",
-    "subtitle": "Kelola pengguna terdaftar, peran, dan undangan"
+  "scheduling": {
+    "subtitle": "Aturan penempatan model dan replika di seluruh kluster",
+    "title": "Penjadwalan"
+  },
+  "settings": {
+    "subtitle": "Konfigurasi pengaturan runtime LocalAI",
+    "title": "Pengaturan"
+  },
+  "traces": {
+    "subtitle": "Lihat log permintaan API, respons, dan operasi backend",
+    "title": "Trace"
   },
   "usage": {
-    "title": "Penggunaan",
-    "subtitle": "Statistik penggunaan token API",
     "sources": {
-      "tab": "Sumber",
+      "clearFilter": "Hapus filter",
+      "filteredTo": "Difilter ke: {{name}}",
+      "legacy": "Legasi",
       "mixTitle": "Campuran sumber",
+      "noKeysYet": "Setelah permintaan masuk, Anda akan melihat rinciannya di sini.",
+      "noTrafficShort": "Tidak ada permintaan dalam periode ini.",
+      "other_other": "",
+      "revoked": " dicabut",
       "ribbonAria": "{{apikey}}% API Key, {{web}}% Web UI, {{legacy}}% Legasi",
-      "topSources": "Sumber teratas dari waktu ke waktu",
       "searchPlaceholder": "Cari berdasarkan nama atau awalan",
       "sortBy": "Urutkan",
-      "sortTokens": "Token",
-      "sortRequests": "Permintaan",
       "sortLastUsed": "Terakhir digunakan",
       "sortName": "Nama",
+      "sortRequests": "Permintaan",
+      "sortTokens": "Token",
       "sortUser": "Pengguna",
-      "webUI": "Web UI",
-      "legacy": "Legasi",
-      "revoked": " dicabut",
-      "filteredTo": "Difilter ke: {{name}}",
-      "clearFilter": "Hapus filter",
-      "other": "Lainnya ({{count}})",
-      "noTrafficShort": "Tidak ada permintaan dalam periode ini.",
-      "noKeysYet": "Setelah permintaan masuk, Anda akan melihat rinciannya di sini.",
-      "createKey": "Buat API Key pertama Anda",
-      "truncatedWarning": "Menampilkan 200 key teratas. Terapkan filter untuk mempersempit pencarian."
-    }
+      "tab": "Sumber",
+      "topSources": "Sumber teratas dari waktu ke waktu",
+      "truncatedWarning": "Menampilkan 200 key teratas. Terapkan filter untuk mempersempit pencarian.",
+      "webUI": "Web UI"
+    },
+    "subtitle": "Statistik penggunaan token API",
+    "title": "Penggunaan"
   },
-  "explorer": {
-    "title": "Penjelajah",
-    "subtitle": "Jelajahi file dan konfigurasi"
+  "users": {
+    "subtitle": "Kelola pengguna terdaftar, peran, dan undangan",
+    "title": "Pengguna"
   }
 }

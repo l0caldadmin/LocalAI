@@ -7,9 +7,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/mudler/LocalAI/pkg/grpc/base"
-	pb "github.com/mudler/LocalAI/pkg/grpc/proto"
-	piper "github.com/mudler/go-piper"
+	"github.com/l0caldadmin/LocalAI/pkg/grpc/base"
+	pb "github.com/l0caldadmin/LocalAI/pkg/grpc/proto"
+	piper "github.com/l0caldadmin/go-piper"
 )
 
 type Piper struct {

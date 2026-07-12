@@ -43,11 +43,12 @@ RUN set -e; if [ "${BUILD_TYPE}" = "vulkan" ] && [ "${SKIP_DRIVERS}" = "false" ]
         apt-get install -y --no-install-recommends \
             software-properties-common pciutils wget gpg-agent; \
         apt-get install -y --no-install-recommends libglm-dev cmake libxcb-dri3-0 libxcb-present0 libpciaccess0 \
-            libpng-dev libxcb-keysyms1-dev libxcb-dri3-dev libx11-dev libmirclient-dev \
+            libpng-dev libxcb-keysyms1-dev libxcb-dri3-dev libx11-dev \
             libwayland-dev libxrandr-dev libxcb-randr0-dev libxcb-ewmh-dev \
-            git python3 bison pkg-config; \
+            git python3 bison pkg-config mesa-vulkan-drivers; \
         wget -qO - https://packages.lunarg.com/lunarg-signing-key-pub.asc | gpg --dearmor -o /usr/share/keyrings/lunarg-vulkan.gpg; \
-        echo "deb [signed-by=/usr/share/keyrings/lunarg-vulkan.gpg] https://packages.lunarg.com/vulkan ${UBUNTU_CODENAME} main" > /etc/apt/sources.list.d/lunarg-vulkan.list; \
+        UBUNTU_CODENAME_DYNAMIC=$(grep VERSION_CODENAME /etc/os-release | cut -d= -f2 | tr -d '\"'); \
+        echo "deb [signed-by=/usr/share/keyrings/lunarg-vulkan.gpg] https://packages.lunarg.com/vulkan ${UBUNTU_CODENAME_DYNAMIC} main" > /etc/apt/sources.list.d/lunarg-vulkan.list; \
         apt-get update; \
         apt-get install -y --no-install-recommends vulkan-sdk; \
         if [ "amd64" = "$TARGETARCH" ]; then \
@@ -92,14 +93,15 @@ RUN set -e; if [ "${BUILD_TYPE}" = "vulkan" ] && [ "${SKIP_DRIVERS}" = "false" ]
 RUN set -e; if ( [ "${BUILD_TYPE}" = "cublas" ] || [ "${BUILD_TYPE}" = "l4t" ] ) && [ "${SKIP_DRIVERS}" = "false" ]; then \
         apt-get update; \
         apt-get install -y --no-install-recommends software-properties-common pciutils; \
+        UBUNTU_VERSION_DYNAMIC=$(grep VERSION_ID /etc/os-release | cut -d= -f2 | tr -d '.\"'); \
         if [ "amd64" = "$TARGETARCH" ]; then \
-            curl -fO https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${UBUNTU_VERSION}/x86_64/cuda-keyring_1.1-1_all.deb; \
+            curl -fO https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${UBUNTU_VERSION_DYNAMIC}/x86_64/cuda-keyring_1.1-1_all.deb; \
         fi; \
         if [ "arm64" = "$TARGETARCH" ]; then \
             if [ "${CUDA_MAJOR_VERSION}" = "13" ]; then \
-                curl -fO https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${UBUNTU_VERSION}/sbsa/cuda-keyring_1.1-1_all.deb; \
+                curl -fO https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${UBUNTU_VERSION_DYNAMIC}/sbsa/cuda-keyring_1.1-1_all.deb; \
             else \
-                curl -fO https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${UBUNTU_VERSION}/arm64/cuda-keyring_1.1-1_all.deb; \
+                curl -fO https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${UBUNTU_VERSION_DYNAMIC}/arm64/cuda-keyring_1.1-1_all.deb; \
             fi; \
         fi; \
         dpkg -i cuda-keyring_1.1-1_all.deb; \
@@ -128,13 +130,14 @@ RUN if [ "${BUILD_TYPE}" = "cublas" ] && [ "${TARGETARCH}" = "arm64" ]; then \
 
 # https://github.com/NVIDIA/Isaac-GR00T/issues/343
 RUN if [ "${BUILD_TYPE}" = "cublas" ] && [ "${TARGETARCH}" = "arm64" ]; then \
-        wget https://developer.download.nvidia.com/compute/cudss/0.6.0/local_installers/cudss-local-tegra-repo-ubuntu${UBUNTU_VERSION}-0.6.0_0.6.0-1_arm64.deb && \
-        dpkg -i cudss-local-tegra-repo-ubuntu${UBUNTU_VERSION}-0.6.0_0.6.0-1_arm64.deb && \
-        cp /var/cudss-local-tegra-repo-ubuntu${UBUNTU_VERSION}-0.6.0/cudss-*-keyring.gpg /usr/share/keyrings/ && \
+        UBUNTU_VERSION_DYNAMIC=$(grep VERSION_ID /etc/os-release | cut -d= -f2 | tr -d '.\"'); \
+        wget https://developer.download.nvidia.com/compute/cudss/0.6.0/local_installers/cudss-local-tegra-repo-ubuntu${UBUNTU_VERSION_DYNAMIC}-0.6.0_0.6.0-1_arm64.deb && \
+        dpkg -i cudss-local-tegra-repo-ubuntu${UBUNTU_VERSION_DYNAMIC}-0.6.0_0.6.0-1_arm64.deb && \
+        cp /var/cudss-local-tegra-repo-ubuntu${UBUNTU_VERSION_DYNAMIC}-0.6.0/cudss-*-keyring.gpg /usr/share/keyrings/ && \
         apt-get update && apt-get -y install cudss cudss-cuda-${CUDA_MAJOR_VERSION} && \
-        wget https://developer.download.nvidia.com/compute/nvpl/25.5/local_installers/nvpl-local-repo-ubuntu${UBUNTU_VERSION}-25.5_1.0-1_arm64.deb && \
-        dpkg -i nvpl-local-repo-ubuntu${UBUNTU_VERSION}-25.5_1.0-1_arm64.deb && \
-        cp /var/nvpl-local-repo-ubuntu${UBUNTU_VERSION}-25.5/nvpl-*-keyring.gpg /usr/share/keyrings/ && \
+        wget https://developer.download.nvidia.com/compute/nvpl/25.5/local_installers/nvpl-local-repo-ubuntu${UBUNTU_VERSION_DYNAMIC}-25.5_1.0-1_arm64.deb && \
+        dpkg -i nvpl-local-repo-ubuntu${UBUNTU_VERSION_DYNAMIC}-25.5_1.0-1_arm64.deb && \
+        cp /var/nvpl-local-repo-ubuntu${UBUNTU_VERSION_DYNAMIC}-25.5/nvpl-*-keyring.gpg /usr/share/keyrings/ && \
         apt-get update && apt-get install -y nvpl; \
     fi
 
@@ -183,9 +186,10 @@ RUN set -e; if [ "${BUILD_TYPE}" = "intel" ] && [ "${SKIP_DRIVERS}" = "false" ];
         apt-get install -y --no-install-recommends gnupg; \
         wget -qO - https://repositories.intel.com/gpu/intel-graphics.key | \
         gpg --yes --dearmor --output /usr/share/keyrings/intel-graphics.gpg; \
-        echo "deb [arch=amd64 signed-by=/usr/share/keyrings/intel-graphics.gpg] https://repositories.intel.com/gpu/ubuntu ${UBUNTU_CODENAME}/lts/2350 unified" > /etc/apt/sources.list.d/intel-graphics.list; \
+        UBUNTU_CODENAME_DYNAMIC=$(grep VERSION_CODENAME /etc/os-release | cut -d= -f2 | tr -d '\"'); \
+        echo "deb [arch=amd64 signed-by=/usr/share/keyrings/intel-graphics.gpg] https://repositories.intel.com/gpu/ubuntu ${UBUNTU_CODENAME_DYNAMIC}/lts/2350 unified" > /etc/apt/sources.list.d/intel-graphics.list; \
         apt-get update; \
-        apt-get install -y --no-install-recommends intel-opencl-icd intel-level-zero-gpu level-zero; \
+        apt-get install -y --no-install-recommends intel-opencl-icd intel-level-zero-gpu level-zero clinfo intel-gpu-tools; \
         apt-get clean; \
         rm -rf /var/lib/apt/lists/*; \
     fi

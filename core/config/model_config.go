@@ -131,6 +131,7 @@ type ModelConfig struct {
 	// detectors.
 	PIIDetection PIIDetectionConfig `yaml:"pii_detection,omitempty" json:"pii_detection,omitempty"`
 	Router       RouterConfig       `yaml:"router,omitempty" json:"router,omitempty"`
+	Metadata     CandidateMetadata  `yaml:"metadata,omitempty" json:"metadata,omitempty"`
 	Proxy        ProxyConfig        `yaml:"proxy,omitempty" json:"proxy,omitempty"`
 	MITM         MITMModelConfig    `yaml:"mitm,omitempty" json:"mitm,omitempty"`
 	Limits       LimitsConfig       `yaml:"limits,omitempty" json:"limits,omitempty"`
@@ -290,6 +291,10 @@ type RouterConfig struct {
 	// 500 — fail-fast, not silent-bypass.
 	Fallback string `yaml:"fallback,omitempty" json:"fallback,omitempty"`
 
+	// Fallbacks is an ordered chain of models to try if the primary route fails.
+	// Replaces the single string 'fallback'.
+	Fallbacks []string `yaml:"fallbacks,omitempty" json:"fallbacks,omitempty"`
+
 	// ClassifierModel names the model the Score classifier scores
 	// against (Arch-Router-1.5B is the canonical choice).
 	ClassifierModel string `yaml:"classifier_model,omitempty" json:"classifier_model,omitempty"`
@@ -381,13 +386,76 @@ type RouterPolicy struct {
 	Description string `yaml:"description" json:"description"`
 }
 
+type ExecutionMode string
+
+const (
+	ExecModeLocal     ExecutionMode = "local"
+	ExecModeRemote    ExecutionMode = "remote"
+	ExecModeFederated ExecutionMode = "federated"
+	ExecModeUnknown   ExecutionMode = ""
+)
+
+type TrustClass int
+
+const (
+	TrustUnknown   TrustClass = 0
+	TrustUntrusted TrustClass = 10
+	TrustStandard  TrustClass = 50
+	TrustHigh      TrustClass = 100
+)
+
+type PrivacyClass int
+
+const (
+	PrivacyUnknown      PrivacyClass = 0
+	PrivacyPublic       PrivacyClass = 10
+	PrivacyInternal     PrivacyClass = 50
+	PrivacyConfidential PrivacyClass = 100
+)
+
+type NetworkScope string
+
+const (
+	NetScopeLocalhost NetworkScope = "localhost"
+	NetScopeVPC       NetworkScope = "vpc"
+	NetScopeInternet  NetworkScope = "internet"
+	NetScopeUnknown   NetworkScope = ""
+)
+
+type CapabilityTag string
+
+const (
+	CapStreaming CapabilityTag = "streaming"
+	CapVision    CapabilityTag = "vision"
+	CapTools     CapabilityTag = "tools"
+	CapReasoning CapabilityTag = "reasoning"
+)
+
+// CandidateMetadata provides immutable typed facts about a model for admission control.
+type CandidateMetadata struct {
+	ExecutionMode ExecutionMode   `yaml:"execution_mode" json:"execution_mode"`
+	TrustClass    TrustClass      `yaml:"trust_class" json:"trust_class"`
+	PrivacyClass  PrivacyClass    `yaml:"privacy_class" json:"privacy_class"`
+	NetworkScope  NetworkScope    `yaml:"network_scope" json:"network_scope"`
+	Capabilities  []CapabilityTag `yaml:"capabilities" json:"capabilities"`
+}
+
+// RouterCandidateConstraints holds static capabilities required by the candidate.
+type RouterCandidateConstraints struct {
+	RequireLocal  bool `yaml:"require_local,omitempty" json:"require_local,omitempty"`
+	MinContext    int  `yaml:"min_context,omitempty" json:"min_context,omitempty"`
+	RequireTools  bool `yaml:"require_tools,omitempty" json:"require_tools,omitempty"`
+	RequireVision bool `yaml:"require_vision,omitempty" json:"require_vision,omitempty"`
+}
+
 // RouterCandidate names a downstream model and the policy labels it
 // is willing to serve. Labels are matched as a set: the middleware
 // picks the first candidate whose Labels is a superset of the
 // classifier's active set.
 type RouterCandidate struct {
-	Model  string   `yaml:"model" json:"model"`
-	Labels []string `yaml:"labels" json:"labels"`
+	Model       string                     `yaml:"model" json:"model"`
+	Labels      []string                   `yaml:"labels" json:"labels"`
+	Constraints RouterCandidateConstraints `yaml:"constraints,omitempty" json:"constraints,omitempty"`
 }
 
 // HasRouter returns true when the model declares a router config with

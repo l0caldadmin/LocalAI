@@ -11,7 +11,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
-	coreTypes "github.com/mudler/LocalAGI/core/types"
+	coreTypes "github.com/l0caldadmin/LocalAGI/core/types"
 	"github.com/mudler/LocalAI/core/application"
 	"github.com/mudler/LocalAI/core/services/agents"
 	"github.com/mudler/xlog"

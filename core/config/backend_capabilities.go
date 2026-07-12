@@ -269,32 +269,8 @@ var BackendCapabilities = map[string]BackendCapability{
 		DefaultUsecases:  []string{UsecaseChat},
 		Description:      "HuggingFace transformers — general-purpose Python inference",
 	},
-	"mlx": {
-		GRPCMethods:      []GRPCMethod{MethodPredict, MethodPredictStream, MethodEmbedding},
-		PossibleUsecases: []string{UsecaseChat, UsecaseCompletion, UsecaseEmbeddings},
-		DefaultUsecases:  []string{UsecaseChat},
-		Description:      "Apple MLX framework — optimized for Apple Silicon",
-	},
-	"mlx-distributed": {
-		GRPCMethods:      []GRPCMethod{MethodPredict, MethodPredictStream, MethodEmbedding},
-		PossibleUsecases: []string{UsecaseChat, UsecaseCompletion, UsecaseEmbeddings},
-		DefaultUsecases:  []string{UsecaseChat},
-		Description:      "MLX distributed inference across multiple Apple Silicon devices",
-	},
-	"mlx-vlm": {
-		GRPCMethods:      []GRPCMethod{MethodPredict, MethodPredictStream, MethodEmbedding},
-		PossibleUsecases: []string{UsecaseChat, UsecaseCompletion, UsecaseEmbeddings, UsecaseVision},
-		DefaultUsecases:  []string{UsecaseChat, UsecaseVision},
-		AcceptsImages:    true,
-		AcceptsAudios:    true,
-		Description:      "MLX vision-language models with multimodal input",
-	},
-	"mlx-audio": {
-		GRPCMethods:      []GRPCMethod{MethodPredict, MethodTTS},
-		PossibleUsecases: []string{UsecaseChat, UsecaseCompletion, UsecaseTTS},
-		DefaultUsecases:  []string{UsecaseChat},
-		Description:      "MLX audio models — text generation and TTS",
-	},
+
+
 
 	// --- Image/video generation backends ---
 	"diffusers": {
@@ -579,9 +555,7 @@ func NormalizeBackendName(backend string) string {
 // and unknown backends fall through to the llama.cpp default to preserve the
 // GGUF auto-detect path's behavior.
 var nonLlamaSamplerBackends = map[string]struct{}{
-	"mlx":             {},
-	"mlx-vlm":         {},
-	"mlx-distributed": {},
+
 }
 
 // UsesLlamaSamplerDefaults reports whether a backend should receive llama.cpp's

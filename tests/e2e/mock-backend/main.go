@@ -80,8 +80,20 @@ func (m *MockBackend) LoadModel(ctx context.Context, in *pb.ModelOptions) (*pb.R
 
 func (m *MockBackend) Predict(ctx context.Context, in *pb.PredictOptions) (*pb.Reply, error) {
 	xlog.Debug("Predict called", "prompt", in.Prompt)
+	if strings.Contains(in.Prompt, "MOCK_CRASH") {
+		opts := snapshotLoadParams()
+		if opts != nil && strings.Contains(in.Prompt, "MOCK_CRASH="+opts.Model) {
+			panic(fmt.Sprintf("MOCK_CRASH triggered for %s", opts.Model))
+		}
+	}
+
 	if strings.Contains(in.Prompt, "MOCK_ERROR") {
-		return nil, fmt.Errorf("mock backend predict error: simulated failure")
+		opts := snapshotLoadParams()
+		if opts != nil && strings.Contains(in.Prompt, "MOCK_ERROR="+opts.Model) {
+			return nil, fmt.Errorf("mock backend predict error: simulated failure")
+		} else if !strings.Contains(in.Prompt, "MOCK_ERROR=") {
+			return nil, fmt.Errorf("mock backend predict error: simulated failure")
+		}
 	}
 
 	// ECHO_LOAD_PARAMS lets path-resolution tests inspect what LoadModel

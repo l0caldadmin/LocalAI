@@ -252,12 +252,7 @@ var _ = Describe("DiscoverModelConfig", func() {
 			Expect(imp.AutoDetects()).To(BeTrue())
 		})
 
-		It("MLXImporter exposes name/modality/autodetect", func() {
-			imp := &importers.MLXImporter{}
-			Expect(imp.Name()).To(Equal("mlx"))
-			Expect(imp.Modality()).To(Equal("text"))
-			Expect(imp.AutoDetects()).To(BeTrue())
-		})
+
 
 		It("VLLMImporter exposes name/modality/autodetect", func() {
 			imp := &importers.VLLMImporter{}

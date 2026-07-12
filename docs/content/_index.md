@@ -13,7 +13,7 @@ type = "home"
 
 **Drop-in replacement for OpenAI API** - modular suite of tools that work seamlessly together or independently. 
 
-Start with **[LocalAI](https://localai.io)**'s OpenAI-compatible API, extend with **[LocalAGI](https://github.com/mudler/LocalAGI)**'s autonomous agents, and enhance with **[LocalRecall](https://github.com/mudler/LocalRecall)**'s semantic search - all running locally on your hardware.
+Start with **[LocalAI](https://localai.io)**'s OpenAI-compatible API, extend with **[LocalAGI](https://github.com/l0caldadmin/LocalAGI)**'s autonomous agents, and enhance with **[LocalRecall](https://github.com/mudler/LocalRecall)**'s semantic search - all running locally on your hardware.
 
 **Open Source** MIT Licensed.
 {{% /notice %}}
@@ -60,4 +60,4 @@ For complete installation instructions, see the [Installation guide](/installati
 - [Try out examples](https://github.com/mudler/LocalAI-examples)
 - [Join the community](https://discord.gg/uJAeKSAGDy)
 - [Check the LocalAI Github repository](https://github.com/mudler/LocalAI)
-- [Check the LocalAGI Github repository](https://github.com/mudler/LocalAGI)
+- [Check the LocalAGI Github repository](https://github.com/l0caldadmin/LocalAGI)

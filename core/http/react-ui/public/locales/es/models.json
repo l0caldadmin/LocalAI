@@ -1,87 +1,95 @@
 {
-  "title": "Instalar modelos",
-  "subtitle": "Explora e instala modelos de IA desde la galería",
+  "actions": {
+    "addModel": "Añadir modelo",
+    "delete": "Eliminar",
+    "importModel": "Importar modelo",
+    "install": "Instalar",
+    "reinstall": "Reinstalar"
+  },
+  "deleteDialog": {
+    "confirm": "Eliminar {{model}}",
+    "deletingToast": "Eliminando {{model}}...",
+    "message": "¿Eliminar el modelo {{model}}?",
+    "title": "Eliminar modelo"
+  },
+  "detail": {
+    "backend": "Backend",
+    "description": "Descripción",
+    "fileCount_one": "{{count}} archivo",
+    "fileCount_many": "",
+    "fileCount_other": "{{count}} archivos",
+    "filename": "Nombre del archivo",
+    "files": "Archivos",
+    "fitsGpu": "Cabe en la GPU",
+    "gallery": "Galería",
+    "license": "Licencia",
+    "links": "Enlaces",
+    "mayNotFitGpu": "Puede no caber en la GPU",
+    "requiresTrustRemoteCode": "Requiere Trust Remote Code",
+    "sha256": "SHA256",
+    "size": "Tamaño",
+    "tags": "Etiquetas",
+    "uri": "URI",
+    "vram": "VRAM",
+    "warning": "Advertencia"
+  },
+  "empty": {
+    "noFilters": "La galería de modelos está vacía.",
+    "title": "No se encontraron modelos",
+    "withFilters": "Ningún modelo coincide con la búsqueda o filtros actuales."
+  },
+  "errors": {
+    "deleteFailed": "Error al eliminar: {{message}}",
+    "installFailed": "Error al instalar: {{message}}",
+    "loadFailed": "Error al cargar modelos: {{message}}"
+  },
+  "filters": {
+    "allBackends": "Todos los backends",
+    "fitsGpu": "Cabe en la GPU",
+    "searchBackends": "Buscar backends..."
+  },
+  "models": "",
+  "recommended": {
+    "cpuNote": "",
+    "dismiss": "",
+    "gpuNote": "",
+    "install": "",
+    "installFailed": "",
+    "installing": "",
+    "installStarted": "",
+    "title": ""
+  },
+  "search": {
+    "clearFilters": "Limpiar filtros",
+    "placeholder": "Buscar modelos..."
+  },
+  "selector": {
+    "loading": "",
+    "noModels": "",
+    "searchPlaceholder": "",
+    "selectModel": ""
+  },
   "stats": {
     "available": "Disponibles",
     "installed": "Instalados"
   },
-  "actions": {
-    "addModel": "Añadir modelo",
-    "importModel": "Importar modelo",
-    "install": "Instalar",
-    "reinstall": "Reinstalar",
-    "delete": "Eliminar"
-  },
-  "filters": {
-    "all": "Todos",
-    "llm": "LLM",
-    "image": "Imagen",
-    "multimodal": "Multimodal",
-    "vision": "Visión",
-    "tts": "TTS",
-    "stt": "STT",
-    "diarization": "Diarización",
-    "embedding": "Embedding",
-    "rerank": "Rerank",
-    "fitsGpu": "Cabe en la GPU",
-    "allBackends": "Todos los backends",
-    "searchBackends": "Buscar backends..."
-  },
-  "search": {
-    "placeholder": "Buscar modelos...",
-    "clearFilters": "Limpiar filtros"
-  },
+  "subtitle": "Explora e instala modelos de IA desde la galería",
   "table": {
-    "modelName": "Nombre del modelo",
-    "description": "Descripción",
-    "backend": "Backend",
-    "sizeVram": "Tamaño / VRAM",
-    "status": "Estado",
     "actions": "Acciones",
-    "size": "Tamaño: {{size}}",
-    "vram": "VRAM: {{vram}}",
+    "backend": "Backend",
+    "description": "Descripción",
     "fits": "Cabe",
-    "mayNotFit": "Puede no caber",
-    "trustRemoteCode": "Trust Remote Code",
+    "installed": "Instalado",
     "installing": "Instalando",
     "installingPct": "Instalando · {{percent}}%",
-    "installed": "Instalado",
-    "notInstalled": "No instalado"
+    "mayNotFit": "Puede no caber",
+    "modelName": "Nombre del modelo",
+    "notInstalled": "No instalado",
+    "size": "Tamaño: {{size}}",
+    "sizeVram": "Tamaño / VRAM",
+    "status": "Estado",
+    "trustRemoteCode": "Trust Remote Code",
+    "vram": "VRAM: {{vram}}"
   },
-  "detail": {
-    "description": "Descripción",
-    "gallery": "Galería",
-    "backend": "Backend",
-    "size": "Tamaño",
-    "vram": "VRAM",
-    "license": "Licencia",
-    "tags": "Etiquetas",
-    "links": "Enlaces",
-    "warning": "Advertencia",
-    "files": "Archivos",
-    "fitsGpu": "Cabe en la GPU",
-    "mayNotFitGpu": "Puede no caber en la GPU",
-    "requiresTrustRemoteCode": "Requiere Trust Remote Code",
-    "fileCount_one": "{{count}} archivo",
-    "fileCount_other": "{{count}} archivos",
-    "filename": "Nombre del archivo",
-    "uri": "URI",
-    "sha256": "SHA256"
-  },
-  "empty": {
-    "title": "No se encontraron modelos",
-    "withFilters": "Ningún modelo coincide con la búsqueda o filtros actuales.",
-    "noFilters": "La galería de modelos está vacía."
-  },
-  "deleteDialog": {
-    "title": "Eliminar modelo",
-    "message": "¿Eliminar el modelo {{model}}?",
-    "confirm": "Eliminar {{model}}",
-    "deletingToast": "Eliminando {{model}}..."
-  },
-  "errors": {
-    "loadFailed": "Error al cargar modelos: {{message}}",
-    "installFailed": "Error al instalar: {{message}}",
-    "deleteFailed": "Error al eliminar: {{message}}"
-  }
+  "title": "Instalar modelos"
 }

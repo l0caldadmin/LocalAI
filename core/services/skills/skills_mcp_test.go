@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
-	agiSkills "github.com/mudler/LocalAGI/services/skills"
+	agiSkills "github.com/l0caldadmin/LocalAGI/services/skills"
 	localskills "github.com/mudler/LocalAI/core/services/skills"
 
 	. "github.com/onsi/ginkgo/v2"

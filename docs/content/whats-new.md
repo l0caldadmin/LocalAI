@@ -123,7 +123,7 @@ Thanks to the community efforts now we have a new [how-to website](https://io.mi
 
 #### LocalAGI in discord!
 
-Did you know that we have now few cool bots in our Discord? come check them out! We also have an instance of [LocalAGI](https://github.com/mudler/LocalAGI) ready to help you out!
+Did you know that we have now few cool bots in our Discord? come check them out! We also have an instance of [LocalAGI](https://github.com/l0caldadmin/LocalAGI) ready to help you out!
 
 
 
@@ -198,9 +198,9 @@ Now by default the model-gallery repositories are configured in the container im
 
 ### 💡 New project
 
-[LocalAGI](https://github.com/mudler/LocalAGI) is a simple agent that uses LocalAI functions to have a full locally runnable assistant (with no API keys needed). 
+[LocalAGI](https://github.com/l0caldadmin/LocalAGI) is a simple agent that uses LocalAI functions to have a full locally runnable assistant (with no API keys needed). 
 
-See it [here in action](https://github.com/mudler/LocalAGI/assets/2420543/9ba43b82-dec5-432a-bdb9-8318e7db59a4) planning a trip for San Francisco! 
+See it [here in action](https://github.com/l0caldadmin/LocalAGI/assets/2420543/9ba43b82-dec5-432a-bdb9-8318e7db59a4) planning a trip for San Francisco! 
 
 The full changelog is available [here](https://github.com/go-skynet/LocalAI/releases/tag/v.1.24.0).
 
@@ -342,7 +342,7 @@ See also [models]({{%relref "features/model-gallery" %}}) for a complete documen
 
 ### Text to Audio
 
-Now `LocalAI` uses [piper](https://github.com/rhasspy/piper) and [go-piper](https://github.com/mudler/go-piper) to generate audio from text. This is an experimental feature, and it requires `GO_TAGS=tts` to be set during build. It is enabled by default in the pre-built container images.
+Now `LocalAI` uses [piper](https://github.com/rhasspy/piper) and [go-piper](https://github.com/l0caldadmin/go-piper) to generate audio from text. This is an experimental feature, and it requires `GO_TAGS=tts` to be set during build. It is enabled by default in the pre-built container images.
 
 To setup audio models, you can use the new galleries, or setup the models manually as described in [the API section of the documentation]({{%relref "features/text-to-audio" %}}).
 

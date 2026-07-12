@@ -1,5 +1,5 @@
 # Disable parallel execution for backend builds
-.NOTPARALLEL: backends/diffusers backends/llama-cpp backends/turboquant backends/outetts backends/piper backends/stablediffusion-ggml backends/whisper backends/crispasr backends/parakeet-cpp backends/faster-whisper backends/silero-vad backends/local-store backends/huggingface backends/rfdetr backends/rfdetr-cpp backends/insightface backends/speaker-recognition backends/kitten-tts backends/kokoro backends/chatterbox backends/llama-cpp-darwin backends/neutts build-darwin-python-backend build-darwin-go-backend backends/mlx backends/diffuser-darwin backends/mlx-vlm backends/mlx-audio backends/mlx-distributed backends/stablediffusion-ggml-darwin backends/vllm backends/vllm-omni backends/sglang backends/moonshine backends/pocket-tts backends/qwen-tts backends/faster-qwen3-tts backends/qwen-asr backends/nemo backends/voxcpm backends/whisperx backends/ace-step backends/acestep-cpp backends/fish-speech backends/voxtral backends/opus backends/trl backends/llama-cpp-quantization backends/kokoros backends/sam3-cpp backends/qwen3-tts-cpp backends/omnivoice-cpp backends/vibevoice-cpp backends/localvqe backends/tinygrad backends/sherpa-onnx backends/ds4 backends/ds4-darwin backends/liquid-audio backends/supertonic backends/depth-anything-cpp backends/privacy-filter backends/privacy-filter-darwin
+.NOTPARALLEL:
 
 GOCMD=go
 GOTEST=$(GOCMD) test
@@ -56,11 +56,6 @@ ifndef UNAME_S
 UNAME_S := $(shell uname -s)
 endif
 
-ifeq ($(OS),Darwin)
-	ifeq ($(OSX_SIGNING_IDENTITY),)
-		OSX_SIGNING_IDENTITY := $(shell security find-identity -v -p codesigning | grep '"' | head -n 1 | sed -E 's/.*"(.*)"/\1/')
-	endif
-endif
 
 # check if goreleaser exists
 ifeq (, $(shell which goreleaser))
@@ -98,7 +93,7 @@ COVERAGE_TAGS?=debug auth
 ## pkg/xsysinfo, pkg/system, pkg/signals, pkg/distributedhdr). Those packages
 ## are integration/e2e territory and inflating the denominator with dead-weight
 ## zeros made the 10% gate meaningless.
-COVERAGE_COVERPKG?=github.com/l0caldadmin/LocalAI/core/...,github.com/l0caldadmin/LocalAI/pkg/functions/...,github.com/l0caldadmin/LocalAI/pkg/reasoning/...,github.com/l0caldadmin/LocalAI/pkg/sanitize/...,github.com/l0caldadmin/LocalAI/pkg/utils/...,github.com/l0caldadmin/LocalAI/pkg/radixtree/...,github.com/l0caldadmin/LocalAI/pkg/audio/...,github.com/l0caldadmin/LocalAI/pkg/sound/...,github.com/l0caldadmin/LocalAI/pkg/model/...,github.com/l0caldadmin/LocalAI/pkg/concurrency/...,github.com/l0caldadmin/LocalAI/pkg/xsync/...,github.com/l0caldadmin/LocalAI/pkg/xio/...,github.com/l0caldadmin/LocalAI/pkg/clusterrouting/...
+COVERAGE_COVERPKG?=github.com/mudler/LocalAI/core/...,github.com/mudler/LocalAI/pkg/functions/...,github.com/mudler/LocalAI/pkg/reasoning/...,github.com/mudler/LocalAI/pkg/sanitize/...,github.com/mudler/LocalAI/pkg/utils/...,github.com/mudler/LocalAI/pkg/radixtree/...,github.com/mudler/LocalAI/pkg/audio/...,github.com/mudler/LocalAI/pkg/sound/...,github.com/mudler/LocalAI/pkg/model/...,github.com/mudler/LocalAI/pkg/concurrency/...,github.com/mudler/LocalAI/pkg/xsync/...,github.com/mudler/LocalAI/pkg/xio/...,github.com/mudler/LocalAI/pkg/clusterrouting/...
 ## In-process integration suites folded into coverage. Run non-recursively
 ## (excludes tests/e2e/distributed, which needs containers) with the mock
 ## backend built by prepare-test. real-models specs need a downloaded model,
@@ -154,7 +149,7 @@ core/http/react-ui/dist: react-ui
 
 ## Build:
 
-build: protogen-go generate install-go-tools core/http/react-ui/dist ## Build the project
+build: generate install-go-tools core/http/react-ui/dist ## Build the project
 	$(info ${GREEN}I local-ai build info:${RESET})
 	$(info ${GREEN}I BUILD_TYPE: ${YELLOW}$(BUILD_TYPE)${RESET})
 	$(info ${GREEN}I GO_TAGS: ${YELLOW}$(GO_TAGS)${RESET})
@@ -183,14 +178,11 @@ dev-dist:
 dist:
 	$(GORELEASER) build --clean
 
-osx-signed: build
-	codesign --deep --force --sign "$(OSX_SIGNING_IDENTITY)" --entitlements "./Entitlements.plist" "./$(BINARY_NAME)"
-
 ## Run
 run: ## run local-ai
 	CGO_LDFLAGS="$(CGO_LDFLAGS)" $(GOCMD) run ./cmd/local-ai
 
-prepare-test: protogen-go build-mock-backend
+prepare-test: build-mock-backend
 
 ########################################################
 ## Tests
@@ -507,37 +499,11 @@ help: ## Show this help.
 .PHONY: protogen
 protogen: protogen-go
 
+PROTOC_SYSTEM := $(shell command -v protoc 2>/dev/null)
+PROTOC_BIN    := $(PROTOC_SYSTEM)
+
 protoc:
-	@OS_NAME=$$(uname -s | tr '[:upper:]' '[:lower:]'); \
-	ARCH_NAME=$$(uname -m); \
-	if [ "$$OS_NAME" = "darwin" ]; then \
-	  if [ "$$ARCH_NAME" = "arm64" ]; then \
-	    FILE=protoc-31.1-osx-aarch_64.zip; \
-	  elif [ "$$ARCH_NAME" = "x86_64" ]; then \
-	    FILE=protoc-31.1-osx-x86_64.zip; \
-	  else \
-	    echo "Unsupported macOS architecture: $$ARCH_NAME"; exit 1; \
-	  fi; \
-	elif [ "$$OS_NAME" = "linux" ]; then \
-	  if [ "$$ARCH_NAME" = "x86_64" ]; then \
-	    FILE=protoc-31.1-linux-x86_64.zip; \
-	  elif [ "$$ARCH_NAME" = "aarch64" ] || [ "$$ARCH_NAME" = "arm64" ]; then \
-	    FILE=protoc-31.1-linux-aarch_64.zip; \
-	  elif [ "$$ARCH_NAME" = "ppc64le" ]; then \
-	    FILE=protoc-31.1-linux-ppcle_64.zip; \
-	  elif [ "$$ARCH_NAME" = "s390x" ]; then \
-	    FILE=protoc-31.1-linux-s390_64.zip; \
-	  elif [ "$$ARCH_NAME" = "i386" ] || [ "$$ARCH_NAME" = "x86" ]; then \
-	    FILE=protoc-31.1-linux-x86_32.zip; \
-	  else \
-	    echo "Unsupported Linux architecture: $$ARCH_NAME"; exit 1; \
-	  fi; \
-	else \
-	  echo "Unsupported OS: $$OS_NAME"; exit 1; \
-	fi; \
-	URL=https://github.com/protocolbuffers/protobuf/releases/download/v31.1/$$FILE; \
-	curl -L $$URL -o protoc.zip && \
-	unzip -j -d $(CURDIR) protoc.zip bin/protoc && rm protoc.zip
+	@command -v protoc >/dev/null 2>&1 || { echo "protoc is not installed. Please install protobuf-compiler."; exit 1; }
 
 .PHONY: protogen-go
 protogen-go: protoc install-go-tools
@@ -548,7 +514,7 @@ protogen-go: protoc install-go-tools
 	# generate step fails with "protoc-gen-go: program not found". Prepend
 	# GOPATH/bin so the freshly-installed plugins win without requiring a
 	# shell-profile change.
-	PATH="$$(go env GOPATH)/bin:$$PATH" ./protoc --experimental_allow_proto3_optional -Ibackend/ --go_out=pkg/grpc/proto/ --go_opt=paths=source_relative --go-grpc_out=pkg/grpc/proto/ --go-grpc_opt=paths=source_relative \
+	PATH="$$(go env GOPATH)/bin:$$PATH" $(PROTOC_BIN) --experimental_allow_proto3_optional -Ibackend/ --go_out=pkg/grpc/proto/ --go_opt=paths=source_relative --go-grpc_out=pkg/grpc/proto/ --go-grpc_opt=paths=source_relative \
     backend/backend.proto
 
 core/config/inference_defaults.json: ## Fetch inference defaults from unsloth (only if missing)
@@ -566,64 +532,14 @@ protogen-go-clean:
 	$(RM) pkg/grpc/proto/backend.pb.go pkg/grpc/proto/backend_grpc.pb.go
 	$(RM) bin/*
 
+PYTHON_BACKENDS := $(wildcard backend/python/*)
+GO_BACKENDS := $(wildcard backend/go/*)
+RUST_BACKENDS := $(wildcard backend/rust/*)
 prepare-test-extra: protogen-python
-	$(MAKE) -C backend/python/transformers
-	$(MAKE) -C backend/python/outetts
-	$(MAKE) -C backend/python/diffusers
-	$(MAKE) -C backend/python/chatterbox
-	$(MAKE) -C backend/python/vllm
-	$(MAKE) -C backend/python/vllm-omni
-	$(MAKE) -C backend/python/sglang
-	$(MAKE) -C backend/python/vibevoice
-	$(MAKE) -C backend/python/liquid-audio
-	$(MAKE) -C backend/python/moonshine
-	$(MAKE) -C backend/python/pocket-tts
-	$(MAKE) -C backend/python/qwen-tts
-	$(MAKE) -C backend/python/fish-speech
-	$(MAKE) -C backend/python/faster-qwen3-tts
-	$(MAKE) -C backend/python/qwen-asr
-	$(MAKE) -C backend/python/nemo
-	$(MAKE) -C backend/python/voxcpm
-	$(MAKE) -C backend/python/faster-whisper
-	$(MAKE) -C backend/python/whisperx
-	$(MAKE) -C backend/python/ace-step
-	$(MAKE) -C backend/python/trl
-	$(MAKE) -C backend/python/tinygrad
-	$(MAKE) -C backend/python/insightface
-	$(MAKE) -C backend/python/speaker-recognition
-	$(MAKE) -C backend/rust/kokoros kokoros-grpc
-	$(MAKE) -C backend/go/rfdetr-cpp
-	$(MAKE) -C backend/go/locate-anything-cpp
+	@for dir in $(PYTHON_BACKENDS) $(GO_BACKENDS) $(RUST_BACKENDS); do if [ -f $$dir/Makefile ]; then $(MAKE) -C $$dir; fi; done
 
 test-extra: prepare-test-extra
-	$(MAKE) -C backend/python/transformers test
-	$(MAKE) -C backend/python/outetts test
-	$(MAKE) -C backend/python/diffusers test
-	$(MAKE) -C backend/python/chatterbox test
-	$(MAKE) -C backend/python/vllm test
-	$(MAKE) -C backend/python/vllm-omni test
-	$(MAKE) -C backend/python/vibevoice test
-	$(MAKE) -C backend/python/liquid-audio test
-	$(MAKE) -C backend/python/moonshine test
-	$(MAKE) -C backend/python/pocket-tts test
-	$(MAKE) -C backend/python/qwen-tts test
-	$(MAKE) -C backend/python/fish-speech test
-	$(MAKE) -C backend/python/faster-qwen3-tts test
-	$(MAKE) -C backend/python/qwen-asr test
-	$(MAKE) -C backend/python/nemo test
-	$(MAKE) -C backend/python/voxcpm test
-	$(MAKE) -C backend/python/faster-whisper test
-	$(MAKE) -C backend/python/whisperx test
-	$(MAKE) -C backend/python/ace-step test
-	$(MAKE) -C backend/python/trl test
-	$(MAKE) -C backend/python/tinygrad test
-	$(MAKE) -C backend/python/insightface test
-	$(MAKE) -C backend/python/speaker-recognition test
-	$(MAKE) -C backend/rust/kokoros test
-	$(MAKE) -C backend/go/rfdetr-cpp test
-	$(MAKE) -C backend/go/locate-anything-cpp test
-	$(MAKE) -C backend/go/depth-anything-cpp test
-	$(MAKE) -C backend/go/supertonic test
+	@for dir in $(PYTHON_BACKENDS) $(GO_BACKENDS) $(RUST_BACKENDS); do if [ -f $$dir/Makefile ]; then $(MAKE) -C $$dir test; fi; done
 
 ##
 ## End-to-end gRPC tests that exercise a built backend container image.
@@ -1073,21 +989,9 @@ test-extra-backend-sglang: docker-build-sglang
 	$(MAKE) test-extra-backend
 
 
-## mlx is Apple-Silicon-first — the MLX backend auto-detects the right tool
 ## parser from the chat template, so no tool_parser: option is needed (it
 ## would be ignored at runtime). Run this on macOS / arm64 with Metal; the
-## Linux/CPU mlx variant is untested in CI.
-test-extra-backend-mlx: docker-build-mlx
-	BACKEND_IMAGE=local-ai-backend:mlx \
-	BACKEND_TEST_MODEL_NAME=mlx-community/Qwen2.5-0.5B-Instruct-4bit \
-	BACKEND_TEST_CAPS=health,load,predict,stream,tools \
-	$(MAKE) test-extra-backend
 
-test-extra-backend-mlx-vlm: docker-build-mlx-vlm
-	BACKEND_IMAGE=local-ai-backend:mlx-vlm \
-	BACKEND_TEST_MODEL_NAME=mlx-community/Qwen2.5-0.5B-Instruct-4bit \
-	BACKEND_TEST_CAPS=health,load,predict,stream,tools \
-	$(MAKE) test-extra-backend
 
 DOCKER_IMAGE?=local-ai
 IMAGE_TYPE?=core
@@ -1108,20 +1012,6 @@ docker:
 		--build-arg APT_PORTS_MIRROR=$(APT_PORTS_MIRROR) \
 		-t $(DOCKER_IMAGE) .
 
-docker-cuda12:
-	docker build \
-		--build-arg CUDA_MAJOR_VERSION=${CUDA_MAJOR_VERSION} \
-		--build-arg CUDA_MINOR_VERSION=${CUDA_MINOR_VERSION} \
-		--build-arg BASE_IMAGE=$(BASE_IMAGE) \
-		--build-arg IMAGE_TYPE=$(IMAGE_TYPE) \
-		--build-arg GO_TAGS="$(GO_TAGS)" \
-		--build-arg MAKEFLAGS="$(DOCKER_MAKEFLAGS)" \
-		--build-arg BUILD_TYPE=$(BUILD_TYPE) \
-		--build-arg UBUNTU_VERSION=$(UBUNTU_VERSION) \
-		--build-arg UBUNTU_CODENAME=$(UBUNTU_CODENAME) \
-		--build-arg APT_MIRROR=$(APT_MIRROR) \
-		--build-arg APT_PORTS_MIRROR=$(APT_PORTS_MIRROR) \
-		-t $(DOCKER_IMAGE)-cuda-12 .
 
 docker-image-intel:
 	docker build \
@@ -1147,48 +1037,16 @@ docker-image-intel:
 backends/%: docker-build-% docker-save-% build
 	./local-ai backends install "ocifile://$(abspath ./backend-images/$*.tar)"
 
-# Darwin-specific backends (keep as explicit targets since they have special build logic)
-backends/llama-cpp-darwin: build
-	bash ./scripts/build/llama-cpp-darwin.sh
-	./local-ai backends install "ocifile://$(abspath ./backend-images/llama-cpp.tar)"
 
-backends/ds4-darwin: build
-	bash ./scripts/build/ds4-darwin.sh
-	./local-ai backends install "ocifile://$(abspath ./backend-images/ds4.tar)"
 
-backends/privacy-filter-darwin: build
-	bash ./scripts/build/privacy-filter-darwin.sh
-	./local-ai backends install "ocifile://$(abspath ./backend-images/privacy-filter.tar)"
 
-build-darwin-python-backend: build
-	bash ./scripts/build/python-darwin.sh
 
-build-darwin-go-backend: build
-	bash ./scripts/build/golang-darwin.sh
 
-backends/mlx:
-	BACKEND=mlx $(MAKE) build-darwin-python-backend
-	./local-ai backends install "ocifile://$(abspath ./backend-images/mlx.tar)"
 
-backends/diffuser-darwin:
-	BACKEND=diffusers $(MAKE) build-darwin-python-backend
-	./local-ai backends install "ocifile://$(abspath ./backend-images/diffusers.tar)"
 
-backends/mlx-vlm:
-	BACKEND=mlx-vlm $(MAKE) build-darwin-python-backend
-	./local-ai backends install "ocifile://$(abspath ./backend-images/mlx-vlm.tar)"
 
-backends/mlx-audio:
-	BACKEND=mlx-audio $(MAKE) build-darwin-python-backend
-	./local-ai backends install "ocifile://$(abspath ./backend-images/mlx-audio.tar)"
 
-backends/mlx-distributed:
-	BACKEND=mlx-distributed $(MAKE) build-darwin-python-backend
-	./local-ai backends install "ocifile://$(abspath ./backend-images/mlx-distributed.tar)"
 
-backends/stablediffusion-ggml-darwin:
-	BACKEND=stablediffusion-ggml BUILD_TYPE=metal $(MAKE) build-darwin-go-backend
-	./local-ai backends install "ocifile://$(abspath ./backend-images/stablediffusion-ggml.tar)"
 
 backend-images:
 	mkdir -p backend-images
@@ -1204,7 +1062,6 @@ BACKEND_TURBOQUANT = turboquant|turboquant|.|false|false
 # ds4 is antirez/ds4, a DeepSeek V4 Flash-specific inference engine.
 # Single-model; hardware-only validation lives at tests/e2e-backends/
 # (BACKEND_BINARY mode); see docs/superpowers/plans/2026-05-11-ds4-backend.md.
-BACKEND_DS4 = ds4|ds4|.|false|false
 # privacy-filter wraps the standalone privacy-filter.cpp GGML engine (the
 # openai-privacy-filter PII/NER token classifier) — the TokenClassify RPC for
 # the PII redactor tier, on stock ggml with no llama.cpp carry-patches.
@@ -1260,9 +1117,6 @@ BACKEND_NEMO = nemo|python|.|false|true
 BACKEND_VOXCPM = voxcpm|python|.|false|true
 BACKEND_WHISPERX = whisperx|python|.|false|true
 BACKEND_ACE_STEP = ace-step|python|.|false|true
-BACKEND_MLX = mlx|python|.|false|true
-BACKEND_MLX_VLM = mlx-vlm|python|.|false|true
-BACKEND_MLX_DISTRIBUTED = mlx-distributed|python|./|false|true
 BACKEND_TRL = trl|python|.|false|true
 BACKEND_LLAMA_CPP_QUANTIZATION = llama-cpp-quantization|python|.|false|true
 BACKEND_TINYGRAD = tinygrad|python|.|false|true
@@ -1299,79 +1153,18 @@ docker-build-$(word 1,$(subst |, ,$(1))):
 endef
 
 # Generate all docker-build targets
-$(eval $(call generate-docker-build-target,$(BACKEND_LLAMA_CPP)))
-$(eval $(call generate-docker-build-target,$(BACKEND_IK_LLAMA_CPP)))
-$(eval $(call generate-docker-build-target,$(BACKEND_TURBOQUANT)))
-$(eval $(call generate-docker-build-target,$(BACKEND_DS4)))
-$(eval $(call generate-docker-build-target,$(BACKEND_PRIVACY_FILTER)))
-$(eval $(call generate-docker-build-target,$(BACKEND_PIPER)))
-$(eval $(call generate-docker-build-target,$(BACKEND_LOCAL_STORE)))
-$(eval $(call generate-docker-build-target,$(BACKEND_CLOUD_PROXY)))
-$(eval $(call generate-docker-build-target,$(BACKEND_HUGGINGFACE)))
-$(eval $(call generate-docker-build-target,$(BACKEND_SILERO_VAD)))
-$(eval $(call generate-docker-build-target,$(BACKEND_STABLEDIFFUSION_GGML)))
-$(eval $(call generate-docker-build-target,$(BACKEND_WHISPER)))
-$(eval $(call generate-docker-build-target,$(BACKEND_CRISPASR)))
-$(eval $(call generate-docker-build-target,$(BACKEND_PARAKEET_CPP)))
-$(eval $(call generate-docker-build-target,$(BACKEND_DEPTH_ANYTHING_CPP)))
-$(eval $(call generate-docker-build-target,$(BACKEND_VOXTRAL)))
-$(eval $(call generate-docker-build-target,$(BACKEND_OPUS)))
-$(eval $(call generate-docker-build-target,$(BACKEND_RERANKERS)))
-$(eval $(call generate-docker-build-target,$(BACKEND_TRANSFORMERS)))
-$(eval $(call generate-docker-build-target,$(BACKEND_OUTETTS)))
-$(eval $(call generate-docker-build-target,$(BACKEND_FASTER_WHISPER)))
-$(eval $(call generate-docker-build-target,$(BACKEND_COQUI)))
-$(eval $(call generate-docker-build-target,$(BACKEND_RFDETR)))
-$(eval $(call generate-docker-build-target,$(BACKEND_INSIGHTFACE)))
-$(eval $(call generate-docker-build-target,$(BACKEND_SPEAKER_RECOGNITION)))
-$(eval $(call generate-docker-build-target,$(BACKEND_KITTEN_TTS)))
-$(eval $(call generate-docker-build-target,$(BACKEND_NEUTTS)))
-$(eval $(call generate-docker-build-target,$(BACKEND_KOKORO)))
-$(eval $(call generate-docker-build-target,$(BACKEND_VLLM)))
-$(eval $(call generate-docker-build-target,$(BACKEND_VLLM_OMNI)))
-$(eval $(call generate-docker-build-target,$(BACKEND_SGLANG)))
-$(eval $(call generate-docker-build-target,$(BACKEND_DIFFUSERS)))
-$(eval $(call generate-docker-build-target,$(BACKEND_CHATTERBOX)))
-$(eval $(call generate-docker-build-target,$(BACKEND_VIBEVOICE)))
-$(eval $(call generate-docker-build-target,$(BACKEND_LIQUID_AUDIO)))
-$(eval $(call generate-docker-build-target,$(BACKEND_MOONSHINE)))
-$(eval $(call generate-docker-build-target,$(BACKEND_POCKET_TTS)))
-$(eval $(call generate-docker-build-target,$(BACKEND_QWEN_TTS)))
-$(eval $(call generate-docker-build-target,$(BACKEND_FISH_SPEECH)))
-$(eval $(call generate-docker-build-target,$(BACKEND_FASTER_QWEN3_TTS)))
-$(eval $(call generate-docker-build-target,$(BACKEND_QWEN_ASR)))
-$(eval $(call generate-docker-build-target,$(BACKEND_NEMO)))
-$(eval $(call generate-docker-build-target,$(BACKEND_VOXCPM)))
-$(eval $(call generate-docker-build-target,$(BACKEND_WHISPERX)))
-$(eval $(call generate-docker-build-target,$(BACKEND_ACE_STEP)))
-$(eval $(call generate-docker-build-target,$(BACKEND_ACESTEP_CPP)))
-$(eval $(call generate-docker-build-target,$(BACKEND_QWEN3_TTS_CPP)))
-$(eval $(call generate-docker-build-target,$(BACKEND_OMNIVOICE_CPP)))
-$(eval $(call generate-docker-build-target,$(BACKEND_VIBEVOICE_CPP)))
-$(eval $(call generate-docker-build-target,$(BACKEND_LOCALVQE)))
-$(eval $(call generate-docker-build-target,$(BACKEND_MLX)))
-$(eval $(call generate-docker-build-target,$(BACKEND_MLX_VLM)))
-$(eval $(call generate-docker-build-target,$(BACKEND_MLX_DISTRIBUTED)))
-$(eval $(call generate-docker-build-target,$(BACKEND_TRL)))
-$(eval $(call generate-docker-build-target,$(BACKEND_LLAMA_CPP_QUANTIZATION)))
-$(eval $(call generate-docker-build-target,$(BACKEND_TINYGRAD)))
-$(eval $(call generate-docker-build-target,$(BACKEND_KOKOROS)))
-$(eval $(call generate-docker-build-target,$(BACKEND_SAM3_CPP)))
-$(eval $(call generate-docker-build-target,$(BACKEND_RFDETR_CPP)))
-$(eval $(call generate-docker-build-target,$(BACKEND_SHERPA_ONNX)))
-$(eval $(call generate-docker-build-target,$(BACKEND_SUPERTONIC)))
-
+ALL_BACKEND_VARS := $(foreach var,$(filter BACKEND_%,$(.VARIABLES)),$(if $(findstring |,$($(var))),$(var)))
 # Pattern rule for docker-save targets
 docker-save-%: backend-images
 	docker save local-ai-backend:$* -o backend-images/$*.tar
 
-docker-build-backends: docker-build-llama-cpp docker-build-ik-llama-cpp docker-build-turboquant docker-build-ds4 docker-build-rerankers docker-build-vllm docker-build-vllm-omni docker-build-sglang docker-build-transformers docker-build-outetts docker-build-diffusers docker-build-kokoro docker-build-faster-whisper docker-build-crispasr docker-build-coqui docker-build-chatterbox docker-build-vibevoice docker-build-liquid-audio docker-build-moonshine docker-build-pocket-tts docker-build-qwen-tts docker-build-fish-speech docker-build-faster-qwen3-tts docker-build-qwen-asr docker-build-nemo docker-build-voxcpm docker-build-whisperx docker-build-ace-step docker-build-acestep-cpp docker-build-voxtral docker-build-mlx-distributed docker-build-trl docker-build-llama-cpp-quantization docker-build-tinygrad docker-build-kokoros docker-build-sam3-cpp docker-build-rfdetr-cpp docker-build-qwen3-tts-cpp docker-build-omnivoice-cpp docker-build-vibevoice-cpp docker-build-localvqe docker-build-insightface docker-build-speaker-recognition docker-build-sherpa-onnx docker-build-cloud-proxy docker-build-supertonic docker-build-depth-anything-cpp docker-build-privacy-filter
+docker-build-backends: $(foreach var,$(ALL_BACKEND_VARS),docker-build-$(word 1,$(subst |, ,$($(var)))))
 
 ########################################################
 ### Mock Backend for E2E Tests
 ########################################################
 
-build-mock-backend: protogen-go
+build-mock-backend:
 	$(GOCMD) build -o tests/e2e/mock-backend/mock-backend ./tests/e2e/mock-backend
 
 clean-mock-backend:
@@ -1483,34 +1276,12 @@ docs: docs/static/gallery.html
 # Build LocalAI.app from the launcher via fyne (metadata read from cmd/launcher/FyneApp.toml).
 # Signing happens via contrib/macos/sign-and-notarize.sh, which is a no-op when the signing
 # secrets are unset, so unsigned local/fork builds keep working.
-build-launcher-darwin:
-	rm -rf dist/LocalAI.app cmd/launcher/LocalAI.app
-	mkdir -p dist
-	cd cmd/launcher && go run fyne.io/tools/cmd/fyne@latest package -os darwin -icon ../../core/http/static/logo.png --executable $(LAUNCHER_BINARY_NAME)
-	mv cmd/launcher/LocalAI.app dist/LocalAI.app
-	bash contrib/macos/sign-and-notarize.sh sign dist/LocalAI.app
-
 # Notarize + staple the .app itself, then wrap it into a drag-to-Applications
 # DMG via hdiutil and sign the DMG. The app is stapled BEFORE packaging so the
 # bundle carries its own ticket and verifies offline (a dmg-only staple leaves
 # the app relying on an online Gatekeeper check, which fails offline / once the
 # app is copied out of the dmg). No-op without notary secrets.
-dmg-launcher-darwin: build-launcher-darwin
-	bash contrib/macos/sign-and-notarize.sh notarize-app dist/LocalAI.app
-	rm -rf dist/dmg dist/LocalAI.dmg
-	mkdir -p dist/dmg
-	cp -R dist/LocalAI.app dist/dmg/LocalAI.app
-	ln -s /Applications dist/dmg/Applications
-	hdiutil create -volname "LocalAI" -srcfolder dist/dmg -ov -format UDZO dist/LocalAI.dmg
-	bash contrib/macos/sign-and-notarize.sh sign dist/LocalAI.dmg
-
 # Submit the DMG to Apple notarization and staple the ticket (no-op without notary secrets).
-notarize-launcher-darwin: dmg-launcher-darwin
-	bash contrib/macos/sign-and-notarize.sh notarize dist/LocalAI.dmg
-
 # Single entrypoint for CI: build -> sign app -> notarize+staple app -> dmg -> sign dmg -> notarize+staple dmg.
-release-launcher-darwin: notarize-launcher-darwin
-	@echo "dist/LocalAI.dmg is ready"
-
 build-launcher-linux:
 	cd cmd/launcher && go run fyne.io/tools/cmd/fyne@latest package -os linux -icon ../../core/http/static/logo.png --executable $(LAUNCHER_BINARY_NAME)-linux && mv LocalAI.tar.xz ../../$(LAUNCHER_BINARY_NAME)-linux.tar.xz

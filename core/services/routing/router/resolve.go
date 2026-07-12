@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/mudler/LocalAI/core/config"
+	"github.com/mudler/LocalAI/core/services/routing/orchestrator"
 )
 
 // CandidateLoader resolves a candidate's model name to its parsed
@@ -57,6 +58,11 @@ type ResolveResult struct {
 	// rather than a classifier-picked candidate (classifier
 	// build/Classify error or no candidate covered the active labels).
 	UsedFallback bool
+
+	// Trace carries the execution trace of the request, which the handler
+	// can mutate to record iterative fallbacks before the middleware
+	// records the decision.
+	Trace *orchestrator.ProvenanceChain
 }
 
 // Resolve runs the full classify → match → load pipeline for a router
@@ -108,6 +114,18 @@ func Resolve(ctx context.Context, routerCfg *config.ModelConfig, classifier Clas
 		Labels:         decision.Labels,
 		ClassifierName: classifier.Name(),
 		UsedFallback:   false,
+		Trace: &orchestrator.ProvenanceChain{
+			FinalOutcome: orchestrator.OutcomeSuccess,
+			Steps: []orchestrator.ProvenanceStep{
+				{
+					Model:  candidate,
+					ExecutionAttempt: &orchestrator.FallbackAttempt{
+						Model:  candidate,
+						Status: orchestrator.OutcomeSuccess,
+					},
+				},
+			},
+		},
 	}, nil
 }
 
@@ -139,6 +157,18 @@ func resolveFallback(routerCfg *config.ModelConfig, loader CandidateLoader, deci
 		Labels:         []string{LabelFallback},
 		ClassifierName: classifierName,
 		UsedFallback:   true,
+		Trace: &orchestrator.ProvenanceChain{
+			FinalOutcome: orchestrator.OutcomeSuccess,
+			Steps: []orchestrator.ProvenanceStep{
+				{
+					Model:  routerCfg.Router.Fallback,
+					ExecutionAttempt: &orchestrator.FallbackAttempt{
+						Model:  routerCfg.Router.Fallback,
+						Status: orchestrator.OutcomeSuccess,
+					},
+				},
+			},
+		},
 	}, nil
 }
 
@@ -169,6 +199,7 @@ func (r *ResolveResult) ToDecisionRecord(id, correlationID, userID, source strin
 		ActivationThreshold: r.Decision.ActivationThreshold,
 		Source:              source,
 		CreatedAt:           time.Now().UTC(),
+		Trace:               r.Trace,
 	}
 }
 

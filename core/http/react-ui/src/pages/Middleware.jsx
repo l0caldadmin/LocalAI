@@ -507,12 +507,39 @@ function LabelBar({ label, score, threshold, active }) {
 // Empty-state messaging covers cached and fallback rows where the
 // classifier never produced per-label scores.
 function DecisionDetail({ d }) {
+  const renderTrace = () => {
+    if (!d.trace) return null
+    return (
+      <div style={{ marginTop: 'var(--spacing-md)' }}>
+        <div style={{ fontSize: '0.875rem', fontWeight: 600, marginBottom: 'var(--spacing-sm)' }}>
+          Execution Trace {d.trace.execution_mode ? <span style={{ fontSize: '0.6875rem', color: 'var(--color-text-muted)', fontWeight: 'normal', paddingLeft: 8 }}>({d.trace.execution_mode} mode)</span> : null}
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-xs)', fontFamily: 'var(--font-mono)', fontSize: '0.75rem' }}>
+          {d.trace.attempts?.map((att, i) => (
+            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-sm)' }}>
+              <span style={{ width: 24, color: 'var(--color-text-muted)' }}>#{i + 1}</span>
+              <span style={{ width: 140, fontWeight: 600 }}>{att.model}</span>
+              <span style={{ width: 180, color: att.status === 'SUCCESS' ? 'var(--color-success)' : 'var(--color-error)' }}>{att.status}</span>
+              {att.duration && <span style={{ color: 'var(--color-text-muted)' }}>{Math.round(att.duration / 1000000)}ms</span>}
+            </div>
+          ))}
+          {d.trace.attempts?.length === 0 && (
+            <div style={{ color: 'var(--color-text-muted)', fontStyle: 'italic' }}>No attempts recorded</div>
+          )}
+        </div>
+      </div>
+    )
+  }
+
   if (!d.label_scores?.length) {
     return (
-      <div style={{ color: 'var(--color-text-muted)', fontSize: '0.75rem', fontStyle: 'italic' }}>
-        {d.cached
-          ? 'Cached decision — per-label scores not recorded (the cache stores only the resulting label set).'
-          : 'No per-label scores recorded for this decision (likely a fallback row).'}
+      <div>
+        <div style={{ color: 'var(--color-text-muted)', fontSize: '0.75rem', fontStyle: 'italic' }}>
+          {d.cached
+            ? 'Cached decision — per-label scores not recorded (the cache stores only the resulting label set).'
+            : 'No per-label scores recorded for this decision (likely a fallback row).'}
+        </div>
+        {renderTrace()}
       </div>
     )
   }
@@ -536,6 +563,7 @@ function DecisionDetail({ d }) {
           active={active.has(ls.label)}
         />
       ))}
+      {renderTrace()}
     </div>
   )
 }

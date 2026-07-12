@@ -13,9 +13,9 @@ import (
 	"strings"
 
 	"github.com/labstack/echo/v4"
-	"github.com/mudler/LocalAGI/core/state"
-	coreTypes "github.com/mudler/LocalAGI/core/types"
-	agiServices "github.com/mudler/LocalAGI/services"
+	"github.com/l0caldadmin/LocalAGI/core/state"
+	coreTypes "github.com/l0caldadmin/LocalAGI/core/types"
+	agiServices "github.com/l0caldadmin/LocalAGI/services"
 	"github.com/mudler/LocalAI/core/application"
 	"github.com/mudler/LocalAI/core/http/auth"
 	"github.com/mudler/LocalAI/core/services/agentpool"

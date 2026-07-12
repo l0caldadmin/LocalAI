@@ -18,7 +18,7 @@ func ShowP2PNodes(appConfig *config.ApplicationConfig) echo.HandlerFunc {
 		return c.JSON(200, schema.P2PNodesResponse{
 			LlamaCPPNodes:  p2p.GetAvailableNodes(p2p.NetworkID(appConfig.P2PNetworkID, p2p.LlamaCPPWorkerID)),
 			FederatedNodes: p2p.GetAvailableNodes(p2p.NetworkID(appConfig.P2PNetworkID, p2p.FederatedID)),
-			MLXNodes:       p2p.GetAvailableNodes(p2p.NetworkID(appConfig.P2PNetworkID, p2p.MLXWorkerID)),
+
 		})
 	}
 }

@@ -1,0 +1,39 @@
+{
+  "actions": {
+    "backTo": "",
+    "createModel": "",
+    "discardAndSwitch": "",
+    "models": "",
+    "saveChanges": "",
+    "saved": "",
+    "saving": "",
+    "switchWarning": "",
+    "system": "",
+    "templates": ""
+  },
+  "forms": {
+    "empty": {
+      "nav": "",
+      "text": "",
+      "title": ""
+    },
+    "modelName": {
+      "hint": "",
+      "label": "",
+      "placeholder": ""
+    }
+  },
+  "subtitle": {
+    "chooseModelType": "",
+    "newModel": ""
+  },
+  "tabs": {
+    "interactive": "",
+    "yaml": "",
+    "yamlDescription": ""
+  },
+  "title": {
+    "add": "",
+    "edit": ""
+  }
+}

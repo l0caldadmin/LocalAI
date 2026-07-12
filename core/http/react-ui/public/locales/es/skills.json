@@ -1,79 +1,78 @@
 {
-  "title": "Habilidades",
-  "subtitle": "Administra las habilidades de los agentes (instrucciones y recursos reutilizables)",
-  "unavailable": {
-    "subtitle": "El servicio de habilidades no está disponible o el índice se está reconstruyendo. Inténtalo de nuevo en un momento.",
-    "retry": "Reintentar"
-  },
   "actions": {
-    "newSkill": "Nueva habilidad",
+    "adding": "Añadiendo...",
+    "addRepo": "Añadir repo",
     "createSkill": "Crear habilidad",
+    "delete": "Eliminar",
+    "disable": "Deshabilitar",
+    "edit": "Editar",
+    "enable": "Habilitar",
+    "export": "Exportar",
+    "gitRepos": "Repos Git",
     "import": "Importar",
     "importing": "Importando...",
-    "gitRepos": "Repos Git",
-    "edit": "Editar",
-    "delete": "Eliminar",
-    "export": "Exportar",
-    "sync": "Sincronizar",
-    "addRepo": "Añadir repo",
-    "adding": "Añadiendo...",
-    "remove": "Quitar",
-    "enable": "Habilitar",
-    "disable": "Deshabilitar"
+    "newSkill": "Nueva habilidad",
+    "sync": "Sincronizar"
+  },
+  "card": {
+    "deleteTitle": "Eliminar habilidad",
+    "editTitle": "Editar habilidad",
+    "exportTitle": "Exportar como .tar.gz",
+    "noDescription": "Sin descripción",
+    "readOnly": "Solo lectura"
+  },
+  "deleteDialog": {
+    "confirm": "Eliminar",
+    "message": "¿Eliminar la habilidad \"{{name}}\"? Esta acción no se puede deshacer.",
+    "title": "Eliminar habilidad"
+  },
+  "empty": {
+    "noPersonal": "Aún no tienes habilidades.",
+    "text": "Crea una habilidad o importa una para empezar.",
+    "title": "No se encontraron habilidades"
+  },
+  "git": {
+    "description": "Añade repositorios Git de los que obtener habilidades. Las habilidades aparecerán en la lista después de sincronizar.",
+    "disabled": "Deshabilitado",
+    "noRepos": "No hay repos Git configurados. Añade uno arriba.",
+    "removeRepo": "Quitar repo",
+    "title": "Repositorios Git",
+    "urlPlaceholder": "https://github.com/user/repo o git@github.com:user/repo.git"
+  },
+  "removeRepoDialog": {
+    "confirm": "Quitar",
+    "message": "¿Quitar este repositorio Git? Las habilidades de él ya no estarán disponibles.",
+    "title": "Quitar repositorio Git"
   },
   "search": {
     "placeholder": "Buscar habilidades..."
   },
-  "git": {
-    "title": "Repositorios Git",
-    "description": "Añade repositorios Git de los que obtener habilidades. Las habilidades aparecerán en la lista después de sincronizar.",
-    "urlPlaceholder": "https://github.com/user/repo o git@github.com:user/repo.git",
-    "noRepos": "No hay repos Git configurados. Añade uno arriba.",
-    "disabled": "Deshabilitado",
-    "removeRepo": "Quitar repo"
-  },
-  "card": {
-    "noDescription": "Sin descripción",
-    "readOnly": "Solo lectura",
-    "editTitle": "Editar habilidad",
-    "deleteTitle": "Eliminar habilidad",
-    "exportTitle": "Exportar como .tar.gz"
-  },
-  "empty": {
-    "title": "No se encontraron habilidades",
-    "text": "Crea una habilidad o importa una para empezar.",
-    "noPersonal": "Aún no tienes habilidades."
-  },
   "sections": {
-    "yourSkills": "Tus habilidades",
-    "otherUsersSkills": "Habilidades de otros usuarios"
+    "otherUsersSkills": "Habilidades de otros usuarios",
+    "yourSkills": "Tus habilidades"
   },
-  "deleteDialog": {
-    "title": "Eliminar habilidad",
-    "message": "¿Eliminar la habilidad \"{{name}}\"? Esta acción no se puede deshacer.",
-    "confirm": "Eliminar"
-  },
-  "removeRepoDialog": {
-    "title": "Quitar repositorio Git",
-    "message": "¿Quitar este repositorio Git? Las habilidades de él ya no estarán disponibles.",
-    "confirm": "Quitar"
-  },
+  "subtitle": "Administra las habilidades de los agentes (instrucciones y recursos reutilizables)",
+  "title": "Habilidades",
   "toasts": {
-    "loadFailed": "Error al cargar habilidades",
+    "addRepoFailed": "Error al añadir repo",
     "deleted": "Habilidad \"{{name}}\" eliminada",
     "deleteFailed": "Error al eliminar habilidad",
     "exported": "Habilidad \"{{name}}\" exportada",
     "exportFailed": "Error al exportar",
     "imported": "Habilidad importada desde \"{{file}}\"",
     "importFailed": "Error al importar",
+    "loadFailed": "Error al cargar habilidades",
     "loadReposFailed": "Error al cargar repos Git",
+    "removed": "Repo eliminado",
+    "removeFailed": "Error al eliminar",
     "repoAdded": "Repo Git añadido y sincronizando",
-    "addRepoFailed": "Error al añadir repo",
     "synced": "Repo sincronizado",
     "syncFailed": "Error al sincronizar",
     "toggled": "Repo actualizado",
-    "toggleFailed": "Error al actualizar",
-    "removed": "Repo eliminado",
-    "removeFailed": "Error al eliminar"
+    "toggleFailed": "Error al actualizar"
+  },
+  "unavailable": {
+    "retry": "Reintentar",
+    "subtitle": "El servicio de habilidades no está disponible o el índice se está reconstruyendo. Inténtalo de nuevo en un momento."
   }
 }

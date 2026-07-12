@@ -1,66 +1,62 @@
 {
-  "manage": {
-    "title": "Sistema",
-    "subtitle": "Administra modelos y backends instalados"
-  },
-  "settings": {
-    "title": "Configuración",
-    "subtitle": "Configura los ajustes de tiempo de ejecución de LocalAI",
-    "saved": "Configuración guardada con éxito",
-    "saveFailed": "Error al guardar: {{message}}",
-    "loadFailed": "Error al cargar configuración: {{message}}",
-    "sections": {
-      "branding": "Branding",
-      "watchdog": "Watchdog",
-      "memory": "Memoria",
-      "backends": "Backends",
-      "performance": "Rendimiento",
-      "tracing": "Tracing",
-      "api": "API y CORS",
-      "p2p": "P2P",
-      "galleries": "Galerías",
-      "apikeys": "Claves API",
-      "agents": "Trabajos de agentes",
-      "agentpool": "Pool de agentes",
-      "assistant": "LocalAI Assistant",
-      "responses": "Respuestas"
-    }
-  },
   "backends": {
-    "title": "Administración de backends",
-    "subtitle": "Descubre e instala backends de IA para tus modelos"
+    "subtitle": "Descubre e instala backends de IA para tus modelos",
+    "title": "Administración de backends"
   },
-  "backendLogs": {
-    "title": "Logs de backends",
-    "subtitle": "Visualiza logs de los backends en ejecución",
-    "empty": "No hay logs disponibles"
-  },
-  "traces": {
-    "title": "Trazas",
-    "subtitle": "Visualiza peticiones API, respuestas y operaciones de backend registradas"
+  "manage": {
+    "subtitle": "Administra modelos y backends instalados",
+    "title": "Sistema"
   },
   "nodes": {
-    "title": "Nodos distribuidos",
-    "subtitle": "Administra nodos worker de backends y agentes"
-  },
-  "scheduling": {
-    "title": "Planificación",
-    "subtitle": "Reglas de ubicación de modelos y réplicas en el clúster"
+    "subtitle": "Administra nodos worker de backends y agentes",
+    "title": "Nodos distribuidos"
   },
   "p2p": {
-    "title": "Computación de IA distribuida",
-    "subtitle": "Escala tus cargas de trabajo de IA en múltiples dispositivos con distribución peer-to-peer"
+    "subtitle": "Escala tus cargas de trabajo de IA en múltiples dispositivos con distribución peer-to-peer",
+    "title": "Computación de IA distribuida"
   },
-  "users": {
-    "title": "Usuarios",
-    "subtitle": "Administra usuarios registrados, roles e invitaciones"
+  "scheduling": {
+    "subtitle": "Reglas de ubicación de modelos y réplicas en el clúster",
+    "title": "Planificación"
+  },
+  "settings": {
+    "subtitle": "Configura los ajustes de tiempo de ejecución de LocalAI",
+    "title": "Configuración"
+  },
+  "traces": {
+    "subtitle": "Visualiza peticiones API, respuestas y operaciones de backend registradas",
+    "title": "Trazas"
   },
   "usage": {
-    "title": "Uso",
-    "subtitle": "Estadísticas de uso de tokens API"
+    "sources": {
+      "clearFilter": "",
+      "filteredTo": "",
+      "legacy": "",
+      "mixTitle": "",
+      "noKeysYet": "",
+      "noTrafficShort": "",
+      "other_one": "",
+      "other_many": "",
+      "other_other": "",
+      "revoked": "",
+      "ribbonAria": "",
+      "searchPlaceholder": "",
+      "sortBy": "",
+      "sortLastUsed": "",
+      "sortName": "",
+      "sortRequests": "",
+      "sortTokens": "",
+      "sortUser": "",
+      "tab": "",
+      "topSources": "",
+      "truncatedWarning": "",
+      "webUI": ""
+    },
+    "subtitle": "Estadísticas de uso de tokens API",
+    "title": "Uso"
   },
-  "explorer": {
-    "title": "Explorador",
-    "subtitle": "Explora archivos y configuración"
+  "users": {
+    "subtitle": "Administra usuarios registrados, roles e invitaciones",
+    "title": "Usuarios"
   }
 }

@@ -139,7 +139,7 @@ There are options that can be tweaked or parameters that can be set using enviro
 
 LocalAI uses https://github.com/libp2p/go-libp2p under the hood, the same project powering IPFS. Differently from other frameworks, LocalAI uses peer2peer without a single master server, but rather it uses sub/gossip and ledger functionalities to achieve consensus across different peers. 
 
-[EdgeVPN](https://github.com/mudler/edgevpn) is used as a library to establish the network and expose the ledger functionality under a shared token to ease out automatic discovery and have separated, private peer2peer networks.
+[EdgeVPN](https://github.com/l0caldadmin/edgevpn) is used as a library to establish the network and expose the ledger functionality under a shared token to ease out automatic discovery and have separated, private peer2peer networks.
 
 The weights are split proportional to the memory when running into worker mode, when in federation mode each request is split to every node which have to load the model fully.
 

@@ -1,156 +1,76 @@
 {
-  "studio": {
-    "tabs": {
-      "images": "Immagini",
-      "video": "Video",
-      "tts": "TTS",
-      "sound": "Audio",
-      "transform": "Transform"
-    }
-  },
   "image": {
-    "title": "Generazione immagini",
-    "labels": {
-      "model": "Modello",
-      "prompt": "Prompt",
-      "promptPlaceholder": "Descrivi l'immagine che vuoi generare...",
-      "negativePrompt": "Prompt negativo",
-      "negativePromptPlaceholder": "Cosa evitare...",
-      "size": "Dimensione",
-      "count": "Quantità (1-4)",
-      "advanced": "Impostazioni avanzate",
-      "imageInputs": "Input immagini",
-      "steps": "Passi",
-      "stepsPlaceholder": "20",
-      "seed": "Seed",
-      "seedPlaceholder": "Casuale",
-      "sourceImage": "Immagine sorgente (img2img)",
-      "refImages": "Immagini di riferimento",
-      "refImagesAdded_one": "{{count}} immagine aggiunta",
-      "refImagesAdded_other": "{{count}} immagini aggiunte"
-    },
     "actions": {
-      "view": "Visualizza",
       "generate": "Genera",
-      "generating": "Generazione..."
+      "generating": "Generazione...",
+      "view": "Visualizza"
     },
     "empty": "Le immagini generate appariranno qui",
+    "labels": {
+      "advanced": "Impostazioni avanzate",
+      "count": "Quantità (1-4)",
+      "imageInputs": "Input immagini",
+      "model": "Modello",
+      "negativePrompt": "Prompt negativo",
+      "negativePromptPlaceholder": "Cosa evitare...",
+      "prompt": "Prompt",
+      "promptPlaceholder": "Descrivi l'immagine che vuoi generare...",
+      "refImages": "Immagini di riferimento",
+      "refImagesAdded_one": "{{count}} immagine aggiunta",
+      "refImagesAdded_many": "",
+      "refImagesAdded_other": "{{count}} immagini aggiunte",
+      "seed": "Seed",
+      "seedPlaceholder": "Casuale",
+      "size": "Dimensione",
+      "sourceImage": "Immagine sorgente (img2img)",
+      "steps": "Passi",
+      "stepsPlaceholder": "20"
+    },
+    "title": "Generazione immagini",
     "toasts": {
-      "noPrompt": "Inserisci un prompt",
       "noModel": "Seleziona un modello",
+      "noPrompt": "Inserisci un prompt",
       "noResults": "Nessuna immagine generata"
     }
   },
-  "video": {
-    "title": "Generazione video",
-    "labels": {
-      "model": "Modello",
-      "prompt": "Prompt",
-      "promptPlaceholder": "Descrivi il video che vuoi generare...",
-      "duration": "Durata (s)",
-      "fps": "FPS",
-      "size": "Dimensione",
-      "advanced": "Impostazioni avanzate",
-      "seed": "Seed",
-      "seedPlaceholder": "Casuale"
-    },
-    "actions": {
-      "generate": "Genera video",
-      "generating": "Generazione..."
-    },
-    "empty": "I video generati appariranno qui",
-    "toasts": {
-      "noPrompt": "Inserisci un prompt",
-      "noModel": "Seleziona un modello",
-      "noResults": "Nessun video generato"
-    }
-  },
   "tts": {
-    "title": "Text to Speech",
-    "labels": {
-      "model": "Modello",
-      "voice": "Voce",
-      "voicePlaceholder": "ID voce opzionale",
-      "input": "Testo",
-      "inputPlaceholder": "Inserisci il testo da convertire in voce..."
-    },
     "actions": {
       "generate": "Genera audio",
       "generating": "Generazione..."
     },
     "empty": "L'audio generato apparirà qui",
+    "labels": {
+      "input": "Testo",
+      "inputPlaceholder": "Inserisci il testo da convertire in voce...",
+      "model": "Modello"
+    },
+    "title": "Text to Speech",
     "toasts": {
-      "noText": "Inserisci del testo",
       "noModel": "Seleziona un modello",
-      "generateFailed": "Generazione fallita"
+      "noText": "Inserisci del testo"
     }
   },
-  "sound": {
-    "title": "Generazione audio",
-    "labels": {
-      "model": "Modello",
-      "prompt": "Prompt",
-      "promptPlaceholder": "Descrivi il suono che vuoi generare...",
-      "duration": "Durata (s)",
-      "language": "Lingua",
-      "vocalLanguage": "Lingua vocale",
-      "lyrics": "Testi (opzionale)",
-      "lyricsPlaceholder": "Testi per la generazione vocale",
-      "advanced": "Impostazioni avanzate",
-      "seed": "Seed",
-      "seedPlaceholder": "Casuale"
-    },
+  "video": {
     "actions": {
-      "generate": "Genera",
+      "generate": "Genera video",
       "generating": "Generazione..."
     },
-    "empty": "L'audio generato apparirà qui",
-    "toasts": {
-      "noPrompt": "Inserisci un prompt",
-      "noModel": "Seleziona un modello",
-      "generateFailed": "Generazione fallita"
-    }
-  },
-  "talk": {
-    "title": "Conversazione",
-    "subtitle": "Conversazione vocale in tempo reale",
-    "actions": {
-      "start": "Avvia sessione",
-      "stop": "Termina sessione",
-      "connecting": "Connessione...",
-      "muted": "Muto",
-      "mute": "Disattiva microfono",
-      "unmute": "Riattiva microfono"
-    },
+    "empty": "I video generati appariranno qui",
     "labels": {
+      "advanced": "Impostazioni avanzate",
+      "duration": "Durata (s)",
+      "fps": "FPS",
       "model": "Modello",
-      "voice": "Voce",
-      "voicePlaceholder": "alloy",
-      "language": "Lingua",
-      "languagePlaceholder": "it",
-      "instructions": "Istruzioni",
-      "instructionsPlaceholder": "Imposta la personalità dell'assistente..."
+      "prompt": "Prompt",
+      "promptPlaceholder": "Descrivi il video che vuoi generare...",
+      "seed": "Seed",
+      "size": "Dimensione"
     },
-    "status": {
-      "idle": "Inattivo",
-      "connecting": "Connessione...",
-      "listening": "In ascolto...",
-      "speaking": "Sta parlando...",
-      "ended": "Sessione terminata"
-    },
+    "title": "Generazione video",
     "toasts": {
-      "noModel": "Seleziona prima un modello",
-      "connectFailed": "Connessione fallita: {{message}}"
+      "noModel": "Seleziona un modello",
+      "noPrompt": "Inserisci un prompt",
+      "noResults": "Nessun video generato"
     }
-  },
-  "history": {
-    "title": "Cronologia",
-    "empty": "Nessuna cronologia",
-    "deleteEntry": "Elimina voce",
-    "clear": "Cancella cronologia",
-    "clearTitle": "Cancella tutta la cronologia",
-    "clearMessage": "Rimuovere tutte le voci della cronologia? Questa azione non può essere annullata.",
-    "clearConfirm": "Cancella",
-    "cleared": "Cronologia cancellata"
   }
 }

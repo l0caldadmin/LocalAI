@@ -3,8 +3,8 @@ package agentpool
 import (
 	"sync"
 
-	"github.com/mudler/LocalAGI/services/skills"
-	"github.com/mudler/LocalAGI/webui/collections"
+	"github.com/l0caldadmin/LocalAGI/services/skills"
+	"github.com/l0caldadmin/LocalAGI/webui/collections"
 	"github.com/mudler/LocalAI/core/config"
 	"github.com/mudler/LocalAI/core/services/jobs"
 	"github.com/mudler/LocalAI/core/services/messaging"

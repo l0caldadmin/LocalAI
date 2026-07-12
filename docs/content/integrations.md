@@ -28,7 +28,7 @@ Feel free to open up a Pull request (by clicking at the "Edit page" below) to ge
 ### Agentic Libraries & Assistants
 
 - [cogito](https://github.com/mudler/cogito) — Agentic library for Go
-- [LocalAGI](https://github.com/mudler/LocalAGI) — Local smart assistant with autonomous agents
+- [LocalAGI](https://github.com/l0caldadmin/LocalAGI) — Local smart assistant with autonomous agents
 
 ### MCP Servers
 
@@ -65,8 +65,8 @@ Feel free to open up a Pull request (by clicking at the "Edit page" below) to ge
 
 ### Chat Bots
 
-- [Discord bot](https://github.com/mudler/LocalAGI/tree/main/examples/discord)
-- [Slack bot](https://github.com/mudler/LocalAGI/tree/main/examples/slack)
+- [Discord bot](https://github.com/l0caldadmin/LocalAGI/tree/main/examples/discord)
+- [Slack bot](https://github.com/l0caldadmin/LocalAGI/tree/main/examples/slack)
 - [Telegram bot](https://github.com/mudler/LocalAI/tree/master/examples/telegram-bot)
 - [Hellper (Telegram)](https://github.com/JackBekket/Hellper)
 

@@ -1,70 +1,22 @@
 {
-  "appName": "LocalAI",
-  "openMenu": "Apri menu",
-  "closeMenu": "Chiudi menu",
-  "primaryNavigation": "Navigazione principale",
-  "switchToLightMode": "Passa al tema chiaro",
-  "switchToDarkMode": "Passa al tema scuro",
-  "expandSidebar": "Espandi barra laterale",
-  "collapseSidebar": "Comprimi barra laterale",
-  "changeLanguage": "Cambia lingua",
-  "logout": "Esci",
-  "accountSettings": "Impostazioni account",
   "account": "Account",
   "accountFor": "Account: {{name}}",
-  "sections": {
-    "create": "Crea",
-    "recognition": "Riconoscimento",
-    "build": "Costruisci",
-    "operate": "Gestione"
-  },
-  "operate": {
-    "inference": "Inference",
-    "cluster": "Cluster",
-    "observability": "Observability",
-    "access": "Access",
-    "system": "System"
-  },
-  "items": {
-    "home": "Home",
-    "installModels": "Installa modelli",
-    "chat": "Chat",
-    "studio": "Studio",
-    "talk": "Conversazione",
-    "fineTune": "Fine-Tuning (Sperimentale)",
-    "quantize": "Quantizzazione (Sperimentale)",
-    "faces": "Volti",
-    "voices": "Voci",
-    "jobs": "Lavori",
-    "operate": "Amministrazione",
-    "host": "Host",
-    "audioTransform": "Trasforma audio",
-    "faceRecognition": "Riconoscimento volti",
-    "voiceRecognition": "Riconoscimento vocale",
-    "agents": "Agenti",
-    "skills": "Competenze",
-    "memory": "Memoria",
-    "mcpJobs": "Job MCP CI",
-    "usage": "Utilizzo",
-    "users": "Utenti",
-    "backends": "Backend",
-    "traces": "Tracce",
-    "nodes": "Nodi",
-    "scheduling": "Pianificazione",
-    "swarm": "Swarm",
-    "system": "Sistema",
-    "settings": "Impostazioni",
-    "api": "API",
-    "middleware": "Middleware"
-  },
+  "accountSettings": "Impostazioni account",
+  "changeLanguage": "Cambia lingua",
+  "closeMenu": "Chiudi menu",
+  "collapseSidebar": "Comprimi barra laterale",
+  "expandSidebar": "Espandi barra laterale",
   "footer": {
-    "github": "GitHub",
-    "documentation": "Documentazione",
     "author": "Autore",
-    "copyright": "© 2023-{{year}} {{author}}"
+    "documentation": "Documentazione",
+    "github": "GitHub"
   },
-  "console": {
-    "automation": "Automazione",
-    "training": "Addestramento"
-  }
+  "logout": "Esci",
+  "openMenu": "Apri menu",
+  "primaryNavigation": "Navigazione principale",
+  "sections": {
+    "create": "Crea"
+  },
+  "switchToDarkMode": "Passa al tema scuro",
+  "switchToLightMode": "Passa al tema chiaro"
 }

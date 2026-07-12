@@ -1,107 +1,95 @@
 {
-  "cluster": {
-    "vram": "Cluster VRAM",
-    "ram": "Cluster RAM",
-    "nodesOnline": "{{healthy}}/{{total}} nodes online"
+  "assistant": {
+    "description": "Install models, switch backends, edit configs and check status by talking to LocalAI.",
+    "open": "Open assistant",
+    "title": "Manage LocalAI by chatting",
+    "tooltip": "Manage LocalAI by chatting"
+  },
+  "connect": {
+    "apiReference": "Full API reference",
+    "browse": "Browse the API",
+    "compatTitle": "Drop-in compatibility",
+    "copied": "Copied",
+    "copy": "Copy",
+    "dismiss": "Dismiss",
+    "hide": "Hide endpoints",
+    "nativeTitle": "Native API",
+    "subtitle": "LocalAI serves its own full API — image & video generation, depth, object detection, reranking, audio, face & voice recognition, and realtime voice over WebRTC and WebSocket. On top of that, a drop-in compatibility layer lets any app built for OpenAI, Anthropic, Ollama or OpenAI Responses talk to it unchanged.",
+    "title": "One endpoint, every API"
+  },
+  "greeting": {
+    "afternoon": "Good afternoon",
+    "evening": "Good evening",
+    "morning": "Good morning",
+    "night": "Working late"
+  },
+  "input": {
+    "attachAudio": "Attach audio",
+    "attachFile": "Attach file",
+    "attachImage": "Attach image",
+    "enterToSend": "Enter to send",
+    "placeholder": "Message...",
+    "selectModelFirst": "Select a model first",
+    "selectModelToast": "Please select a model first",
+    "sendMessage": "Send message"
+  },
+  "loadedModels": {
+    "heading": "Active models",
+    "stop": "Stop model",
+    "stopAll": "Stop all"
+  },
+  "quickLinks": {
+    "browseGallery": "Browse Gallery",
+    "documentation": "Documentation",
+    "importModel": "Import Model",
+    "installedModels": "Installed Models",
+    "manageByChat": "Manage by chat"
   },
   "resourceGpu": "GPU",
   "resourceRam": "RAM",
-  "greeting": {
-    "morning": "Good morning",
-    "afternoon": "Good afternoon",
-    "evening": "Good evening",
-    "night": "Working late"
+  "starters": {
+    "cpuNote": "No GPU detected — these small models stay responsive on CPU.",
+    "gpuNote": "Picked to fit your available VRAM with room for context.",
+    "install": "Install",
+    "installFailed": "Install failed: {{message}}",
+    "installing": "Installing",
+    "installStarted": "Installing {{model}}…",
+    "title": "Recommended for your hardware"
   },
   "statusLine": {
     "modelsLoaded_one": "{{count}} model loaded",
     "modelsLoaded_other": "{{count}} models loaded",
-    "noModelsLoaded": "No models loaded",
     "nodes_one": "{{count}} node",
-    "nodes_other": "{{count}} nodes"
-  },
-  "assistant": {
-    "title": "Manage LocalAI by chatting",
-    "description": "Install models, switch backends, edit configs and check status by talking to LocalAI.",
-    "open": "Open assistant",
-    "tooltip": "Manage LocalAI by chatting"
-  },
-  "input": {
-    "placeholder": "Message...",
-    "attachImage": "Attach image",
-    "attachAudio": "Attach audio",
-    "attachFile": "Attach file",
-    "enterToSend": "Enter to send",
-    "selectModelFirst": "Select a model first",
-    "sendMessage": "Send message",
-    "selectModelToast": "Please select a model first"
-  },
-  "quickLinks": {
-    "manageByChat": "Manage by chat",
-    "installedModels": "Installed Models",
-    "browseGallery": "Browse Gallery",
-    "importModel": "Import Model",
-    "documentation": "Documentation"
-  },
-  "loadedModels": {
-    "heading": "Active models",
-    "count_one": "{{count}} model loaded",
-    "count_other": "{{count}} models loaded",
-    "stop": "Stop model",
-    "stopAll": "Stop all"
+    "nodes_other": "{{count}} nodes",
+    "noModelsLoaded": "No models loaded"
   },
   "stopDialog": {
-    "title": "Stop Model",
-    "message": "Stop model {{model}}?",
-    "confirm": "Stop {{model}}",
-    "stopAllTitle": "Stop All Models",
-    "stopAllMessage": "Stop all {{count}} loaded models?",
-    "stopAllConfirm": "Stop all",
-    "stoppedToast": "Stopped {{model}}",
     "allStoppedToast": "All models stopped",
-    "stopFailed": "Failed to stop: {{message}}"
+    "confirm": "Stop {{model}}",
+    "message": "Stop model {{model}}?",
+    "stopAllConfirm": "Stop all",
+    "stopAllMessage_one": "stopDialog.stopAllMessage",
+    "stopAllMessage_other": "stopDialog.stopAllMessage",
+    "stopAllTitle": "Stop All Models",
+    "stopFailed": "Failed to stop: {{message}}",
+    "stoppedToast": "Stopped {{model}}",
+    "title": "Stop Model"
   },
   "wizard": {
-    "getStarted": "Get started with {{name}}",
-    "intro": "Install your first model to begin. Browse the gallery or import your own.",
-    "steps": {
-      "step1Title": "Browse the Model Gallery",
-      "step1Body": "Find the right model for your needs from our curated collection.",
-      "step2Title": "Install a Model",
-      "step2Body": "Click install to download and configure it automatically.",
-      "step3Title": "Start Chatting",
-      "step3Body": "Chat with your model right from the browser or use the API."
-    },
     "browseGallery": "Browse Model Gallery",
-    "importModel": "Import Model",
     "docs": "Docs",
+    "getStarted": "Get started with {{name}}",
+    "importModel": "Import Model",
+    "intro": "Install your first model to begin. Browse the gallery or import your own.",
+    "noModelsBody": "There are no models installed yet. Ask your administrator to set up models so you can start chatting.",
     "noModelsTitle": "No Models Available",
-    "noModelsBody": "There are no models installed yet. Ask your administrator to set up models so you can start chatting."
-  },
-  "starters": {
-    "title": "Recommended for your hardware",
-    "tier": {
-      "cpu": "CPU-only",
-      "gpu-small": "GPU",
-      "gpu-mid": "GPU",
-      "gpu-large": "GPU"
-    },
-    "cpuNote": "No GPU detected — these small models stay responsive on CPU.",
-    "gpuNote": "Picked to fit your available VRAM with room for context.",
-    "install": "Install",
-    "installing": "Installing",
-    "installStarted": "Installing {{model}}…",
-    "installFailed": "Install failed: {{message}}"
-  },
-  "connect": {
-    "title": "One endpoint, every API",
-    "subtitle": "LocalAI serves its own full API — image & video generation, depth, object detection, reranking, audio, face & voice recognition, and realtime voice over WebRTC and WebSocket. On top of that, a drop-in compatibility layer lets any app built for OpenAI, Anthropic, Ollama or OpenAI Responses talk to it unchanged.",
-    "nativeTitle": "Native API",
-    "compatTitle": "Drop-in compatibility",
-    "apiReference": "Full API reference",
-    "copy": "Copy",
-    "copied": "Copied",
-    "browse": "Browse the API",
-    "hide": "Hide endpoints",
-    "dismiss": "Dismiss"
+    "steps": {
+      "step1Body": "Find the right model for your needs from our curated collection.",
+      "step1Title": "Browse the Model Gallery",
+      "step2Body": "Click install to download and configure it automatically.",
+      "step2Title": "Install a Model",
+      "step3Body": "Chat with your model right from the browser or use the API.",
+      "step3Title": "Start Chatting"
+    }
   }
 }

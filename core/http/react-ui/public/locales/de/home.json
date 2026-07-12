@@ -1,92 +1,95 @@
 {
-  "cluster": {
-    "vram": "Cluster-VRAM",
-    "ram": "Cluster-RAM",
-    "nodesOnline": "{{healthy}}/{{total}} Knoten online"
+  "assistant": {
+    "description": "Modelle installieren, Backends wechseln, Konfigurationen bearbeiten und Status prüfen — durch Gespräche mit LocalAI.",
+    "open": "Assistent öffnen",
+    "title": "LocalAI per Chat verwalten",
+    "tooltip": "LocalAI per Chat verwalten"
+  },
+  "connect": {
+    "apiReference": "Vollständige API-Referenz",
+    "browse": "Browse the API",
+    "compatTitle": "Drop-in-Kompatibilität",
+    "copied": "Kopiert",
+    "copy": "Kopieren",
+    "dismiss": "Dismiss",
+    "hide": "Hide endpoints",
+    "nativeTitle": "Native API",
+    "subtitle": "LocalAI bietet eine eigene, vollständige API — Bild- und Videoerzeugung, Tiefe, Objekterkennung, Reranking, Audio, Gesichts- und Spracherkennung sowie Echtzeit-Sprache über WebRTC und WebSocket. Darüber hinaus sorgt eine Drop-in-Kompatibilitätsschicht dafür, dass jede für OpenAI, Anthropic, Ollama oder OpenAI Responses gebaute App unverändert funktioniert.",
+    "title": "Ein Endpunkt, jede API"
+  },
+  "greeting": {
+    "afternoon": "Good afternoon",
+    "evening": "Good evening",
+    "morning": "Good morning",
+    "night": "Working late"
+  },
+  "input": {
+    "attachAudio": "Audio anhängen",
+    "attachFile": "Datei anhängen",
+    "attachImage": "Bild anhängen",
+    "enterToSend": "Enter zum Senden",
+    "placeholder": "Nachricht...",
+    "selectModelFirst": "Bitte zuerst ein Modell auswählen",
+    "selectModelToast": "Bitte zuerst ein Modell auswählen",
+    "sendMessage": "Nachricht senden"
+  },
+  "loadedModels": {
+    "heading": "Aktive Modelle",
+    "stop": "Modell stoppen",
+    "stopAll": "Alle stoppen"
+  },
+  "quickLinks": {
+    "browseGallery": "Galerie durchsuchen",
+    "documentation": "Dokumentation",
+    "importModel": "Modell importieren",
+    "installedModels": "Installierte Modelle",
+    "manageByChat": "Per Chat verwalten"
   },
   "resourceGpu": "GPU",
   "resourceRam": "RAM",
-  "greeting": {
-    "morning": "Good morning",
-    "afternoon": "Good afternoon",
-    "evening": "Good evening",
-    "night": "Working late"
+  "starters": {
+    "cpuNote": "",
+    "gpuNote": "",
+    "install": "",
+    "installFailed": "",
+    "installing": "",
+    "installStarted": "",
+    "title": ""
   },
   "statusLine": {
     "modelsLoaded_one": "{{count}} model loaded",
     "modelsLoaded_other": "{{count}} models loaded",
-    "noModelsLoaded": "No models loaded",
     "nodes_one": "{{count}} node",
-    "nodes_other": "{{count}} nodes"
-  },
-  "assistant": {
-    "title": "LocalAI per Chat verwalten",
-    "description": "Modelle installieren, Backends wechseln, Konfigurationen bearbeiten und Status prüfen — durch Gespräche mit LocalAI.",
-    "open": "Assistent öffnen",
-    "tooltip": "LocalAI per Chat verwalten"
-  },
-  "input": {
-    "placeholder": "Nachricht...",
-    "attachImage": "Bild anhängen",
-    "attachAudio": "Audio anhängen",
-    "attachFile": "Datei anhängen",
-    "enterToSend": "Enter zum Senden",
-    "selectModelFirst": "Bitte zuerst ein Modell auswählen",
-    "sendMessage": "Nachricht senden",
-    "selectModelToast": "Bitte zuerst ein Modell auswählen"
-  },
-  "quickLinks": {
-    "manageByChat": "Per Chat verwalten",
-    "installedModels": "Installierte Modelle",
-    "browseGallery": "Galerie durchsuchen",
-    "importModel": "Modell importieren",
-    "documentation": "Dokumentation"
-  },
-  "loadedModels": {
-    "heading": "Aktive Modelle",
-    "count_one": "{{count}} Modell geladen",
-    "count_other": "{{count}} Modelle geladen",
-    "stop": "Modell stoppen",
-    "stopAll": "Alle stoppen"
+    "nodes_other": "{{count}} nodes",
+    "noModelsLoaded": "No models loaded"
   },
   "stopDialog": {
-    "title": "Modell stoppen",
-    "message": "Modell {{model}} stoppen?",
-    "confirm": "{{model}} stoppen",
-    "stopAllTitle": "Alle Modelle stoppen",
-    "stopAllMessage": "Alle {{count}} geladenen Modelle stoppen?",
-    "stopAllConfirm": "Alle stoppen",
-    "stoppedToast": "{{model}} gestoppt",
     "allStoppedToast": "Alle Modelle gestoppt",
-    "stopFailed": "Stopp fehlgeschlagen: {{message}}"
+    "confirm": "{{model}} stoppen",
+    "message": "Modell {{model}} stoppen?",
+    "stopAllConfirm": "Alle stoppen",
+    "stopAllMessage_one": "",
+    "stopAllMessage_other": "",
+    "stopAllTitle": "Alle Modelle stoppen",
+    "stopFailed": "Stopp fehlgeschlagen: {{message}}",
+    "stoppedToast": "{{model}} gestoppt",
+    "title": "Modell stoppen"
   },
   "wizard": {
-    "getStarted": "Loslegen mit {{name}}",
-    "intro": "Installieren Sie Ihr erstes Modell, um zu beginnen. Durchsuchen Sie die Galerie oder importieren Sie ein eigenes.",
-    "steps": {
-      "step1Title": "Modellgalerie durchsuchen",
-      "step1Body": "Finden Sie das richtige Modell für Ihre Anforderungen aus unserer kuratierten Sammlung.",
-      "step2Title": "Modell installieren",
-      "step2Body": "Klicken Sie auf Installieren, um es automatisch herunterzuladen und zu konfigurieren.",
-      "step3Title": "Chat starten",
-      "step3Body": "Chatten Sie mit Ihrem Modell direkt im Browser oder nutzen Sie die API."
-    },
     "browseGallery": "Modellgalerie durchsuchen",
-    "importModel": "Modell importieren",
     "docs": "Dokumentation",
+    "getStarted": "Loslegen mit {{name}}",
+    "importModel": "Modell importieren",
+    "intro": "Installieren Sie Ihr erstes Modell, um zu beginnen. Durchsuchen Sie die Galerie oder importieren Sie ein eigenes.",
+    "noModelsBody": "Es sind noch keine Modelle installiert. Bitten Sie Ihren Administrator, Modelle einzurichten, damit Sie mit dem Chatten beginnen können.",
     "noModelsTitle": "Keine Modelle verfügbar",
-    "noModelsBody": "Es sind noch keine Modelle installiert. Bitten Sie Ihren Administrator, Modelle einzurichten, damit Sie mit dem Chatten beginnen können."
-  },
-  "connect": {
-    "title": "Ein Endpunkt, jede API",
-    "subtitle": "LocalAI bietet eine eigene, vollständige API — Bild- und Videoerzeugung, Tiefe, Objekterkennung, Reranking, Audio, Gesichts- und Spracherkennung sowie Echtzeit-Sprache über WebRTC und WebSocket. Darüber hinaus sorgt eine Drop-in-Kompatibilitätsschicht dafür, dass jede für OpenAI, Anthropic, Ollama oder OpenAI Responses gebaute App unverändert funktioniert.",
-    "nativeTitle": "Native API",
-    "compatTitle": "Drop-in-Kompatibilität",
-    "apiReference": "Vollständige API-Referenz",
-    "copy": "Kopieren",
-    "copied": "Kopiert",
-    "browse": "Browse the API",
-    "hide": "Hide endpoints",
-    "dismiss": "Dismiss"
+    "steps": {
+      "step1Body": "Finden Sie das richtige Modell für Ihre Anforderungen aus unserer kuratierten Sammlung.",
+      "step1Title": "Modellgalerie durchsuchen",
+      "step2Body": "Klicken Sie auf Installieren, um es automatisch herunterzuladen und zu konfigurieren.",
+      "step2Title": "Modell installieren",
+      "step3Body": "Chatten Sie mit Ihrem Modell direkt im Browser oder nutzen Sie die API.",
+      "step3Title": "Chat starten"
+    }
   }
 }

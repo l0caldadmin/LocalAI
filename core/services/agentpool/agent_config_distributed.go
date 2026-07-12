@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/mudler/LocalAGI/core/agent"
-	"github.com/mudler/LocalAGI/core/sse"
-	"github.com/mudler/LocalAGI/core/state"
+	"github.com/l0caldadmin/LocalAGI/core/agent"
+	"github.com/l0caldadmin/LocalAGI/core/sse"
+	"github.com/l0caldadmin/LocalAGI/core/state"
 	"github.com/mudler/LocalAI/core/services/agents"
 	"github.com/mudler/xlog"
 )

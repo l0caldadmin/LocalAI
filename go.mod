@@ -13,7 +13,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/credentials v1.19.28
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.105.0
 	github.com/charmbracelet/glamour v1.0.0
-	github.com/containerd/containerd v1.7.33
+	github.com/containerd/containerd v1.7.34
 	github.com/coreos/go-oidc/v3 v3.20.0
 	github.com/dhowden/tag v0.0.0-20240417053706-3d75831295e8
 	github.com/ebitengine/purego v0.10.1
@@ -141,7 +141,6 @@ require (
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/jolestar/go-commons-pool/v2 v2.1.2 // indirect
 	github.com/klippa-app/go-pdfium v1.19.4 // indirect
-	github.com/l0caldadmin/water v0.0.0-20260708175602-1c6bdaae76e0 // indirect
 	github.com/mattn/go-sqlite3 v1.14.47 // indirect
 	github.com/moby/moby/api v1.55.0 // indirect
 	github.com/moby/moby/client v0.5.0 // indirect
@@ -186,8 +185,8 @@ require (
 	github.com/antchfx/htmlquery v1.3.6 // indirect
 	github.com/antchfx/xmlquery v1.5.1 // indirect
 	github.com/antchfx/xpath v1.3.6 // indirect
-	github.com/bits-and-blooms/bitset v1.24.5 // indirect
-	github.com/blevesearch/bleve/v2 v2.6.0 // indirect
+	github.com/bits-and-blooms/bitset v1.24.6 // indirect
+	github.com/blevesearch/bleve/v2 v2.6.1-0.20260709151816-8fb0f1b6835b // indirect
 	github.com/blevesearch/bleve_index_api v1.4.0 // indirect
 	github.com/blevesearch/geo v0.2.5 // indirect
 	github.com/blevesearch/go-faiss v1.1.5 // indirect
@@ -234,8 +233,6 @@ require (
 	github.com/kevinburke/ssh_config v1.6.0 // indirect
 	github.com/labstack/gommon v0.5.0 // indirect
 	github.com/mschoch/smat v0.2.0 // indirect
-	github.com/l0caldadmin/LocalAGI v0.0.1
-	github.com/l0caldadmin/localrecall v0.0.1 // indirect
 	github.com/mudler/skillserver v0.0.7-0.20260520220837-a7317cbf9145
 	github.com/olekukonko/tablewriter v1.1.4 // indirect
 	github.com/oxffaa/gopher-parse-sitemap v0.0.0-20191021113419-005d2eb1def4 // indirect
@@ -346,7 +343,7 @@ require (
 	golang.org/x/image v0.44.0 // indirect
 	golang.org/x/net v0.57.0 // indirect (for websocket)
 	golang.org/x/oauth2 v0.36.0
-	golang.org/x/telemetry v0.0.0-20260708182218-49f421fb7959 // indirect
+	golang.org/x/telemetry v0.0.0-20260710170516-c325552849a7 // indirect
 	golang.org/x/time v0.15.0 // indirect
 )
 
@@ -394,7 +391,7 @@ require (
 	github.com/google/btree v1.1.3 // indirect
 	github.com/google/go-cmp v0.7.0 // indirect
 	github.com/google/gopacket v1.1.19 // indirect
-	github.com/google/pprof v0.0.0-20260604005048-7023385849c0 // indirect
+	github.com/google/pprof v0.0.0-20260709232956-b9395ee17fa0 // indirect
 	github.com/gorilla/css v1.0.1 // indirect
 	github.com/gorilla/websocket v1.5.4-0.20250319132907-e064f32e3674
 	github.com/hashicorp/golang-lru v1.0.2 // indirect
@@ -442,7 +439,6 @@ require (
 	github.com/moby/sys/sequential v0.7.0 // indirect
 	github.com/moby/term v0.5.2 // indirect
 	github.com/mr-tron/base58 v1.3.0 // indirect
-	github.com/l0caldadmin/go-piper v0.0.1
 	github.com/muesli/reflow v0.3.0 // indirect
 	github.com/muesli/termenv v0.16.0 // indirect
 	github.com/multiformats/go-base32 v0.1.0 // indirect
@@ -466,7 +462,7 @@ require (
 	github.com/polydawn/refmt v0.90.0 // indirect
 	github.com/power-devops/perfstat v0.0.0-20240221224432-82ca36839d55 // indirect
 	github.com/prometheus/client_model v0.6.2 // indirect
-	github.com/prometheus/common v0.69.0 // indirect
+	github.com/prometheus/common v0.70.0 // indirect
 	github.com/prometheus/procfs v0.21.1 // indirect
 	github.com/quic-go/qpack v0.6.0 // indirect
 	github.com/quic-go/quic-go v0.60.0 // indirect
@@ -496,7 +492,7 @@ require (
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.28.0 // indirect
 	golang.org/x/crypto v0.54.0
-	golang.org/x/exp v0.0.0-20260611194520-c48552f49976 // indirect
+	golang.org/x/exp v0.0.0-20260709172345-9ea1abe57597 // indirect
 	golang.org/x/mod v0.38.0 // indirect
 	golang.org/x/sync v0.22.0
 	golang.org/x/sys v0.47.0 // indirect
@@ -514,8 +510,14 @@ require (
 	lukechampine.com/blake3 v1.4.1 // indirect
 )
 
-require github.com/l0caldadmin/edgevpn v0.0.1
-
-replace (
-	github.com/mudler/LocalAI => .
+//LocalDadmin Repositories
+require (
+	github.com/l0caldadmin/LocalAGI v0.0.1
+	github.com/l0caldadmin/edgevpn v0.0.1
+	github.com/l0caldadmin/go-piper v0.0.1
+	github.com/l0caldadmin/localrecall v0.0.1 // indirect
+	github.com/l0caldadmin/water v0.0.1 // indirect
 )
+
+//REPLACE MUDLER for LOCAL REPO
+replace github.com/mudler/LocalAI => .

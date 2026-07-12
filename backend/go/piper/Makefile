@@ -1,6 +1,6 @@
 
 # go-piper version
-PIPER_REPO?=https://github.com/mudler/go-piper
+PIPER_REPO?=https://github.com/l0caldadmin/go-piper
 PIPER_VERSION?=e10ca041a885d4a8f3871d52924b47792d5e5aa0
 
 CURRENT_DIR=$(abspath ./)
@@ -27,7 +27,7 @@ espeak-ng-data: sources/go-piper sources/go-piper/libpiper_binding.a
 	@cp -rf sources/go-piper/piper-phonemize/pi/share/espeak-ng-data/. espeak-ng-data
 
 piper: sources/go-piper sources/go-piper/libpiper_binding.a espeak-ng-data
-	$(GOCMD) mod edit -replace github.com/mudler/go-piper=$(CURRENT_DIR)/sources/go-piper
+	$(GOCMD) mod edit -replace github.com/l0caldadmin/go-piper=$(CURRENT_DIR)/sources/go-piper
 	CGO_CXXFLAGS="$(PIPER_CGO_CXXFLAGS)" CGO_LDFLAGS="$(PIPER_CGO_LDFLAGS)" LIBRARY_PATH=$(CURRENT_DIR)/sources/go-piper \
 	$(GOCMD) build -ldflags "$(LD_FLAGS)" -tags "$(GO_TAGS)" -o piper ./
 

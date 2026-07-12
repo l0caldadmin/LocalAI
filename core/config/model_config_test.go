@@ -587,45 +587,7 @@ concurrency_groups:
 			Expect(*cfg.TopK).To(Equal(40))
 		})
 
-		It("leaves TopK nil for the mlx backend", func() {
-			cfg := &ModelConfig{}
-			cfg.Backend = "mlx"
 
-			cfg.SetDefaults()
-
-			Expect(cfg.TopK).To(BeNil(),
-				"mlx_lm's intended default is top_k=0 (disabled); LocalAI must not inject 40")
-		})
-
-		It("leaves TopK nil for the mlx-vlm backend", func() {
-			cfg := &ModelConfig{}
-			cfg.Backend = "mlx-vlm"
-
-			cfg.SetDefaults()
-
-			Expect(cfg.TopK).To(BeNil())
-		})
-
-		It("leaves TopK nil for the mlx-distributed backend", func() {
-			cfg := &ModelConfig{}
-			cfg.Backend = "mlx-distributed"
-
-			cfg.SetDefaults()
-
-			Expect(cfg.TopK).To(BeNil())
-		})
-
-		It("respects an explicit top_k even for the mlx backend", func() {
-			explicit := 7
-			cfg := &ModelConfig{}
-			cfg.Backend = "mlx"
-			cfg.TopK = &explicit
-
-			cfg.SetDefaults()
-
-			Expect(cfg.TopK).NotTo(BeNil())
-			Expect(*cfg.TopK).To(Equal(7))
-		})
 	})
 })
 

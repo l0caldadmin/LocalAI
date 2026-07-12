@@ -42,6 +42,7 @@ func NewRequestExtractor(modelConfigLoader *config.ModelConfigLoader, modelLoade
 const CONTEXT_LOCALS_KEY_MODEL_NAME = "MODEL_NAME"
 const CONTEXT_LOCALS_KEY_LOCALAI_REQUEST = "LOCALAI_REQUEST"
 const CONTEXT_LOCALS_KEY_MODEL_CONFIG = "MODEL_CONFIG"
+const CONTEXT_LOCALS_KEY_RESOLVE_RESULT = "RESOLVE_RESULT"
 
 // TODO: Refactor to not return error if unchanged
 func (re *RequestExtractor) setModelNameFromRequest(c echo.Context) {

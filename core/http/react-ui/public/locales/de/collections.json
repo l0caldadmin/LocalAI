@@ -1,42 +1,41 @@
 {
-  "title": "Wissensdatenbank",
-  "subtitle": "Verwalten Sie Dokumentensammlungen für RAG der Agenten",
-  "newPlaceholder": "Name der neuen Sammlung...",
   "actions": {
     "create": "Erstellen",
     "creating": "Wird erstellt...",
+    "deleteCollection": "Sammlung löschen",
     "details": "Details",
     "reset": "Zurücksetzen",
-    "delete": "Löschen",
-    "viewDetails": "Details anzeigen",
     "resetCollection": "Sammlung zurücksetzen",
-    "deleteCollection": "Sammlung löschen"
-  },
-  "sections": {
-    "yourCollections": "Ihre Sammlungen",
-    "otherUsersCollections": "Sammlungen anderer Benutzer"
-  },
-  "empty": {
-    "title": "Noch keine Sammlungen",
-    "text": "Mit Sammlungen organisieren Sie Dokumente in Wissensdatenbanken, die Agenten mit RAG (Retrieval-Augmented Generation) durchsuchen können. Erstellen Sie oben eine Sammlung, um zu beginnen.",
-    "noPersonal": "Sie haben noch keine Sammlungen."
+    "viewDetails": "Details anzeigen"
   },
   "deleteDialog": {
-    "title": "Sammlung löschen",
+    "confirm": "Löschen",
     "message": "Sammlung \"{{name}}\" löschen? Dies entfernt alle Einträge und kann nicht rückgängig gemacht werden.",
-    "confirm": "Löschen"
+    "title": "Sammlung löschen"
   },
+  "empty": {
+    "noPersonal": "Sie haben noch keine Sammlungen.",
+    "text": "Mit Sammlungen organisieren Sie Dokumente in Wissensdatenbanken, die Agenten mit RAG (Retrieval-Augmented Generation) durchsuchen können. Erstellen Sie oben eine Sammlung, um zu beginnen.",
+    "title": "Noch keine Sammlungen"
+  },
+  "newPlaceholder": "Name der neuen Sammlung...",
   "resetDialog": {
-    "title": "Sammlung zurücksetzen",
+    "confirm": "Zurücksetzen",
     "message": "Sammlung \"{{name}}\" zurücksetzen? Dies entfernt alle Einträge, behält aber die Sammlung.",
-    "confirm": "Zurücksetzen"
+    "title": "Sammlung zurücksetzen"
   },
+  "sections": {
+    "otherUsersCollections": "Sammlungen anderer Benutzer",
+    "yourCollections": "Ihre Sammlungen"
+  },
+  "subtitle": "Verwalten Sie Dokumentensammlungen für RAG der Agenten",
+  "title": "Wissensdatenbank",
   "toasts": {
-    "loadFailed": "Laden der Sammlungen fehlgeschlagen: {{message}}",
     "created": "Sammlung \"{{name}}\" erstellt",
     "createFailed": "Erstellen der Sammlung fehlgeschlagen: {{message}}",
     "deleted": "Sammlung \"{{name}}\" gelöscht",
     "deleteFailed": "Löschen der Sammlung fehlgeschlagen: {{message}}",
+    "loadFailed": "Laden der Sammlungen fehlgeschlagen: {{message}}",
     "reset": "Sammlung \"{{name}}\" zurückgesetzt",
     "resetFailed": "Zurücksetzen der Sammlung fehlgeschlagen: {{message}}"
   }

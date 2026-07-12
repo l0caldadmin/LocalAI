@@ -1,118 +1,128 @@
 {
+  "actions": {
+    "branch": "",
+    "copy": "Copiar",
+    "jumpToLatest": "Jump to latest",
+    "regenerate": "Regenerar"
+  },
   "activity": {
+    "result": "Resultado",
+    "thinking": "Pensando...",
     "thought": "Pensamiento",
     "tool": "Herramienta",
-    "result": "Resultado",
-    "toolResult": "Resultado de {{name}}",
-    "thinking": "Pensando..."
-  },
-  "header": {
-    "manageModeTooltip": "Este chat puede instalar modelos, editar configuraciones y administrar backends hablando con LocalAI.",
-    "modelInfo": "Información del modelo",
-    "chatSettings": "Ajustes del chat",
-    "modelInfoTitle": "Información del modelo: {{model}}",
-    "editConfig": "Editar configuración",
-    "close": "Cerrar"
-  },
-  "modelInfo": {
-    "backend": "Backend",
-    "modelFile": "Archivo del modelo",
-    "contextSize": "Tamaño del contexto",
-    "threads": "Hilos",
-    "mcp": "MCP",
-    "configured": "Configurado",
-    "chatTemplate": "Plantilla de chat",
-    "yes": "Sí",
-    "gpuLayers": "Capas GPU"
+    "toolResult": "Resultado de {{name}}"
   },
   "context": {
     "label": "Contexto: {{percent}}%",
     "labelWithTokens": "Contexto: {{percent}}% ({{tokens}} tokens)"
   },
-  "settings": {
-    "title": "Ajustes del chat",
-    "manageMode": "Modo administración",
-    "manageModeDesc": "Permite que este chat instale modelos, cambie backends y edite configuraciones hablando con LocalAI.",
-    "systemPrompt": "Prompt del sistema",
-    "systemPromptPlaceholder": "Eres un asistente útil...",
-    "temperature": "Temperatura",
-    "topP": "Top P",
-    "topK": "Top K",
-    "contextSize": "Tamaño del contexto",
-    "contextSizePlaceholder": "2048",
-    "clearHistory": "Borrar historial del chat"
+  "deleteAllDialog": {
+    "confirm": "Eliminar todo",
+    "message": "¿Eliminar todos los chats? Esta acción no se puede deshacer.",
+    "title": "Eliminar todos los chats"
   },
   "empty": {
-    "manageTitle": "Administra LocalAI chateando",
+    "hintAttach": "Adjuntar archivos",
+    "hintEnter": "Enter para enviar",
+    "hintShiftEnter": "Shift+Enter para nueva línea",
     "manageText": "Pide instalar modelos, cambiar backends, editar configuraciones o consultar el estado. El asistente resumirá las acciones y esperará tu confirmación antes de cambiar nada.",
-    "startTitle": "Inicia una conversación",
+    "manageTitle": "Administra LocalAI chateando",
+    "noMessages": "Aún no hay mensajes",
     "readyText": "Listo para chatear con {{model}}",
+    "recent": "Recientes",
     "selectModelText": "Selecciona un modelo arriba para comenzar",
-    "suggestionsManage": [
-      "¿Qué está instalado?",
-      "Instala un modelo de chat",
-      "Muestra el estado del sistema",
-      "Actualiza un backend"
-    ],
+    "startTitle": "Inicia una conversación",
     "suggestionsChat": [
       "Explica cómo funciona esto",
       "Ayúdame a escribir código",
       "Resume un documento",
       "Lluvia de ideas"
     ],
-    "recent": "Recientes",
-    "noMessages": "Aún no hay mensajes",
-    "hintEnter": "Enter para enviar",
-    "hintShiftEnter": "Shift+Enter para nueva línea",
-    "hintAttach": "Adjuntar archivos"
+    "suggestionsManage": [
+      "¿Qué está instalado?",
+      "Instala un modelo de chat",
+      "Muestra el estado del sistema",
+      "Actualiza un backend"
+    ]
   },
   "errors": {
     "viewTraces": "Ver trazas para más detalles"
   },
-  "actions": {
-    "copy": "Copiar",
-    "regenerate": "Regenerar",
-    "jumpToLatest": "Jump to latest"
+  "header": {
+    "chatSettings": "Ajustes del chat",
+    "close": "Cerrar",
+    "editConfig": "Editar configuración",
+    "manageModeTooltip": "Este chat puede instalar modelos, editar configuraciones y administrar backends hablando con LocalAI.",
+    "modelInfo": "Información del modelo",
+    "modelInfoTitle": "Información del modelo: {{model}}"
+  },
+  "input": {
+    "attachFile": "Adjuntar archivo",
+    "canvasLabel": "Canvas",
+    "canvasTitle": "Canvas — extrae bloques de código y multimedia en un panel lateral para vista previa, copia y descarga",
+    "openCanvas": "Abrir panel canvas",
+    "placeholder": "Mensaje...",
+    "send": "",
+    "stopGenerating": "Detener generación"
+  },
+  "menu": {
+    "clearAll": "Borrar todo",
+    "clearSearch": "Limpiar búsqueda",
+    "copyChat": "",
+    "deleteAllTitle": "Eliminar todas las conversaciones",
+    "deleteChat": "Eliminar chat",
+    "duplicate": "",
+    "exportMarkdown": "Exportar como Markdown",
+    "newChat": "Nuevo chat",
+    "noConversations": "Aún no hay conversaciones",
+    "noMatch": "Ninguna conversación coincide con tu búsqueda",
+    "rename": "Renombrar",
+    "search": "Buscar conversaciones...",
+    "trigger": "Chats",
+    "triggerTitle": "Conversaciones (Ctrl/Cmd+K)"
+  },
+  "modelInfo": {
+    "backend": "Backend",
+    "chatTemplate": "Plantilla de chat",
+    "configured": "Configurado",
+    "contextSize": "Tamaño del contexto",
+    "gpuLayers": "Capas GPU",
+    "mcp": "MCP",
+    "modelFile": "Archivo del modelo",
+    "threads": "Hilos",
+    "yes": "Sí"
+  },
+  "settings": {
+    "clearHistory": "Borrar historial del chat",
+    "contextSize": "Tamaño del contexto",
+    "contextSizePlaceholder": "2048",
+    "manageMode": "Modo administración",
+    "manageModeDesc": "Permite que este chat instale modelos, cambie backends y edite configuraciones hablando con LocalAI.",
+    "systemPrompt": "Prompt del sistema",
+    "systemPromptPlaceholder": "Eres un asistente útil...",
+    "temperature": "Temperatura",
+    "title": "Ajustes del chat",
+    "topK": "Top K",
+    "topP": "Top P"
   },
   "streaming": {
     "transferring": "Transfiriendo modelo...",
     "transferringTo": "Transfiriendo modelo a {{node}}..."
   },
-  "tokens": {
-    "perSec": "{{count}} tok/s",
-    "peak": "Pico: {{count}} tok/s",
-    "usage": "{{prompt}}p + {{completion}}c = {{total}}"
-  },
-  "input": {
-    "placeholder": "Mensaje...",
-    "attachFile": "Adjuntar archivo",
-    "stopGenerating": "Detener generación",
-    "canvasTitle": "Canvas — extrae bloques de código y multimedia en un panel lateral para vista previa, copia y descarga",
-    "canvasLabel": "Canvas",
-    "openCanvas": "Abrir panel canvas"
-  },
-  "deleteAllDialog": {
-    "title": "Eliminar todos los chats",
-    "message": "¿Eliminar todos los chats? Esta acción no se puede deshacer.",
-    "confirm": "Eliminar todo"
-  },
   "toasts": {
-    "selectModel": "Por favor selecciona un modelo",
+    "chatCopied": "",
     "copied": "Copiado al portapapeles",
-    "copyFailed": "No se pudo copiar al portapapeles"
+    "copyFailed": "No se pudo copiar al portapapeles",
+    "forked": "",
+    "selectModel": "Por favor selecciona un modelo"
   },
-  "menu": {
-    "trigger": "Chats",
-    "triggerTitle": "Conversaciones (Ctrl/Cmd+K)",
-    "search": "Buscar conversaciones...",
-    "clearSearch": "Limpiar búsqueda",
-    "noMatch": "Ninguna conversación coincide con tu búsqueda",
-    "noConversations": "Aún no hay conversaciones",
-    "rename": "Renombrar",
-    "exportMarkdown": "Exportar como Markdown",
-    "deleteChat": "Eliminar chat",
-    "newChat": "Nuevo chat",
-    "clearAll": "Borrar todo",
-    "deleteAllTitle": "Eliminar todas las conversaciones"
+  "tokens": {
+    "peak_one": "",
+    "peak_many": "",
+    "peak_other": "",
+    "perSec_one": "",
+    "perSec_many": "",
+    "perSec_other": "",
+    "usage": "{{prompt}}p + {{completion}}c = {{total}}"
   }
 }

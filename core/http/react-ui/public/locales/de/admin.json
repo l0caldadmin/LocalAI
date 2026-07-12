@@ -1,66 +1,61 @@
 {
-  "manage": {
-    "title": "System",
-    "subtitle": "Verwalten Sie installierte Modelle und Backends"
-  },
-  "settings": {
-    "title": "Einstellungen",
-    "subtitle": "Konfigurieren Sie die Laufzeiteinstellungen von LocalAI",
-    "saved": "Einstellungen erfolgreich gespeichert",
-    "saveFailed": "Speichern fehlgeschlagen: {{message}}",
-    "loadFailed": "Laden der Einstellungen fehlgeschlagen: {{message}}",
-    "sections": {
-      "branding": "Branding",
-      "watchdog": "Watchdog",
-      "memory": "Speicher",
-      "backends": "Backends",
-      "performance": "Leistung",
-      "tracing": "Tracing",
-      "api": "API & CORS",
-      "p2p": "P2P",
-      "galleries": "Galerien",
-      "apikeys": "API-Schlüssel",
-      "agents": "Agentenaufgaben",
-      "agentpool": "Agenten-Pool",
-      "assistant": "LocalAI Assistant",
-      "responses": "Antworten"
-    }
-  },
   "backends": {
-    "title": "Backend-Verwaltung",
-    "subtitle": "Entdecken und installieren Sie KI-Backends für Ihre Modelle"
+    "subtitle": "Entdecken und installieren Sie KI-Backends für Ihre Modelle",
+    "title": "Backend-Verwaltung"
   },
-  "backendLogs": {
-    "title": "Backend-Logs",
-    "subtitle": "Logs laufender Backends anzeigen",
-    "empty": "Keine Logs verfügbar"
-  },
-  "traces": {
-    "title": "Traces",
-    "subtitle": "Protokollierte API-Anfragen, Antworten und Backend-Operationen anzeigen"
+  "manage": {
+    "subtitle": "Verwalten Sie installierte Modelle und Backends",
+    "title": "System"
   },
   "nodes": {
-    "title": "Verteilte Knoten",
-    "subtitle": "Backend- und Agenten-Worker-Knoten verwalten"
-  },
-  "scheduling": {
-    "title": "Planung",
-    "subtitle": "Modellplatzierung und Replikat-Regeln im gesamten Cluster"
+    "subtitle": "Backend- und Agenten-Worker-Knoten verwalten",
+    "title": "Verteilte Knoten"
   },
   "p2p": {
-    "title": "Verteilte KI-Berechnung",
-    "subtitle": "Skalieren Sie Ihre KI-Workloads über mehrere Geräte mit Peer-to-Peer-Verteilung"
+    "subtitle": "Skalieren Sie Ihre KI-Workloads über mehrere Geräte mit Peer-to-Peer-Verteilung",
+    "title": "Verteilte KI-Berechnung"
   },
-  "users": {
-    "title": "Benutzer",
-    "subtitle": "Registrierte Benutzer, Rollen und Einladungen verwalten"
+  "scheduling": {
+    "subtitle": "Modellplatzierung und Replikat-Regeln im gesamten Cluster",
+    "title": "Planung"
+  },
+  "settings": {
+    "subtitle": "Konfigurieren Sie die Laufzeiteinstellungen von LocalAI",
+    "title": "Einstellungen"
+  },
+  "traces": {
+    "subtitle": "Protokollierte API-Anfragen, Antworten und Backend-Operationen anzeigen",
+    "title": "Traces"
   },
   "usage": {
-    "title": "Nutzung",
-    "subtitle": "API-Token-Nutzungsstatistiken"
+    "sources": {
+      "clearFilter": "",
+      "filteredTo": "",
+      "legacy": "",
+      "mixTitle": "",
+      "noKeysYet": "",
+      "noTrafficShort": "",
+      "other_one": "",
+      "other_other": "",
+      "revoked": "",
+      "ribbonAria": "",
+      "searchPlaceholder": "",
+      "sortBy": "",
+      "sortLastUsed": "",
+      "sortName": "",
+      "sortRequests": "",
+      "sortTokens": "",
+      "sortUser": "",
+      "tab": "",
+      "topSources": "",
+      "truncatedWarning": "",
+      "webUI": ""
+    },
+    "subtitle": "API-Token-Nutzungsstatistiken",
+    "title": "Nutzung"
   },
-  "explorer": {
-    "title": "Explorer",
-    "subtitle": "Dateien und Konfiguration durchsuchen"
+  "users": {
+    "subtitle": "Registrierte Benutzer, Rollen und Einladungen verwalten",
+    "title": "Benutzer"
   }
 }

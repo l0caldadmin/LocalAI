@@ -102,23 +102,7 @@ func (a *Application) StartP2P() error {
 		return err
 	}
 
-	// Attach a ServiceDiscoverer for MLX distributed workers
-	xlog.Info("Starting MLX P2P worker discovery...")
-	if err := p2p.ServiceDiscoverer(ctx, n, a.applicationConfig.P2PToken, p2p.NetworkID(networkID, p2p.MLXWorkerID), func(serviceID string, node schema.NodeData) {
-		var tunnelAddresses []string
-		for _, v := range p2p.GetAvailableNodes(p2p.NetworkID(networkID, p2p.MLXWorkerID)) {
-			if v.IsOnline() {
-				tunnelAddresses = append(tunnelAddresses, v.TunnelAddress)
-			} else {
-				xlog.Info("MLX node is offline", "node", v.ID)
-			}
-		}
-		if a.applicationConfig.MLXTunnelCallback != nil {
-			a.applicationConfig.MLXTunnelCallback(tunnelAddresses)
-		}
-	}, true); err != nil {
-		return err
-	}
+
 
 	return nil
 }

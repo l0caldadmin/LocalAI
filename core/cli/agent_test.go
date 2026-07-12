@@ -8,7 +8,7 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
-	"github.com/mudler/LocalAGI/core/state"
+	"github.com/l0caldadmin/LocalAGI/core/state"
 )
 
 var _ = Describe("AgentRunCMD", func() {

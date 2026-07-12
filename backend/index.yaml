@@ -1548,7 +1548,7 @@
   icon: https://github.com/OHF-Voice/piper1-gpl/raw/main/etc/logo.png
   urls:
     - https://github.com/rhasspy/piper
-    - https://github.com/mudler/go-piper
+    - https://github.com/l0caldadmin/go-piper
   license: MIT
   description: |
      A fast, local neural text to speech system

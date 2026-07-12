@@ -148,6 +148,10 @@ func (c *RegistrationClient) Heartbeat(ctx context.Context, nodeID string, body 
 		return err
 	}
 	defer resp.Body.Close()
+	
+	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+		return fmt.Errorf("heartbeat failed with status %d", resp.StatusCode)
+	}
 	return nil
 }
 

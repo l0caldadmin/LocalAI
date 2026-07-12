@@ -1,79 +1,78 @@
 {
-  "title": "Skills",
-  "subtitle": "Manage agent skills (reusable instructions and resources)",
-  "unavailable": {
-    "subtitle": "Skills service is not available or the index is rebuilding. Try again in a moment.",
-    "retry": "Retry"
-  },
   "actions": {
-    "newSkill": "New skill",
+    "adding": "Adding...",
+    "addRepo": "Add repo",
     "createSkill": "Create skill",
+    "delete": "Delete",
+    "disable": "Disable",
+    "edit": "Edit",
+    "enable": "Enable",
+    "export": "Export",
+    "gitRepos": "Git Repos",
     "import": "Import",
     "importing": "Importing...",
-    "gitRepos": "Git Repos",
-    "edit": "Edit",
-    "delete": "Delete",
-    "export": "Export",
-    "sync": "Sync",
-    "addRepo": "Add repo",
-    "adding": "Adding...",
-    "remove": "Remove",
-    "enable": "Enable",
-    "disable": "Disable"
+    "newSkill": "New skill",
+    "sync": "Sync"
+  },
+  "card": {
+    "deleteTitle": "Delete skill",
+    "editTitle": "Edit skill",
+    "exportTitle": "Export as .tar.gz",
+    "noDescription": "No description",
+    "readOnly": "Read-only"
+  },
+  "deleteDialog": {
+    "confirm": "Delete",
+    "message": "Delete skill \"{{name}}\"? This action cannot be undone.",
+    "title": "Delete Skill"
+  },
+  "empty": {
+    "noPersonal": "You have no skills yet.",
+    "text": "Create a skill or import one to get started.",
+    "title": "No skills found"
+  },
+  "git": {
+    "description": "Add Git repositories to pull skills from. Skills will appear in the list after sync.",
+    "disabled": "Disabled",
+    "noRepos": "No Git repos configured. Add one above.",
+    "removeRepo": "Remove repo",
+    "title": "Git repositories",
+    "urlPlaceholder": "https://github.com/user/repo or git@github.com:user/repo.git"
+  },
+  "removeRepoDialog": {
+    "confirm": "Remove",
+    "message": "Remove this Git repository? Skills from it will no longer be available.",
+    "title": "Remove Git Repository"
   },
   "search": {
     "placeholder": "Search skills..."
   },
-  "git": {
-    "title": "Git repositories",
-    "description": "Add Git repositories to pull skills from. Skills will appear in the list after sync.",
-    "urlPlaceholder": "https://github.com/user/repo or git@github.com:user/repo.git",
-    "noRepos": "No Git repos configured. Add one above.",
-    "disabled": "Disabled",
-    "removeRepo": "Remove repo"
-  },
-  "card": {
-    "noDescription": "No description",
-    "readOnly": "Read-only",
-    "editTitle": "Edit skill",
-    "deleteTitle": "Delete skill",
-    "exportTitle": "Export as .tar.gz"
-  },
-  "empty": {
-    "title": "No skills found",
-    "text": "Create a skill or import one to get started.",
-    "noPersonal": "You have no skills yet."
-  },
   "sections": {
-    "yourSkills": "Your Skills",
-    "otherUsersSkills": "Other Users' Skills"
+    "otherUsersSkills": "Other Users' Skills",
+    "yourSkills": "Your Skills"
   },
-  "deleteDialog": {
-    "title": "Delete Skill",
-    "message": "Delete skill \"{{name}}\"? This action cannot be undone.",
-    "confirm": "Delete"
-  },
-  "removeRepoDialog": {
-    "title": "Remove Git Repository",
-    "message": "Remove this Git repository? Skills from it will no longer be available.",
-    "confirm": "Remove"
-  },
+  "subtitle": "Manage agent skills (reusable instructions and resources)",
+  "title": "Skills",
   "toasts": {
-    "loadFailed": "Failed to load skills",
+    "addRepoFailed": "Failed to add repo",
     "deleted": "Skill \"{{name}}\" deleted",
     "deleteFailed": "Failed to delete skill",
     "exported": "Skill \"{{name}}\" exported",
     "exportFailed": "Export failed",
     "imported": "Skill imported from \"{{file}}\"",
     "importFailed": "Import failed",
+    "loadFailed": "Failed to load skills",
     "loadReposFailed": "Failed to load Git repos",
+    "removed": "Repo removed",
+    "removeFailed": "Remove failed",
     "repoAdded": "Git repo added and syncing",
-    "addRepoFailed": "Failed to add repo",
     "synced": "Repo synced",
     "syncFailed": "Sync failed",
     "toggled": "Repo toggled",
-    "toggleFailed": "Toggle failed",
-    "removed": "Repo removed",
-    "removeFailed": "Remove failed"
+    "toggleFailed": "Toggle failed"
+  },
+  "unavailable": {
+    "retry": "Retry",
+    "subtitle": "Skills service is not available or the index is rebuilding. Try again in a moment."
   }
 }

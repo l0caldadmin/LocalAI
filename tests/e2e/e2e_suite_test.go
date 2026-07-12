@@ -342,12 +342,22 @@ var _ = BeforeSuite(func() {
 	Expect(err).ToNot(HaveOccurred())
 	Expect(os.WriteFile(filepath.Join(modelsPath, "mock-classifier.yaml"), classifierData, 0644)).To(Succeed())
 
-	for _, name := range []string{"mock-cand-casual", "mock-cand-code"} {
+	for _, name := range []string{"mock-cand-casual", "mock-cand-code", "mock-cand-fallback", "mock-cand-untrusted"} {
 		candCfg := map[string]any{
 			"name":           name,
 			"backend":        "mock-backend",
 			"known_usecases": []string{"chat"},
 			"parameters":     map[string]any{"model": name + ".bin"},
+		}
+		if name == "mock-cand-casual" {
+			candCfg["router"] = map[string]any{
+				"fallbacks": []string{"mock-cand-fallback"},
+			}
+		}
+		if name == "mock-cand-untrusted" {
+			candCfg["metadata"] = map[string]any{
+				"trust_class": 10, // TrustUntrusted
+			}
 		}
 		candData, err := yaml.Marshal(candCfg)
 		Expect(err).ToNot(HaveOccurred())
@@ -370,6 +380,7 @@ var _ = BeforeSuite(func() {
 			"candidates": []map[string]any{
 				{"model": "mock-cand-casual", "labels": []string{"casual-chat"}},
 				{"model": "mock-cand-code", "labels": []string{"code-generation", "math-reasoning"}},
+				{"model": "mock-cand-untrusted", "labels": []string{"untrusted"}},
 			},
 		},
 	}

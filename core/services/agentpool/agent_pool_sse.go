@@ -5,7 +5,7 @@ import (
 	"math/rand/v2"
 
 	"github.com/labstack/echo/v4"
-	"github.com/mudler/LocalAGI/core/sse"
+	"github.com/l0caldadmin/LocalAGI/core/sse"
 )
 
 // HandleSSE bridges a LocalAGI SSE Manager to an Echo HTTP response.

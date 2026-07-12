@@ -1,42 +1,41 @@
 {
-  "title": "Base de conocimiento",
-  "subtitle": "Administra colecciones de documentos para el RAG de los agentes",
-  "newPlaceholder": "Nombre de la nueva colección...",
   "actions": {
     "create": "Crear",
     "creating": "Creando...",
+    "deleteCollection": "Eliminar colección",
     "details": "Detalles",
     "reset": "Restablecer",
-    "delete": "Eliminar",
-    "viewDetails": "Ver detalles",
     "resetCollection": "Restablecer colección",
-    "deleteCollection": "Eliminar colección"
-  },
-  "sections": {
-    "yourCollections": "Tus colecciones",
-    "otherUsersCollections": "Colecciones de otros usuarios"
-  },
-  "empty": {
-    "title": "Aún no hay colecciones",
-    "text": "Las colecciones te permiten organizar documentos en bases de conocimiento que los agentes pueden buscar usando RAG (Retrieval-Augmented Generation). Crea una colección arriba para empezar.",
-    "noPersonal": "Aún no tienes colecciones."
+    "viewDetails": "Ver detalles"
   },
   "deleteDialog": {
-    "title": "Eliminar colección",
+    "confirm": "Eliminar",
     "message": "¿Eliminar la colección \"{{name}}\"? Esto eliminará todas las entradas y no se puede deshacer.",
-    "confirm": "Eliminar"
+    "title": "Eliminar colección"
   },
+  "empty": {
+    "noPersonal": "Aún no tienes colecciones.",
+    "text": "Las colecciones te permiten organizar documentos en bases de conocimiento que los agentes pueden buscar usando RAG (Retrieval-Augmented Generation). Crea una colección arriba para empezar.",
+    "title": "Aún no hay colecciones"
+  },
+  "newPlaceholder": "Nombre de la nueva colección...",
   "resetDialog": {
-    "title": "Restablecer colección",
+    "confirm": "Restablecer",
     "message": "¿Restablecer la colección \"{{name}}\"? Esto eliminará todas las entradas pero mantendrá la colección.",
-    "confirm": "Restablecer"
+    "title": "Restablecer colección"
   },
+  "sections": {
+    "otherUsersCollections": "Colecciones de otros usuarios",
+    "yourCollections": "Tus colecciones"
+  },
+  "subtitle": "Administra colecciones de documentos para el RAG de los agentes",
+  "title": "Base de conocimiento",
   "toasts": {
-    "loadFailed": "Error al cargar colecciones: {{message}}",
     "created": "Colección \"{{name}}\" creada",
     "createFailed": "Error al crear colección: {{message}}",
     "deleted": "Colección \"{{name}}\" eliminada",
     "deleteFailed": "Error al eliminar colección: {{message}}",
+    "loadFailed": "Error al cargar colecciones: {{message}}",
     "reset": "Colección \"{{name}}\" restablecida",
     "resetFailed": "Error al restablecer colección: {{message}}"
   }

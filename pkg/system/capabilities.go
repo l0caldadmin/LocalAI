@@ -36,7 +36,7 @@ const (
 
 	// Backend detection tokens (private)
 	backendTokenDarwin = "darwin"
-	backendTokenMLX    = "mlx"
+
 	backendTokenMetal  = "metal"
 	backendTokenL4T    = "l4t"
 	backendTokenCUDA   = "cuda"
@@ -223,14 +223,7 @@ func (s *SystemState) IsBackendCompatible(name, uri string) bool {
 	combined := strings.ToLower(name + " " + uri)
 	capability := s.getSystemCapabilities()
 
-	// Check for darwin/macOS-specific backends (mlx, metal, darwin)
-	isDarwinBackend := strings.Contains(combined, backendTokenDarwin) ||
-		strings.Contains(combined, backendTokenMLX) ||
-		strings.Contains(combined, backendTokenMetal)
-	if isDarwinBackend {
-		// Darwin backends require the system to be running on darwin with metal or darwin-x86 capability
-		return capability == metal || capability == darwinX86
-	}
+
 
 	// Check for NVIDIA L4T-specific backends (arm64 Linux with NVIDIA GPU)
 	// This must be checked before the general NVIDIA check as L4T backends

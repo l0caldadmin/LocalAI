@@ -189,6 +189,7 @@ func RouteModel(loader *config.ModelConfigLoader, appConfig *config.ApplicationC
 			}
 
 			c.Set(CONTEXT_LOCALS_KEY_MODEL_CONFIG, result.ChosenConfig)
+			c.Set(CONTEXT_LOCALS_KEY_RESOLVE_RESULT, result)
 			// Preserve an upstream requested model (e.g. an alias that points
 			// at this router model) so accounting keeps the name the client
 			// actually sent. Served always reflects the final candidate.
@@ -197,10 +198,14 @@ func RouteModel(loader *config.ModelConfigLoader, appConfig *config.ApplicationC
 			}
 			c.Set(ContextKeyServedModel, result.ChosenModel)
 
+			// Call the next handler in the chain. Any routing/fallback trace
+			// updates made by the handler to result.Trace will be captured.
+			handlerErr := next(c)
+
 			if store != nil {
 				recordHTTPDecision(c, store, result, fallbackUser, source)
 			}
-			return next(c)
+			return handlerErr
 		}
 	}
 }

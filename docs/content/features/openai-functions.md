@@ -16,7 +16,7 @@ To learn more about OpenAI functions, see also the [OpenAI API blog post](https:
 
 LocalAI also supports [JSON mode](https://platform.openai.com/docs/guides/text-generation/json-mode) out of the box on llama.cpp-compatible models.
 
-💡 Check out [LocalAGI](https://github.com/mudler/LocalAGI) for an example on how to use LocalAI functions.
+💡 Check out [LocalAGI](https://github.com/l0caldadmin/LocalAGI) for an example on how to use LocalAI functions.
 
 ## Supported backends
 

@@ -141,7 +141,7 @@ type ApplicationConfig struct {
 	APIAddress string
 
 	LlamaCPPTunnelCallback func(tunnels []string)
-	MLXTunnelCallback      func(tunnels []string)
+
 
 	DisableRuntimeSettings bool
 
@@ -655,11 +655,7 @@ func WithLlamaCPPTunnelCallback(callback func(tunnels []string)) AppOption {
 	}
 }
 
-func WithMLXTunnelCallback(callback func(tunnels []string)) AppOption {
-	return func(o *ApplicationConfig) {
-		o.MLXTunnelCallback = callback
-	}
-}
+
 
 func WithF16(f16 bool) AppOption {
 	return func(o *ApplicationConfig) {

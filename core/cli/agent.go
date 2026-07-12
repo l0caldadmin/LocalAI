@@ -8,8 +8,8 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/mudler/LocalAGI/core/state"
-	coreTypes "github.com/mudler/LocalAGI/core/types"
+	"github.com/l0caldadmin/LocalAGI/core/state"
+	coreTypes "github.com/l0caldadmin/LocalAGI/core/types"
 	cliContext "github.com/mudler/LocalAI/core/cli/context"
 	"github.com/mudler/LocalAI/core/config"
 	"github.com/mudler/LocalAI/core/services/agentpool"

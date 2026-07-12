@@ -10,10 +10,14 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/mudler/LocalAI/core/backend"
 	"github.com/mudler/LocalAI/core/config"
+	conf "github.com/mudler/LocalAI/core/config"
 	mcpTools "github.com/mudler/LocalAI/core/http/endpoints/mcp"
 	"github.com/mudler/LocalAI/core/http/middleware"
 	"github.com/mudler/LocalAI/core/schema"
 	"github.com/mudler/LocalAI/core/services/cloudproxy"
+	"github.com/mudler/LocalAI/core/services/routing/admission"
+	"github.com/mudler/LocalAI/core/services/routing/orchestrator"
+	"github.com/mudler/LocalAI/core/services/routing/router"
 	"github.com/mudler/LocalAI/pkg/functions"
 	reason "github.com/mudler/LocalAI/pkg/reasoning"
 
@@ -371,21 +375,47 @@ func ChatEndpoint(cl *config.ModelConfigLoader, ml *model.ModelLoader, evaluator
 
 		xlog.Debug("Parameters", "config", config)
 
-		var predInput string
+		var trace *orchestrator.ProvenanceChain
+		if rr, ok := c.Get(middleware.CONTEXT_LOCALS_KEY_RESOLVE_RESULT).(*router.ResolveResult); ok {
+			trace = rr.Trace
+		}
 
-		// If we are using the tokenizer template, we don't need to process the messages
-		// unless we are processing functions
-		if !config.TemplateConfig.UseTokenizerTemplate {
-			predInput = evaluator.TemplateMessages(*input, input.Messages, config, funcs, shouldUseFn)
-
-			xlog.Debug("Prompt (after templating)", "prompt", predInput)
-			if config.Grammar != "" {
-				xlog.Debug("Grammar", "grammar", config.Grammar)
+		reqPolicy := admission.RequestPolicy{
+			RequiredTrust:   conf.TrustUnknown,
+			RequiredPrivacy: conf.PrivacyUnknown,
+			RequiredCaps:    []conf.CapabilityTag{},
+		}
+		if trustStr, ok := c.Get("X-LocalAI-Require-Trust").(string); ok && trustStr != "" {
+			var trustVal int
+			if _, err := fmt.Sscanf(trustStr, "%d", &trustVal); err == nil {
+				reqPolicy.RequiredTrust = conf.TrustClass(trustVal)
 			}
 		}
 
-		switch {
-		case toStream:
+		executeErr := orchestrator.ExecuteWithPlan(
+			c.Request().Context(),
+			reqPolicy,
+			config,
+			trace,
+			func(name string) (*conf.ModelConfig, error) {
+				return cl.LoadModelConfigFileByNameDefaultOptions(name, startupOptions)
+			},
+			func(candCfg *conf.ModelConfig) (bool, error) {
+				var predInput string
+
+				// If we are using the tokenizer template, we don't need to process the messages
+				// unless we are processing functions
+				if !candCfg.TemplateConfig.UseTokenizerTemplate {
+					predInput = evaluator.TemplateMessages(*input, input.Messages, candCfg, funcs, shouldUseFn)
+
+					xlog.Debug("Prompt (after templating)", "prompt", predInput)
+					if candCfg.Grammar != "" {
+						xlog.Debug("Grammar", "grammar", candCfg.Grammar)
+					}
+				}
+
+				switch {
+				case toStream:
 
 			xlog.Debug("Stream request received")
 			c.Response().Header().Set("Content-Type", "text/event-stream")
@@ -394,15 +424,15 @@ func ChatEndpoint(cl *config.ModelConfigLoader, ml *model.ModelLoader, evaluator
 			c.Response().Header().Set("X-Correlation-ID", id)
 
 			mcpStreamMaxIterations := 10
-			if config.Agent.MaxIterations > 0 {
-				mcpStreamMaxIterations = config.Agent.MaxIterations
+			if candCfg.Agent.MaxIterations > 0 {
+				mcpStreamMaxIterations = candCfg.Agent.MaxIterations
 			}
 			hasMCPToolsStream := mcpExecutor != nil && mcpExecutor.HasTools()
 
 			for mcpStreamIter := 0; mcpStreamIter <= mcpStreamMaxIterations; mcpStreamIter++ {
 				// Re-template on MCP iterations
-				if mcpStreamIter > 0 && !config.TemplateConfig.UseTokenizerTemplate {
-					predInput = evaluator.TemplateMessages(*input, input.Messages, config, funcs, shouldUseFn)
+				if mcpStreamIter > 0 && !candCfg.TemplateConfig.UseTokenizerTemplate {
+					predInput = evaluator.TemplateMessages(*input, input.Messages, candCfg, funcs, shouldUseFn)
 					xlog.Debug("MCP stream re-templating", "iteration", mcpStreamIter)
 				}
 
@@ -411,10 +441,10 @@ func ChatEndpoint(cl *config.ModelConfigLoader, ml *model.ModelLoader, evaluator
 
 				go func() {
 					if !shouldUseFn {
-						u, err := processStream(predInput, input, config, cl, startupOptions, ml, responses, id, created)
+						u, err := processStream(predInput, input, candCfg, cl, startupOptions, ml, responses, id, created)
 						ended <- streamWorkerResult{usage: u, err: err}
 					} else {
-						u, err := processStreamWithTools(noActionName, predInput, input, config, cl, startupOptions, ml, responses, id, created, &textContentToReturn)
+						u, err := processStreamWithTools(noActionName, predInput, input, candCfg, cl, startupOptions, ml, responses, id, created, &textContentToReturn)
 						ended <- streamWorkerResult{usage: u, err: err}
 					}
 				}()
@@ -465,7 +495,7 @@ func ChatEndpoint(cl *config.ModelConfigLoader, ml *model.ModelLoader, evaluator
 						// We collect the RAW (unfiltered) content so the model's tool-call
 						// markup keeps parsing correctly even when PII redaction would mask
 						// substrings.
-						if (hasMCPToolsStream || config.FunctionsConfig.AutomaticToolParsingFallback) && haveContent {
+						if (hasMCPToolsStream || candCfg.FunctionsConfig.AutomaticToolParsingFallback) && haveContent {
 							collectedContent += rawContent
 						}
 						respData, err := json.Marshal(ev)
@@ -479,7 +509,7 @@ func ChatEndpoint(cl *config.ModelConfigLoader, ml *model.ModelLoader, evaluator
 						if err != nil {
 							xlog.Debug("Sending chunk failed", "error", err)
 							input.Cancel()
-							return err
+							return c.Response().Committed, err
 						}
 						c.Response().Flush()
 					case res := <-ended:
@@ -506,7 +536,7 @@ func ChatEndpoint(cl *config.ModelConfigLoader, ml *model.ModelLoader, evaluator
 						fmt.Fprintf(c.Response().Writer, "data: [DONE]\n\n")
 						c.Response().Flush()
 
-						return nil
+						return c.Response().Committed, nil
 					}
 				}
 
@@ -577,8 +607,8 @@ func ChatEndpoint(cl *config.ModelConfigLoader, ml *model.ModelLoader, evaluator
 
 				// Automatic tool parsing fallback for streaming: when no tools were
 				// requested but the model emitted tool call markup, parse and emit them.
-				if !shouldUseFn && config.FunctionsConfig.AutomaticToolParsingFallback && collectedContent != "" && !toolsCalled {
-					parsed := functions.ParseFunctionCall(collectedContent, config.FunctionsConfig)
+				if !shouldUseFn && candCfg.FunctionsConfig.AutomaticToolParsingFallback && collectedContent != "" && !toolsCalled {
+					parsed := functions.ParseFunctionCall(collectedContent, candCfg.FunctionsConfig)
 					for i, fc := range parsed {
 						toolCallID := fc.ID
 						if toolCallID == "" {
@@ -618,7 +648,7 @@ func ChatEndpoint(cl *config.ModelConfigLoader, ml *model.ModelLoader, evaluator
 					finishReason = FinishReasonToolCalls
 				} else if toolsCalled {
 					finishReason = FinishReasonFunctionCall
-				} else if reachedTokenBudget(finalUsage.Completion, config.Maxtokens) {
+				} else if reachedTokenBudget(finalUsage.Completion, candCfg.Maxtokens) {
 					// Generation stopped because it hit the max_tokens ceiling
 					// rather than a natural stop — report "length" (issue #9716).
 					finishReason = FinishReasonLength
@@ -665,37 +695,37 @@ func ChatEndpoint(cl *config.ModelConfigLoader, ml *model.ModelLoader, evaluator
 				fmt.Fprintf(c.Response().Writer, "data: [DONE]\n\n")
 				c.Response().Flush()
 				xlog.Debug("Stream ended")
-				return nil
+				return c.Response().Committed, nil
 			} // end MCP stream iteration loop
 
 			// Safety fallback
 			fmt.Fprintf(c.Response().Writer, "data: [DONE]\n\n")
 			c.Response().Flush()
-			return nil
+			return c.Response().Committed, nil
 
 		// no streaming mode
 		default:
 			mcpMaxIterations := 10
-			if config.Agent.MaxIterations > 0 {
-				mcpMaxIterations = config.Agent.MaxIterations
+			if candCfg.Agent.MaxIterations > 0 {
+				mcpMaxIterations = candCfg.Agent.MaxIterations
 			}
 			hasMCPTools := mcpExecutor != nil && mcpExecutor.HasTools()
 
 			for mcpIteration := 0; mcpIteration <= mcpMaxIterations; mcpIteration++ {
 				// Re-template on each MCP iteration since messages may have changed
-				if mcpIteration > 0 && !config.TemplateConfig.UseTokenizerTemplate {
-					predInput = evaluator.TemplateMessages(*input, input.Messages, config, funcs, shouldUseFn)
+				if mcpIteration > 0 && !candCfg.TemplateConfig.UseTokenizerTemplate {
+					predInput = evaluator.TemplateMessages(*input, input.Messages, candCfg, funcs, shouldUseFn)
 					xlog.Debug("MCP re-templating", "iteration", mcpIteration, "prompt_len", len(predInput))
 				}
 
 				// Detect if thinking token is already in prompt or template
 				var template string
-				if config.TemplateConfig.UseTokenizerTemplate {
-					template = config.GetModelTemplate() // TODO: this should be the parsed jinja template. But for now this is the best we can do.
+				if candCfg.TemplateConfig.UseTokenizerTemplate {
+					template = candCfg.GetModelTemplate() // TODO: this should be the parsed jinja template. But for now this is the best we can do.
 				} else {
 					template = predInput
 				}
-				thinkingStartToken := reason.DetectThinkingStartToken(template, &config.ReasoningConfig)
+				thinkingStartToken := reason.DetectThinkingStartToken(template, &candCfg.ReasoningConfig)
 
 				xlog.Debug("Thinking start token", "thinkingStartToken", thinkingStartToken, "template", template)
 
@@ -705,7 +735,7 @@ func ChatEndpoint(cl *config.ModelConfigLoader, ml *model.ModelLoader, evaluator
 				var cbRawResult, cbReasoning string
 
 				tokenCallback := func(s string, c *[]schema.Choice) {
-					reasoning, s := reason.ExtractReasoningWithConfig(s, thinkingStartToken, config.ReasoningConfig)
+					reasoning, s := reason.ExtractReasoningWithConfig(s, thinkingStartToken, candCfg.ReasoningConfig)
 
 					if !shouldUseFn {
 						stopReason := FinishReasonStop
@@ -730,7 +760,7 @@ func ChatEndpoint(cl *config.ModelConfigLoader, ml *model.ModelLoader, evaluator
 				result, tokenUsage, chatDeltas, err = ComputeChoices(
 					input,
 					predInput,
-					config,
+					candCfg,
 					cl,
 					startupOptions,
 					ml,
@@ -755,14 +785,14 @@ func ChatEndpoint(cl *config.ModelConfigLoader, ml *model.ModelLoader, evaluator
 					},
 				)
 				if err != nil {
-					return err
+					return c.Response().Committed, err
 				}
 
 				// For non-tool requests: prefer C++ autoparser chat deltas over
 				// Go-side tag extraction (which can mangle output when thinkingStartToken
 				// differs from the model's actual reasoning tags, e.g. Gemma 4).
 				if !shouldUseFn {
-					result = applyAutoparserOverride(chatDeltas, thinkingStartToken, config.ReasoningConfig, result)
+					result = applyAutoparserOverride(chatDeltas, thinkingStartToken, candCfg.ReasoningConfig, result)
 				}
 
 				// Tool parsing is deferred here (only when shouldUseFn) so chat deltas are available
@@ -1025,12 +1055,15 @@ func ChatEndpoint(cl *config.ModelConfigLoader, ml *model.ModelLoader, evaluator
 				middleware.StampUsage(c, input.Model, usage.PromptTokens, usage.CompletionTokens)
 
 				// Return the prediction in the response body
-				return c.JSON(200, resp)
+				return true, c.JSON(200, resp)
 			} // end MCP iteration loop
 
 			// Should not reach here, but safety fallback
-			return fmt.Errorf("MCP iteration limit reached")
+			return c.Response().Committed, fmt.Errorf("MCP iteration limit reached")
 		}
+	})
+
+	return executeErr
 	}
 }
 
