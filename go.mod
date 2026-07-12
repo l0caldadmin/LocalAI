@@ -234,8 +234,8 @@ require (
 	github.com/kevinburke/ssh_config v1.6.0 // indirect
 	github.com/labstack/gommon v0.5.0 // indirect
 	github.com/mschoch/smat v0.2.0 // indirect
-	github.com/mudler/LocalAGI v0.0.0-20260618144834-9a6b32f9bcc7
-	github.com/mudler/localrecall v0.6.3 // indirect
+	github.com/l0caldadmin/LocalAGI v0.0.1
+	github.com/l0caldadmin/localrecall v0.0.1 // indirect
 	github.com/mudler/skillserver v0.0.7-0.20260520220837-a7317cbf9145
 	github.com/olekukonko/tablewriter v1.1.4 // indirect
 	github.com/oxffaa/gopher-parse-sitemap v0.0.0-20191021113419-005d2eb1def4 // indirect
@@ -442,7 +442,7 @@ require (
 	github.com/moby/sys/sequential v0.7.0 // indirect
 	github.com/moby/term v0.5.2 // indirect
 	github.com/mr-tron/base58 v1.3.0 // indirect
-	github.com/mudler/go-piper v0.0.0-20241103095234-e10ca041a885
+	github.com/l0caldadmin/go-piper v0.0.1
 	github.com/muesli/reflow v0.3.0 // indirect
 	github.com/muesli/termenv v0.16.0 // indirect
 	github.com/multiformats/go-base32 v0.1.0 // indirect
@@ -514,10 +514,8 @@ require (
 	lukechampine.com/blake3 v1.4.1 // indirect
 )
 
-require github.com/l0caldadmin/edgevpn v0.0.0-20260709143635-fa4283c734aa
+require github.com/l0caldadmin/edgevpn v0.0.1
 
 replace (
-	github.com/mudler/LocalAGI => github.com/l0caldadmin/LocalAGI v0.0.0-20260704190425-a41c6ff36ed2
 	github.com/mudler/LocalAI => .
-	github.com/mudler/localrecall => github.com/l0caldadmin/LocalRecall v0.0.0-20260626062721-d5f4a998e01f
 )
