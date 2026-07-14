@@ -1,0 +1,10 @@
+name: granite-embedding-125m-english
+urls:
+  - https://huggingface.co/bartowski/granite-embedding-125m-english-GGUF/resolve/main/granite-embedding-125m-english-f16.gguf
+config_file: |
+    backend: llama-cpp
+    known_usecases:
+        - embeddings
+    parameters:
+        f16: true
+        mmap: true
